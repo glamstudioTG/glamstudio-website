@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum DayOfWeek {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+model User {
+  id    String @id @default(uuid())
+  name  String
+  email String @unique
+  phone String
+  role  Role   @default(CLIENT)
+
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  duration    Int
+  price       Float
+  category    String?
+
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Booking {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  date    DateTime
+  status  BookingStatus @default(PENDING)
+  comment String?
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  transactionProofs TransactionProof[]
+}
+
+model TransactionProof {
+  id       String @id @default(uuid())
+  imageUrl String
+
+  bookindId String
+  booking   Booking @relation(fields: [bookindId], references: [id])
+
+  uploadedAt DateTime @default(now())
+}
+
+model Schedule {
+  id        String    @id @default(uuid())
+  day       DayOfWeek
+  startTime String
+  endTime   String
+}
+
+model ScheduleBlock {
+  id        String   @id @default(uuid())
+  date      DateTime
+  startTime String
+  endTime   String
+  reason    String?
+  createdAt DateTime @default(now())
+}
