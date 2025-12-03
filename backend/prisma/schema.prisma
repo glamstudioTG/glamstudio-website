@@ -37,11 +37,12 @@ enum DayOfWeek {
 }
 
 model User {
-  id    String @id @default(uuid())
-  name  String
-  email String @unique
-  phone String
-  role  Role   @default(CLIENT)
+  id       String @id @default(uuid())
+  name     String
+  password String
+  email    String @unique
+  phone    String
+  role     Role   @default(CLIENT)
 
   bookings Booking[]
 
