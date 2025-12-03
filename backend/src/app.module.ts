@@ -26,4 +26,4 @@ import { ServicesController } from './shedule/services/services.controller';
   ],
   controllers: [ServicesController],
 })
-export class AppModule { }
+export class AppModule {}

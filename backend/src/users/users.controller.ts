@@ -4,22 +4,18 @@ import { registerUserDto } from './dto/register-user.dto';
 
 @Controller('users')
 export class UsersController {
-    constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
-    @Get('/profile')
-    getProfile(@Param('id') id: string) {
-        return this.userService.findProfile(id)
-    }
+  @Get('/profile')
+  getProfile(@Param('id') id: string) {
+    return this.userService.findProfile(id);
+  }
 
-    @Get()
-    getUserByEmail() {
+  @Get()
+  getUserByEmail() {}
 
-    }
-
-    @Post('/register')
-    registerUser(@Body() dto: registerUserDto) {
-        return this.userService.createUser(dto)
-    }
-
-
+  @Post('/register')
+  registerUser(@Body() dto: registerUserDto) {
+    return this.userService.createUser(dto);
+  }
 }
