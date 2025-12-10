@@ -7,7 +7,7 @@ import { ServicesModule } from './services/services.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { ServicesController } from './shedule/services/services.controller';
+
 
 @Module({
   imports: [
@@ -24,6 +24,5 @@ import { ServicesController } from './shedule/services/services.controller';
     UsersModule,
     AuthModule,
   ],
-  controllers: [ServicesController],
 })
 export class AppModule {}
