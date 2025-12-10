@@ -56,9 +56,21 @@ model Service {
   description String?
   duration    Int
   price       Float
-  category    String?
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
 
   bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  image    String?
+  services Service[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

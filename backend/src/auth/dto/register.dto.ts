@@ -10,6 +10,6 @@ export class registerDto {
   @IsNotEmpty()
   password: string;
 
-  @IsPhoneNumber()
+  @IsPhoneNumber('CO')
   phone: string;
 }

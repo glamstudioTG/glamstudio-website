@@ -35,6 +35,13 @@ export class UserService {
     return user;
   }
 
+  getAllUsers () {
+    return this.prisma.user.findMany(
+    { select: { id: true, name: true, email: true, phone: true, role: true } }
+    )
+  } 
+  
+
   updateProfile(id: string, data: updateUserDto) {
     return this.prisma.user.update({
       where: { id },
