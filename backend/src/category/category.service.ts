@@ -1,15 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { UnprocessableEntityException } from '@nestjs/common';
 
 @Injectable()
 export class CategoryService {
   constructor(private prisma: PrismaService) {}
 
   async createCategory(dto: CreateCategoryDto) {
-    return await this.prisma.category.create({
+
+    const exists = await this.prisma.category.findUnique({
+      where: { name: dto.name },
+    })
+
+    if (exists) {
+          throw new UnprocessableEntityException('Categoria ya existente');
+        }
+
+    const data = await this.prisma.category.create({
       data: dto,
     });
+
+    return data
   }
 
   async getAllCategories() {

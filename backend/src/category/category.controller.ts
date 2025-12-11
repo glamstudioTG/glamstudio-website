@@ -11,31 +11,31 @@ export class CategoryController {
     constructor(private categoryService: CategoryService) {}
 
 
-    @Get('all')
+    @Get()
     getCategories() {
         return this.categoryService.getAllCategories();
     }
 
     @Get(':id')
-    getCategoryById(@Param() id: string) {
+    getCategoryById(@Param('id') id: string) {
         return this.categoryService.getCategoryById(id);
     }
 
     @UseGuards(JwtGuard, AdminGuard)
-    @Post('create')
+    @Post()
     createCategory(@Body() dto: CreateCategoryDto){
         return this.categoryService.createCategory(dto);
     }
 
     @UseGuards(JwtGuard, AdminGuard)
-    @Patch('update')
-    updateCategory(id: string,@Body() dto: UpdateCategoryDto) {
+    @Patch(':id')
+    updateCategory(@Param('id') id: string,@Body() dto: UpdateCategoryDto) {
         return this.categoryService.updateCategory(id, dto);
     }
 
     @UseGuards(JwtGuard, AdminGuard)
     @Delete(':id')
-    deleteCategory(@Param() id: string) {
+    deleteCategory(@Param('id') id: string) {
         return this.categoryService.deleteCategory(id)
     }
 }
