@@ -71,6 +71,21 @@ export class AvailabilityService {
       freeRanges.push(...substractRanges(s, e, blockRanges));
     }
 
+    const now = new Date();
+    const isToday = dateUtc.toDateString() === now.toDateString();
+
+    let nowMinutes = 0;
+
+    if (isToday) {
+      nowMinutes = now.getHours() * 60 + now.getMinutes();
+    }
+
+    if( isToday ) {
+      freeRanges = freeRanges
+      .map(([s, e]) => [Math.max(s, nowMinutes), e] as [number, number])
+      .filter(([s, e]) => e - s >= serviceDuration)
+    }
+
     const interval = slotInterval ?? serviceDuration;
     const slots: Array<{
       startMin: number;

@@ -11,10 +11,22 @@ import { AvailabilityService } from 'src/availability/availability.service';
 import { hhmmToMinutes } from 'src/common/utils/time.utils';
 import { localDateToUtc } from 'src/common/utils/date.utils';
 import { BookingStatus, Prisma } from '@prisma/client';
+import { canTransition } from 'src/common/constants/booking-rules';
 
 @Injectable()
 export class BookingService {
   constructor(private prisma: PrismaService, private availability: AvailabilityService) {}
+
+  private assertTransition(
+    current: BookingStatus,
+    next: BookingStatus,
+  ) {
+    if (!canTransition(current, next)) {
+      throw new BadRequestException(
+        `No se puede cambiar el estado de ${current} a ${next}`,
+      );
+    }
+  }
 
   async createBooking(dto: CreateBookingDto, userId?: string) {
 
@@ -45,6 +57,25 @@ export class BookingService {
     const end = start + service.duration
 
     if (start >= end) throw new BadRequestException('Rango de reserva invalido.')
+
+    const MAX_BOOKINGS_PER_DAY = 4;
+    const bookingsCount = await this.prisma.booking.count({
+      where: {
+        date: dateUtc,
+        status: {
+          not: BookingStatus.CANCELLED,
+          in: [BookingStatus.PENDING, BookingStatus.CONFIRMED, BookingStatus.COMPLETED],
+        }
+      }
+    })
+
+    if (bookingsCount >= MAX_BOOKINGS_PER_DAY) {
+  throw new ConflictException(
+    'No hay más cupos disponibles para este día.',
+  );
+}
+
+
 
     const slots = await this.availability.getAvailableSlots(dto.date, service.duration)
 
@@ -89,9 +120,7 @@ async cancelBooking(id: string, userId?: string) {
     throw new NotFoundException('Reserva no encontrada.');
   }
 
-  if (booking.status === BookingStatus.CANCELLED) {
-    throw new BadRequestException('La reserva ya fue cancelada.');
-  }
+  this.assertTransition(booking.status, BookingStatus.CANCELLED);
 
   const bookingDateTime = new Date(booking.date);
   bookingDateTime.setMinutes(
@@ -132,18 +161,42 @@ async cancelBooking(id: string, userId?: string) {
 
   async confirmBooking(id: string) {
     const booking = await this.prisma.booking.findUnique({
-      where: {id}
-    })
-    if(!booking) {
-      throw new BadRequestException('Reserva no encontrada.')
+      where: { id },
+    });
+
+    if (!booking) {
+      throw new NotFoundException('Reserva no encontrada.');
     }
 
+    this.assertTransition(
+      booking.status,
+      BookingStatus.CONFIRMED,
+    );
+
     return this.prisma.booking.update({
-      where: {id},
-      data: {
-        status: 'CONFIRMED'
-      }
-    })
+      where: { id },
+      data: { status: BookingStatus.CONFIRMED },
+    });
+  }
+
+  async completeBooking(id: string) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+    });
+
+    if (!booking) {
+      throw new NotFoundException('Reserva no encontrada.');
+    }
+
+    this.assertTransition(
+      booking.status,
+      BookingStatus.COMPLETED,
+    );
+
+    return this.prisma.booking.update({
+      where: { id },
+      data: { status: BookingStatus.COMPLETED },
+    });
   }
 
   async getByDate(date: string) {
