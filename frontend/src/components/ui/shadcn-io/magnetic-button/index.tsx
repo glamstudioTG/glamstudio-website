@@ -25,7 +25,7 @@ export const MagneticButton = React.forwardRef<
   MagneticButtonProps
 >(
   (
-    { className, particleCount = 11, attractRadius = 60, children, ...props },
+    { className, particleCount = 12, attractRadius = 60, children, ...props },
     ref
   ) => {
     const [isAttracting, setIsAttracting] = useState(false);

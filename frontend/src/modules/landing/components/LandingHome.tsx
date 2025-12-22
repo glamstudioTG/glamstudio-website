@@ -1,9 +1,11 @@
-import HeroSection from "./hero/HeroSection"
+import HeroSection from "./hero/HeroSection";
+import ServiceSection from "./service/ServiceSection";
 
 export default function LandingHome() {
-	return (
-        <>
-            <HeroSection/>
-        </>
-    )
+  return (
+    <>
+      <HeroSection />
+      <ServiceSection />
+    </>
+  );
 }
