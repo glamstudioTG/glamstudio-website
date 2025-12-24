@@ -42,8 +42,8 @@ export default function GallerySection() {
                 px-5 py-2 rounded-full text-sm transition-all
                 ${
                   activeFilter === filter
-                    ? "bg-[#D4AF37] text-black shadow-md"
-                    : "bg-[#FDE68A]/70 text-[#696464] hover:bg-[#D4AF37]"
+                    ? "bg-[#D4AF37] text-black shadow-md cursor-pointer"
+                    : "bg-[#FDE68A]/70 text-[#696464] hover:bg-[#D4AF37] cursor-pointer"
                 }
               `}
             >
@@ -53,7 +53,7 @@ export default function GallerySection() {
         </div>
 
         <div
-          className="grid gap-6 justify-center"
+          className="grid gap-6 justify-center "
           style={{
             gridTemplateColumns: "214px 277px 214px",
             gridTemplateAreas: `

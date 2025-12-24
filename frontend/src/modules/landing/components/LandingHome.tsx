@@ -1,6 +1,7 @@
 import HeroSection from "./hero/HeroSection";
 import ServiceSection from "./service/ServiceSection";
 import GallerySection from "./galery/gallerySection";
+import FormSection from "./form/formSection";
 
 export default function LandingHome() {
   return (
@@ -8,6 +9,7 @@ export default function LandingHome() {
       <HeroSection />
       <ServiceSection />
       <GallerySection />
+      <FormSection />
     </>
   );
 }
