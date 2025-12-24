@@ -8,7 +8,7 @@ export default function FormLegend() {
       <p className="text-sm text-gray-500 mb-2">
         Tu momento de belleza empieza aquí{" "}
       </p>
-      <h2 className="text-4xl md:text-5xl font-mono font-bold mb-6 leading-tight text-black">
+      <h2 className="text-4xl md:text-5xl font-mono mb-6 leading-tight text-black">
         Redefine tu belleza con una cita personalizada
       </h2>
       <p className="text-lg text-gray-700 mb-6">
