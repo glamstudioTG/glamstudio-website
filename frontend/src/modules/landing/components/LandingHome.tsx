@@ -3,6 +3,7 @@ import ServiceSection from "./service/ServiceSection";
 import GallerySection from "./galery/gallerySection";
 import FormSection from "./form/formSection";
 import AboutUsSection from "./aboutUs/AboutUsSection";
+import ContactUsSection from "./contactUs/contactUsSection";
 
 export default function LandingHome() {
   return (
@@ -12,6 +13,7 @@ export default function LandingHome() {
       <GallerySection />
       <FormSection />
       <AboutUsSection />
+      <ContactUsSection />
     </>
   );
 }

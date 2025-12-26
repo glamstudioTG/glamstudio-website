@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${greatVibes.variable} ${merriweather.variable} antialiased`}
+        className={`${greatVibes.variable} ${merriweather.variable} antialiased overflow-x-hidden`}
       >
         {children}
       </body>
