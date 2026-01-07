@@ -3,6 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+body {
+  font-family: var(--font-merriweather), serif;
+  background-color: #fcf5e8;
+}
+
 :root {
   /* Beige background for the whole site */
   --background: oklch(1 0 0);
@@ -136,5 +141,26 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@keyframes goldPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 166, 78, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(212, 166, 78, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 166, 78, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
   }
 }

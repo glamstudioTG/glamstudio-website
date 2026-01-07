@@ -14,4 +14,5 @@ export interface CardServiceProps {
   description: string;
   image: StaticImageData | string;
   framePosition: FramePosition | string;
+  href?: string;
 }

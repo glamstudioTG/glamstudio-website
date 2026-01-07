@@ -9,6 +9,7 @@ export const services = [
   {
     title: "Pestañas",
     price: "Desde $70.000",
+    href: "/services#pestanas",
     description: "Realce de pestañas suave y natural.",
     image: eyelashes,
     framePosition: "top-left",
@@ -16,6 +17,7 @@ export const services = [
   {
     title: "Cejas",
     price: "Desde $25.000",
+    href: "/services#cejas",
     description: "Cejas de aspecto natural diseñadas con arte y precisión.",
     image: eyebrows,
     framePosition: "top-center",
@@ -23,6 +25,7 @@ export const services = [
   {
     title: "Labios",
     price: "Desde $200.000",
+    href: "/services#labios",
     description: "Color sutil, belleza duradera.",
     image: lips,
     framePosition: "top-right",
@@ -30,6 +33,7 @@ export const services = [
   {
     title: "Retoques",
     price: "Desde $25.000",
+    href: "/services#retoques",
     description: "Mantén tu color vibrante y preciso.",
     image: retouching,
     framePosition: "bottom-left",
@@ -44,6 +48,7 @@ export const services = [
   {
     title: "Depilación",
     price: "Desde $7.000",
+    href: "/services#depilacion",
     description: "Mantén tu esencia con una depilación suave.",
     image: depilation,
     framePosition: "bottom-right",

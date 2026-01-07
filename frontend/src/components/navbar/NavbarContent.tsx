@@ -1,0 +1,132 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { User } from "lucide-react";
+import { NAV_ITEMS, SERVICES_ITEMS } from "./header.data";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/src/components/ui/shadcn-io/popover/popover";
+import { useCloseOnScroll } from "./useScrollDirection";
+
+export default function NavbarContent() {
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  useCloseOnScroll(() => {
+    setServicesOpen(false);
+    setProfileOpen(false);
+  });
+
+  return (
+    <nav className="flex items-center gap-10">
+      <Popover open={servicesOpen} onOpenChange={setServicesOpen}>
+        <PopoverTrigger asChild>
+          <button className="text-sm font-medium text-black/80 hover:text-black transition cursor-pointer">
+            Servicios
+          </button>
+        </PopoverTrigger>
+
+        <PopoverContent
+          align="start"
+          sideOffset={12}
+          className="w-56 bg-[#FBF9E6] border-[#D4AF37]/40 rounded-xl p-3"
+        >
+          <ul className="flex flex-col gap-1">
+            {SERVICES_ITEMS.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setServicesOpen(false)}
+                    className="
+                      group flex items-center gap-3
+                      rounded-lg px-3 py-2
+                      text-sm text-black/80
+                      hover:bg-[#D4AF37]/15 hover:text-black
+                      transition-all
+                    "
+                  >
+                    <Icon
+                      size={16}
+                      className="
+                        text-[#D4AF37]
+                        transition-transform duration-200
+                        group-hover:translate-x-0.5
+                      "
+                    />
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </PopoverContent>
+      </Popover>
+
+      {NAV_ITEMS.filter((i) => i.label !== "Servicios").map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          className="text-sm font-medium text-black/80 hover:text-black transition"
+        >
+          {item.label}
+        </Link>
+      ))}
+
+      <Popover open={profileOpen} onOpenChange={setProfileOpen}>
+        <PopoverTrigger asChild>
+          <button
+            className="
+              ml-2 flex items-center justify-center
+              h-9 w-9 rounded-full
+              cursor-pointer
+              border border-[#D4AF37]/40
+              hover:bg-[#D4AF37]/20
+              transition
+            "
+          >
+            <User size={18} className="text-black" />
+          </button>
+        </PopoverTrigger>
+
+        <PopoverContent
+          align="end"
+          sideOffset={12}
+          className="w-44 bg-[#FBF9E6] border-[#D4AF37]/40 p-3 rounded-xl"
+        >
+          <button
+            onClick={() => {
+              setProfileOpen(false);
+            }}
+            className="
+              w-full text-left rounded-md px-3 py-2 text-sm
+              text-black/80 hover:bg-[#D4AF37]/15 hover:text-black
+              transition
+            "
+          >
+            Iniciar sesión
+          </button>
+
+          <button
+            onClick={() => {
+              setProfileOpen(false);
+              console.log("logout");
+            }}
+            className="
+              w-full text-left rounded-md px-3 py-2 text-sm
+              text-black/80 hover:bg-red-500/10 hover:text-red-600
+              transition
+            "
+          >
+            Cerrar sesión
+          </button>
+        </PopoverContent>
+      </Popover>
+    </nav>
+  );
+}

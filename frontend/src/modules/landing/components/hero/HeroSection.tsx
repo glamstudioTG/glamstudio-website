@@ -30,7 +30,7 @@ export default function HeroSection() {
           />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 items-center">
-          <div className="flex flex-col gap-6 max-w-md">
+          <div className="flex flex-col gap-6 max-w-[500] ml-2">
             <span className="text-gray-500 text-sm tracking-wide font-sans">
               Estudio de belleza premium
             </span>
@@ -45,7 +45,7 @@ export default function HeroSection() {
             </p>
 
             <div className="flex items-center gap-10 pt-4">
-              <CornerAccentButton className="cursor-pointer">
+              <CornerAccentButton className="cursor-pointer ">
                 Reserva tu cita
               </CornerAccentButton>
 

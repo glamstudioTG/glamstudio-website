@@ -4,7 +4,10 @@ import Orb from "@/src/components/ui/shadcn-io/bgOrb/Orb";
 
 export default function ServiceSection() {
   return (
-    <section className="relative bg-[#fcf5e8] py-24 overflow-hidden">
+    <section
+      className="relative bg-[#fcf5e8] py-24 overflow-hidden"
+      id="service"
+    >
       <div className="absolute left-0 top-[65%] w-full h-1/2 -translate-y-1/2 z-0 pointer-events-none">
         <Orb
           hue={12}

@@ -3,8 +3,10 @@ import meImage from "@/public/images/landing/4763f4ea1c606ab46ca79652a645a336 2.
 
 export default function AboutUsSection() {
   return (
-    <section className="relative bg-[#FFEFD3] py-24 px-4 overflow-hidden">
-      {/* DEGRADADO SUPERIOR (fondo del section) */}
+    <section
+      className="relative bg-[#FFEFD3] py-24 px-4 overflow-hidden"
+      id="about"
+    >
       <div
         className="
           absolute top-0 left-0 w-full h-48 z-0 pointer-events-none
@@ -15,7 +17,6 @@ export default function AboutUsSection() {
         "
       />
 
-      {/* DEGRADADO INFERIOR (fondo del section) */}
       <div
         className="
           absolute bottom-0 left-0 w-full h-48 z-0 pointer-events-none
@@ -26,7 +27,6 @@ export default function AboutUsSection() {
         "
       />
 
-      {/* CONTENIDO */}
       <div className="relative z-10 max-w-280.5 mx-auto border-2 border-[#C2A85D] rounded-xl px-8 py-16">
         <h2 className="text-center font-mono text-3xl md:text-5xl text-black mb-16 max-w-130 mx-auto">
           La historia detrás de GlamStudio

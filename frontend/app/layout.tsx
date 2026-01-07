@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Great_Vibes, Merriweather } from "next/font/google";
 import "../src/style/globals.css";
 import Footer from "@/src/components/footer/Footer";
+import Navbar from "@/src/components/navbar/Navbar";
 
 const greatVibes = Great_Vibes({
   subsets: ["latin"],
@@ -31,8 +32,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${greatVibes.variable} ${merriweather.variable} antialiased overflow-x-hidden bg-[#FFEFD3]`}
+        className={`${greatVibes.variable} ${merriweather.variable} antialiased overflow-x-hidden bg-[#FFEFD3] `}
       >
+        <Navbar />
         {children}
         <Footer />
       </body>

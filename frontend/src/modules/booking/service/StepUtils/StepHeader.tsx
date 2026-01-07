@@ -1,0 +1,24 @@
+import { Sparkles } from "lucide-react";
+import { LucideIcon } from "lucide-react";
+
+type StepHeaderProps = {
+  title: string;
+  step: number;
+  icon: LucideIcon;
+};
+
+export default function StepHeader({
+  title,
+  step,
+  icon: Icon,
+}: StepHeaderProps) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex flex-row gap-3">
+        <Icon size={30} className="text-[#D4A64E]" />
+        <h2 className="text-black text-4xl font-mono">{title}</h2>
+      </div>
+      <span className="text-sm text-black/60">Paso {step} de 4</span>
+    </div>
+  );
+}

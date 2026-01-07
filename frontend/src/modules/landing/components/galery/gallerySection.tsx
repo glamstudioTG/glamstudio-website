@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Silk from "@/src/components/ui/shadcn-io/bgSlig/Silk";
 
 import galleryItems from "./gallery.data";
 import { buildGallery } from "../../service/gallery/gallery.utils";
@@ -24,7 +23,10 @@ export default function GallerySection() {
   const gallery = buildGallery(galleryItems, activeFilter);
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#FFEFD3]">
+    <section
+      className="relative min-h-screen overflow-hidden bg-[#FFEFD3]"
+      id="gallery"
+    >
       <div
         className="
   absolute top-0 left-0 w-full h-68 pointer-events-none

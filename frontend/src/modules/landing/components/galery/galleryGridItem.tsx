@@ -18,7 +18,6 @@ export function GalleryGridItem({ item, area, framePosition, size }: Props) {
       className="group relative"
       style={{ gridArea: area, width: size.width }}
     >
-      {/* Aura */}
       <div
         className="
         absolute inset-0 z-0 rounded-xl
@@ -29,7 +28,6 @@ export function GalleryGridItem({ item, area, framePosition, size }: Props) {
       "
       />
 
-      {/* Marco */}
       <div
         className={`
         absolute inset-0 z-10 rounded-xl border border-[#D4AF37]
@@ -39,7 +37,6 @@ export function GalleryGridItem({ item, area, framePosition, size }: Props) {
       `}
       />
 
-      {/* Imagen */}
       <div
         className="relative z-20 overflow-hidden rounded-xl bg-white"
         style={{ height: size.height }}

@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function FormSection() {
   return (
-    <section className=" relative py-24 bg-[#fcf5e8] h-250 ">
+    <section className=" relative py-24 bg-[#fcf5e8] h-250 " id="form">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start h-120">
           <FormLegend />
