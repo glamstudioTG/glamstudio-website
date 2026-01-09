@@ -11,6 +11,7 @@ import { BusinessHoursModule } from './business-hours/business-hours.module';
 import { ScheduleBlockModule } from './schedule-block/schedule-block.module';
 import { OverrideHoursModule } from './override-hours/override-hours.module';
 import { AvailabilityModule } from './availability/availability.module';
+import { WorkerModule } from './worker/worker.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { AvailabilityModule } from './availability/availability.module';
     BusinessHoursModule,
     ScheduleBlockModule,
     OverrideHoursModule,
-    AvailabilityModule
+    AvailabilityModule,
+    WorkerModule,
   ],
 })
 export class AppModule {}

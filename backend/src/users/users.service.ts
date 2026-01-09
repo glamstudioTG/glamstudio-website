@@ -67,7 +67,7 @@ export class UserService {
       throw new BadRequestException('Usuario no encontrado');
     }
 
-    const user = this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { id: userId },
       data: {
         role: dto.role,

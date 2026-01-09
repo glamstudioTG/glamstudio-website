@@ -59,6 +59,7 @@ model Worker {
   user   User   @relation(fields: [userId], references: [id])
 
   isActive Boolean @default(true)
+  deactivatedAt DateTime?
   bio      String?
   avatar   String?
 
