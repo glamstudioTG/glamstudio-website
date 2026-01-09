@@ -1,28 +1,39 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
-import { scheduleBlockService } from "./schedule-block.service";
-import { CreateScheduleBlockDto } from "./dto/create-schedule-block.dto";
-import { JwtGuard } from "src/auth/guards/jwt-auth.guard"; 
-import { AdminGuard } from "src/auth/guards/admin.guard";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ScheduleBlockService } from './schedule-block.service';
+import { CreateScheduleBlockDto } from './dto/create-schedule-block.dto';
+import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
 
-@Controller('admin/schedule-blocks')
+@Controller('workers/:workerId/schedule-blocks')
+@UseGuards(JwtGuard)
 export class ScheduleBlockController {
-    constructor(private service: scheduleBlockService) {}
- 
-  @UseGuards(JwtGuard, AdminGuard)
+  constructor(private service: ScheduleBlockService) {}
+
   @Post()
-  create(@Body() dto: CreateScheduleBlockDto) {
-    return this.service.create(dto);
+  @UseGuards(AdminOrWorkerGuard)
+  create(
+    @Param('workerId') workerId: string,
+    @Body() dto: CreateScheduleBlockDto,
+  ) {
+    return this.service.create(dto, workerId);
   }
 
-  @UseGuards(JwtGuard, AdminGuard)
   @Get(':date')
-  getByDate(@Param('date') date: string) {
-    return this.service.getByDate(date);
+  getByDate(@Param('workerId') workerId: string, @Param('date') date: string) {
+    return this.service.getByDate(workerId, date);
   }
 
-  @UseGuards(JwtGuard, AdminGuard)
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.service.delete(id);
+  @UseGuards(AdminOrWorkerGuard)
+  delete(@Param('workerId') workerId: string, @Param('id') id: string) {
+    return this.service.delete(workerId, id);
   }
 }
