@@ -1,29 +1,37 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
-import { OverrideHoursService } from "./override-hours.service";
-import { CreateOverrideHoursDto } from "./dto/create-override-hours.dto";
-import { JwtGuard } from "src/auth/guards/jwt-auth.guard"; 
-import { AdminGuard } from "src/auth/guards/admin.guard";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { OverrideHoursService } from './override-hours.service';
+import { CreateOverrideHoursDto } from './dto/create-override-hours.dto';
+import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
 
-@Controller('admin/override-hours')
+@Controller('workers/:workerId/override-hours')
 export class OverrideHoursController {
-    constructor (private service: OverrideHoursService) {}
+  constructor(private service: OverrideHoursService) {}
 
-    @UseGuards(JwtGuard, AdminGuard)
-    @Post()
-    create(@Body() dto: CreateOverrideHoursDto) {
-        return this.service.create(dto);
-    }
+  @Post()
+  @UseGuards(AdminOrWorkerGuard)
+  create(
+    @Param('workerId') workerId: string,
+    @Body() dto: CreateOverrideHoursDto,
+  ) {
+    return this.service.create(workerId, dto);
+  }
 
-    @UseGuards(JwtGuard, AdminGuard)
-    @Get(':date')
-    getByDate(@Param('date') date: string) {
-        return this.service.getByDate(date);
-    }
+  @Get(':date')
+  getByDate(@Param('workerId') workerId: string, @Param('date') date: string) {
+    return this.service.getByDate(workerId, date);
+  }
 
-    @UseGuards(JwtGuard, AdminGuard)
-    @Delete(':id')
-    delete(@Param('id') id: string) {
-        return this.service.delete(id);
-    }
-
+  @Delete(':id')
+  @UseGuards(AdminOrWorkerGuard)
+  delete(@Param('workerId') workerId: string, @Param('id') id: string) {
+    return this.service.delete(workerId, id);
+  }
 }
