@@ -16,7 +16,7 @@ datasource db {
 
 enum Role {
   CLIENT
-  LASHIST
+  WORKER
   ADMIN
 }
 
@@ -46,23 +46,23 @@ model User {
   role     Role    @default(CLIENT)
 
   bookings Booking[]
-  lashist  Lashist?
+  worker Worker?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Lashist {
+model Worker {
   id String @id @default(uuid())
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
   isActive Boolean @default(true)
-  bio      String
-  avatar   String
+  bio      String?
+  avatar   String?
 
-  categories    LashistCategory[]
+  categories    WorkerCategory[]
   businessHours BusinessHours[]
   blocks        ScheduleBlock[]
   bookings      Booking[]
@@ -72,15 +72,15 @@ model Lashist {
   updatedAt DateTime @updatedAt
 }
 
-model LashistCategory {
+model WorkerCategory {
   id         String @id @default(uuid())
-  lashistId  String
+  workerId  String
   categoryId String
 
-  lashist  Lashist  @relation(fields: [lashistId], references: [id])
+  worker  Worker  @relation(fields: [workerId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
 
-  @@unique([lashistId, categoryId])
+  @@unique([workerId, categoryId])
 }
 
 model Service {
@@ -89,6 +89,7 @@ model Service {
   description String?
   duration    Int
   price       Float
+  image       String?
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
@@ -105,7 +106,7 @@ model Category {
   image String?
 
   services          Service[]
-  lashistCategories LashistCategory[]
+  workerCategories WorkerCategory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -117,8 +118,8 @@ model Booking {
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
 
-  lashistId String
-  lashist   Lashist @relation(fields: [lashistId], references: [id])
+  workerId String
+  worker   Worker @relation(fields: [workerId], references: [id])
 
   guestName  String?
   guestEmail String?
@@ -140,7 +141,7 @@ model Booking {
 
   @@index([date, startTime])
   @@index([date, endTime])
-  @@index([lashistId, date, startTime])
+  @@index([workerId, date, startTime])
 }
 
 model TransactionProof {
@@ -161,14 +162,14 @@ model ScheduleBlock {
   endTime   Int?
   reason    String?
 
-  lashistId String?
-  lashist   Lashist? @relation(fields: [lashistId], references: [id])
+  workerId String?
+  worker   Worker? @relation(fields: [workerId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([date, startTime])
-  @@index([lashistId, date])
+  @@index([workerId, date])
 }
 
 model BusinessHours {
@@ -177,14 +178,14 @@ model BusinessHours {
   startTime Int
   endTime   Int
 
-  lashistId String
-  lashist   Lashist @relation(fields: [lashistId], references: [id])
+  workerId String
+  worker   Worker @relation(fields: [workerId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([lashistId, day])
-  @@index([lashistId, day])
+  @@unique([workerId, day])
+  @@index([workerId, day])
   @@index([day, startTime])
   @@index([day, endTime])
 }
@@ -195,8 +196,8 @@ model OverrideHours {
   startTime Int
   endTime   Int
 
-  lashistId String?
-  lashist   Lashist? @relation(fields: [lashistId], references: [id])
+  workerId String?
+  worker   Worker? @relation(fields: [workerId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

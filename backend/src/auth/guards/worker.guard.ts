@@ -8,8 +8,8 @@ import { AuthUser } from '../types/auth-user.type';
 import { Role } from '@prisma/client';
 
 @Injectable()
-export class AdminGuard implements CanActivate {
-    canActivate(context: ExecutionContext): boolean {
+export class WorkerGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest();
     const user: AuthUser | undefined = req.user;
 
@@ -17,9 +17,9 @@ export class AdminGuard implements CanActivate {
       throw new ForbiddenException('Usuario no autenticado.');
     }
 
-    if (user.role !== Role.ADMIN) {
+    if (user.role !== Role.WORKER) {
       throw new ForbiddenException(
-        'Acceso denegado. Solo administradores pueden realizar esta acción.',
+        'Acceso denegado. Solo trabajadores pueden realizar esta acción.',
       );
     }
 
