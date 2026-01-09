@@ -42,7 +42,7 @@ export class WorkerService {
     return worker;
   }
 
-  async updateWorker(workerId: string, categoryIds: string[]) {
+  async updateWorkerCategories(workerId: string, categoryIds: string[]) {
     const worker = await this.prisma.worker.findUnique({
       where: { id: workerId },
     });

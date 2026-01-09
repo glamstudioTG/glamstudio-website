@@ -1,45 +1,57 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
-import { BusinessHoursService } from "./business-hours.service";
-import { CreateBusinessHoursDto } from "./dto/create-business-hours.dto";
-import { DayOfWeek } from "@prisma/client";
-import { JwtGuard } from "src/auth/guards/jwt-auth.guard";
-import { AdminGuard } from "src/auth/guards/admin.guard";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { BusinessHoursService } from './business-hours.service';
+import { CreateBusinessHoursDto } from './dto/create-business-hours.dto';
+import { DayOfWeek } from '@prisma/client';
+import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { WorkerGuard } from 'src/auth/guards/worker.guard';
+import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
 
-@Controller('admin/business-hours')
+@Controller('workers/:workerId/business-hours')
 export class BusinessHoursController {
-  constructor (private service: BusinessHoursService) {}
+  constructor(private service: BusinessHoursService) {}
 
-  @UseGuards(JwtGuard, AdminGuard)
+  @UseGuards(JwtGuard, AdminOrWorkerGuard)
   @Post()
-  create(@Body() dto: CreateBusinessHoursDto) {
-    return this.service.create(dto);
+  create(
+    @Body() dto: CreateBusinessHoursDto,
+    @Param('workerId') workerId: string,
+  ) {
+    return this.service.create(workerId, dto);
   }
 
-  @UseGuards(JwtGuard, AdminGuard)
   @Get()
-  getAll() {
-    return this.service.getAll();
+  getByWorker(@Param('workerId') workerId: string) {
+    return this.service.getByWorker(workerId);
   }
 
-  @UseGuards(JwtGuard, AdminGuard)
-  @Get(':day')
-  getByDay(@Param('day') day: DayOfWeek) {
-    return this.service.getByDay(day);
+  @Get('day/:day')
+  getByDay(@Param('day') day: DayOfWeek, @Param('workerId') workerId: string) {
+    return this.service.getByDay(workerId, day);
   }
 
-  @UseGuards(JwtGuard, AdminGuard)
+  @UseGuards(JwtGuard, AdminOrWorkerGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() dto: Partial<CreateBusinessHoursDto>,
+    @Param('workerId') workerId: string,
   ) {
-    return this.service.update(id, dto);
+    return this.service.update(id, workerId, dto);
   }
 
-  @UseGuards(JwtGuard, AdminGuard)
+  @UseGuards(JwtGuard, AdminOrWorkerGuard)
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.service.delete(id);
+  delete(@Param('id') id: string, @Param('workerId') workerId: string) {
+    return this.service.delete(id, workerId);
   }
-
 }
