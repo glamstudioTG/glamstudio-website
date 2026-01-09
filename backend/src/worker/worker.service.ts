@@ -43,16 +43,28 @@ export class WorkerService {
   }
 
   async updateWorker(workerId: string, categoryIds: string[]) {
+    const worker = await this.prisma.worker.findUnique({
+      where: { id: workerId },
+    });
+
+    if (!worker) {
+      throw new NotFoundException('Worker no encontrado');
+    }
+
     await this.prisma.workerCategory.deleteMany({
       where: { workerId },
     });
 
-    await this.prisma.workerCategory.createMany({
-      data: categoryIds.map((categoryId) => ({
-        workerId,
-        categoryId,
-      })),
-    });
+    if (categoryIds.length > 0) {
+      await this.prisma.workerCategory.createMany({
+        data: categoryIds.map((categoryId) => ({
+          workerId,
+          categoryId,
+        })),
+      });
+    }
+
+    return { ok: true };
   }
 
   async deactivate(workerId: string) {

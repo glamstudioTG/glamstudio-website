@@ -32,7 +32,7 @@ export class WorkerController {
     @Param('id') id: string,
     @Body() body: { categoryIds: string[] },
   ) {
-    return this.service.updateWorker(id, body.categoryIds);
+    return this.service.updateWorkerCategories(id, body.categoryIds);
   }
 
   @UseGuards(JwtGuard, AdminGuard)

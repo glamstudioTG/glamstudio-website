@@ -1,51 +1,64 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
-import { ServicesService } from "./services.service";
-import { CreateServiceDto } from "./dto/create-service.dto";
-import { JwtGuard } from "src/auth/guards/jwt-auth.guard";
-import { AdminGuard } from "src/auth/guards/admin.guard";
-import { UpdateServiceDto } from "./dto/update-service.dto";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ServicesService } from './services.service';
+import { CreateServiceDto } from './dto/create-service.dto';
+import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { UpdateServiceDto } from './dto/update-service.dto';
 
 @Controller('services')
 export class ServicesController {
+  constructor(private serviceService: ServicesService) {}
 
-    constructor(private serviceService: ServicesService) {}
+  @Get('category/:id')
+  getServiceByCategory(@Param('id') id: string) {
+    return this.serviceService.getServiceByCategory(id);
+  }
 
-    @Get('category/:id')
-    getServiceByCategory(@Param('id') id: string){
-        return this.serviceService.getServiceByCategory(id)
-    }
+  @Get()
+  getServices() {
+    return this.serviceService.getServices();
+  }
 
-    @Get()
-    getServices(){
-        return this.serviceService.getServices()
-    }
+  @Get(':id')
+  getServiceById(@Param('id') id: string) {
+    return this.serviceService.getServicesById(id);
+  }
 
+  @Get('worker/:workerId')
+  getServiceByWorker(@Param('workerId') workerId: string) {
+    return this.serviceService.getServiceByWorker(workerId);
+  }
 
-    @Get(':id')
-    getServiceById(@Param('id') id:string){
-        return this.serviceService.getServicesById(id)
-    }
-
-
-    @UseGuards(JwtGuard, AdminGuard)
-    @Post(':categoryId')
-    createService(
+  @UseGuards(JwtGuard, AdminGuard)
+  @Post(':categoryId')
+  createService(
     @Param('categoryId') categoryId: string,
-    @Body() dto: CreateServiceDto
-) {
+    @Body() dto: CreateServiceDto,
+  ) {
     return this.serviceService.createServices(categoryId, dto);
-}
+  }
 
-    @UseGuards(JwtGuard, AdminGuard)
-    @Patch(':id')
-    updateService(@Param('id') id: string, @Body() dto: Partial<UpdateServiceDto>){
-        return this.serviceService.updateService(id, dto)
-    }
+  @UseGuards(JwtGuard, AdminGuard)
+  @Patch(':id')
+  updateService(
+    @Param('id') id: string,
+    @Body() dto: Partial<UpdateServiceDto>,
+  ) {
+    return this.serviceService.updateService(id, dto);
+  }
 
-    @UseGuards(JwtGuard, AdminGuard)
-    @Delete(':id')
-    deleteService(@Param('id') id: string){
-        return this.serviceService.deleteService(id)
-    }
-
+  @UseGuards(JwtGuard, AdminGuard)
+  @Delete(':id')
+  deleteService(@Param('id') id: string) {
+    return this.serviceService.deleteService(id);
+  }
 }
