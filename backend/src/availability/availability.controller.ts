@@ -1,17 +1,15 @@
-import { Controller, Get, Query } from "@nestjs/common";
-import { AvailabilityService } from "./availability.service";
-import { da } from "date-fns/locale";
+import { Controller, Get, Query } from '@nestjs/common';
+import { AvailabilityService } from './availability.service';
 
-
-
-@Controller('availability')
+@Controller('workers/:workerId/availability')
 export class AvailabilityController {
-    constructor(private service: AvailabilityService) {}
-    @Get()
-    getSlots (
-        @Query('date') date: string,
-        @Query('serviceDuration') duration: number,
-    ) {
-        return this.service.getAvailableSlots(date, duration)
-    }
+  constructor(private service: AvailabilityService) {}
+  @Get()
+  getSlots(
+    @Query('date') date: string,
+    @Query('serviceDuration') duration: number,
+    @Query('workerId') workerId: string,
+  ) {
+    return this.service.getAvailableSlots(workerId, date, Number(duration));
+  }
 }

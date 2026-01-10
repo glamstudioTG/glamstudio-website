@@ -1,54 +1,57 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
-import { minutesToHhmm } from "src/common/utils/time.utils";
-import { substractRanges } from "src/common/utils/substractRanges";
-import { localDateToUtc } from "src/common/utils/date.utils";
-import { getDayOfWeekEnum } from "src/common/utils/day-of-week";
-
-
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { minutesToHhmm } from 'src/common/utils/time.utils';
+import { substractRanges } from 'src/common/utils/substractRanges';
+import { localDateToUtc } from 'src/common/utils/date.utils';
+import { getDayOfWeekEnum } from 'src/common/utils/day-of-week';
 
 @Injectable()
 export class AvailabilityService {
   constructor(private prisma: PrismaService) {}
 
   async getAvailableSlots(
+    workerId: string,
     dateStr: string,
     serviceDuration: number,
-    slotInterval?: number
+    slotInterval?: number,
   ) {
     const dateUtc = localDateToUtc(dateStr);
     const dayOfWeek = getDayOfWeekEnum(dateUtc);
 
-    const blocks = await this.prisma.scheduleBlock.findMany({
-      where: { date: dateUtc },
+    const GlobalBlocks = await this.prisma.scheduleBlock.findMany({
+      where: { workerId: null, date: dateUtc },
     });
 
-    if (blocks.some(b => b.startTime == null && b.endTime == null)) {
+    if (GlobalBlocks.some((b) => b.startTime == null && b.endTime == null)) {
       return [];
     }
 
-    const overrides = await this.prisma.overrideHours.findMany({
-      where: { date: dateUtc },
+    const workerBlocks = await this.prisma.scheduleBlock.findMany({
+      where: { workerId, date: dateUtc },
+    });
+
+    const overrides = await this.prisma.overrideHours.findFirst({
+      where: { workerId, date: dateUtc },
     });
 
     let baseRanges: Array<[number, number]> = [];
 
-    if (overrides.length > 0) {
-      baseRanges = overrides.map(o => [o.startTime, o.endTime]);
+    if (overrides) {
+      baseRanges = [[overrides.startTime, overrides.endTime]];
     } else {
       const businessHours = await this.prisma.businessHours.findMany({
-        where: { day: dayOfWeek },
+        where: { workerId, day: dayOfWeek },
         orderBy: { startTime: 'asc' },
       });
 
-      baseRanges = businessHours.map(b => [b.startTime, b.endTime]);
+      baseRanges = businessHours.map((b) => [b.startTime, b.endTime]);
     }
 
     if (baseRanges.length === 0) return [];
 
     const blockRanges: Array<[number, number]> = [];
 
-    for (const b of blocks) {
+    for (const b of [...GlobalBlocks, ...workerBlocks]) {
       if (b.startTime != null && b.endTime != null) {
         blockRanges.push([b.startTime, b.endTime]);
       }
@@ -80,10 +83,10 @@ export class AvailabilityService {
       nowMinutes = now.getHours() * 60 + now.getMinutes();
     }
 
-    if( isToday ) {
+    if (isToday) {
       freeRanges = freeRanges
-      .map(([s, e]) => [Math.max(s, nowMinutes), e] as [number, number])
-      .filter(([s, e]) => e - s >= serviceDuration)
+        .map(([s, e]) => [Math.max(s, nowMinutes), e] as [number, number])
+        .filter(([s, e]) => e - s >= serviceDuration);
     }
 
     const interval = slotInterval ?? serviceDuration;
