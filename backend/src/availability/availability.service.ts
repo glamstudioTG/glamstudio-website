@@ -4,6 +4,7 @@ import { minutesToHhmm } from 'src/common/utils/time.utils';
 import { substractRanges } from 'src/common/utils/substractRanges';
 import { localDateToUtc } from 'src/common/utils/date.utils';
 import { getDayOfWeekEnum } from 'src/common/utils/day-of-week';
+import { BookingStatus } from '@prisma/client';
 
 @Injectable()
 export class AvailabilityService {
@@ -12,7 +13,7 @@ export class AvailabilityService {
   async getAvailableSlots(
     workerId: string,
     dateStr: string,
-    serviceDuration: number,
+    totalDuration: number,
     slotInterval?: number,
   ) {
     const dateUtc = localDateToUtc(dateStr);
@@ -58,7 +59,18 @@ export class AvailabilityService {
     }
 
     const bookings = await this.prisma.booking.findMany({
-      where: { date: dateUtc },
+      where: {
+        workerId,
+        date: dateUtc,
+        status: {
+          in: [
+            BookingStatus.PENDING_REVIEW,
+            BookingStatus.CONFIRMED,
+            BookingStatus.COMPLETED,
+          ],
+        },
+      },
+
       select: { startTime: true, endTime: true },
     });
 
@@ -86,10 +98,10 @@ export class AvailabilityService {
     if (isToday) {
       freeRanges = freeRanges
         .map(([s, e]) => [Math.max(s, nowMinutes), e] as [number, number])
-        .filter(([s, e]) => e - s >= serviceDuration);
+        .filter(([s, e]) => e - s >= totalDuration);
     }
 
-    const interval = slotInterval ?? serviceDuration;
+    const interval = slotInterval ?? totalDuration;
     const slots: Array<{
       startMin: number;
       endMin: number;
@@ -99,12 +111,12 @@ export class AvailabilityService {
 
     for (const [fs, fe] of freeRanges) {
       let cursor = fs;
-      while (cursor + serviceDuration <= fe) {
+      while (cursor + totalDuration <= fe) {
         slots.push({
           startMin: cursor,
-          endMin: cursor + serviceDuration,
+          endMin: cursor + totalDuration,
           start: minutesToHhmm(cursor),
-          end: minutesToHhmm(cursor + serviceDuration),
+          end: minutesToHhmm(cursor + totalDuration),
         });
         cursor += interval;
       }

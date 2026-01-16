@@ -4,10 +4,13 @@ import {
   IsDateString,
   IsEmail,
   IsPhoneNumber,
-  ValidateIf
+  IsArray,
 } from 'class-validator';
 
 export class CreateBookingDto {
+  @IsOptional()
+  workerId: string;
+
   @IsOptional()
   @IsString()
   name?: string;
@@ -21,7 +24,8 @@ export class CreateBookingDto {
   phone?: string;
 
   @IsString()
-  serviceId: string;
+  @IsArray()
+  serviceIds: string[];
 
   @IsDateString()
   date: string;

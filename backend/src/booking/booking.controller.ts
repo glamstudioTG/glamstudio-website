@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Post, Param, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -6,6 +14,7 @@ import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import type { JwtUserPayload } from 'src/auth/decorator/current-user.decorator';
 import { OptionalJwtGuard } from 'src/auth/guards/optional-jwt.guard';
+import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
 
 @Controller('/booking')
 export class BookingController {
@@ -13,7 +22,7 @@ export class BookingController {
 
   @UseGuards(OptionalJwtGuard)
   @Post()
-  create(@Body() dto: CreateBookingDto, @CurrentUser() user?: JwtUserPayload,) {
+  create(@Body() dto: CreateBookingDto, @CurrentUser() user?: JwtUserPayload) {
     return this.bookingService.createBooking(dto, user?.sub);
   }
 
@@ -23,7 +32,7 @@ export class BookingController {
     return this.bookingService.cancelBooking(id, user?.sub);
   }
 
-  @UseGuards(JwtGuard, AdminGuard)
+  @UseGuards(JwtGuard, AdminOrWorkerGuard)
   @Patch(':id/confirm')
   confirm(@Param('id') id: string) {
     return this.bookingService.confirmBooking(id);

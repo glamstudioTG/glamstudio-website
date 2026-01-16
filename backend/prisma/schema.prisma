@@ -21,10 +21,17 @@ enum Role {
 }
 
 enum BookingStatus {
-  PENDING
+  PENDING_PAYMENT
+  PENDING_REVIEW
   CONFIRMED
   CANCELLED
   COMPLETED
+}
+
+enum TransactionStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum DayOfWeek {
@@ -46,7 +53,7 @@ model User {
   role     Role    @default(CLIENT)
 
   bookings Booking[]
-  worker Worker?
+  worker   Worker?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -58,10 +65,10 @@ model Worker {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
-  isActive Boolean @default(true)
+  isActive      Boolean   @default(true)
   deactivatedAt DateTime?
-  bio      String?
-  avatar   String?
+  bio           String?
+  avatar        String?
 
   categories    WorkerCategory[]
   businessHours BusinessHours[]
@@ -75,10 +82,10 @@ model Worker {
 
 model WorkerCategory {
   id         String @id @default(uuid())
-  workerId  String
+  workerId   String
   categoryId String
 
-  worker  Worker  @relation(fields: [workerId], references: [id])
+  worker   Worker   @relation(fields: [workerId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
 
   @@unique([workerId, categoryId])
@@ -97,8 +104,9 @@ model Service {
 
   bookings Booking[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  BookingService BookingService[]
 }
 
 model Category {
@@ -106,7 +114,7 @@ model Category {
   name  String  @unique
   image String?
 
-  services          Service[]
+  services         Service[]
   workerCategories WorkerCategory[]
 
   createdAt DateTime @default(now())
@@ -119,30 +127,48 @@ model Booking {
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
 
-  workerId String
-  worker   Worker @relation(fields: [workerId], references: [id])
-
   guestName  String?
   guestEmail String?
   guestPhone String?
 
-  serviceId String
-  service   Service @relation(fields: [serviceId], references: [id])
+  totalDuration Int
+
+  workerId String
+  worker   Worker @relation(fields: [workerId], references: [id])
+
+  service           BookingService[]
+  transactionProofs TransactionProof[]
 
   date      DateTime
   startTime Int
   endTime   Int
 
-  status  BookingStatus @default(PENDING)
+  status  BookingStatus @default(PENDING_PAYMENT)
   comment String?
 
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  transactionProofs TransactionProof[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Service   Service? @relation(fields: [serviceId], references: [id])
+  serviceId String?
 
   @@index([date, startTime])
   @@index([date, endTime])
   @@index([workerId, date, startTime])
+}
+
+model BookingService {
+  id String @id @default(uuid())
+
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id])
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  duration Int
+  price   Float?
+
+  @@unique([bookingId, serviceId])
 }
 
 model TransactionProof {
@@ -151,6 +177,10 @@ model TransactionProof {
 
   bookingId String
   booking   Booking @relation(fields: [bookingId], references: [id])
+
+  status TransactionStatus @default(PENDING)
+  reviewedAt DateTime?
+  reviewedBy String?
 
   uploadedAt DateTime @default(now())
 }
