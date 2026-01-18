@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 
 import { PrismaModule } from './prisma/prisma.module';
@@ -12,6 +13,7 @@ import { ScheduleBlockModule } from './schedule-block/schedule-block.module';
 import { OverrideHoursModule } from './override-hours/override-hours.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { WorkerModule } from './worker/worker.module';
+import { TransactionProofModule } from './transaction-proof/transaction-proof.module';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { WorkerModule } from './worker/worker.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ScheduleModule.forRoot(),
 
     PrismaModule,
 
@@ -32,6 +35,7 @@ import { WorkerModule } from './worker/worker.module';
     OverrideHoursModule,
     AvailabilityModule,
     WorkerModule,
+    TransactionProofModule,
   ],
 })
 export class AppModule {}
