@@ -7,8 +7,6 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AvailabilityService } from 'src/availability/availability.service';
 import { BookingStatus, TransactionStatus } from '@prisma/client';
-import { ReviewTransactionProofDto } from './dto/review-transaction-proof.dto';
-import { UploadTransactionProofDto } from './dto/upload-transaction-proof.dto';
 
 @Injectable()
 export class TransactionProofService {

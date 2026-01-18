@@ -14,6 +14,9 @@ import { OverrideHoursModule } from './override-hours/override-hours.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { WorkerModule } from './worker/worker.module';
 import { TransactionProofModule } from './transaction-proof/transaction-proof.module';
+import { BookingExpirationModule } from './booking-expiration/booking-expiration.module';
+import { BookingCleanupModule } from './booking-cleanup/booking-cleanup.module';
+import { BookingCompletionModule } from './booking-completion/booking-completion.module';
 
 @Module({
   imports: [
@@ -24,6 +27,10 @@ import { TransactionProofModule } from './transaction-proof/transaction-proof.mo
     ScheduleModule.forRoot(),
 
     PrismaModule,
+
+    BookingExpirationModule,
+    BookingCleanupModule,
+    BookingCompletionModule,
 
     BookingModule,
     ServicesModule,
