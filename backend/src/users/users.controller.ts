@@ -23,7 +23,7 @@ export class UsersController {
   @UseGuards(JwtGuard)
   @Get('/me')
   getMyProfile(@CurrentUser() user: AuthUser) {
-    return this.userService.getProfile(user.id);
+    return this.userService.getProfile(user.sub);
   }
 
   @UseGuards(JwtGuard, AdminGuard)
@@ -35,16 +35,12 @@ export class UsersController {
   @UseGuards(JwtGuard)
   @Patch('me/update')
   updateMyProfile(@CurrentUser() user: AuthUser, @Body() dto: UpdateUserDto) {
-    return this.userService.updateProfile(user.id, dto);
+    return this.userService.updateProfile(user.sub, dto);
   }
 
   @UseGuards(JwtGuard, AdminGuard)
   @Patch('admin/users/:id/role')
-  changeUserRole(
-    @Param('id') userId: string,
-    @Body() dto: ChangeUserRoleDto,
-    @Req() req,
-  ) {
+  changeUserRole(@Param('id') userId: string, @Body() dto: ChangeUserRoleDto) {
     return this.userService.changeUserRole(userId, dto);
   }
 }
