@@ -146,6 +146,8 @@ model Booking {
   status  BookingStatus @default(PENDING_PAYMENT)
   comment String?
 
+  calendarEventId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Service   Service? @relation(fields: [serviceId], references: [id])

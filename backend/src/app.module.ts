@@ -17,7 +17,7 @@ import { TransactionProofModule } from './transaction-proof/transaction-proof.mo
 import { BookingExpirationModule } from './booking-expiration/booking-expiration.module';
 import { BookingCleanupModule } from './booking-cleanup/booking-cleanup.module';
 import { BookingCompletionModule } from './booking-completion/booking-completion.module';
-
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,6 +25,7 @@ import { BookingCompletionModule } from './booking-completion/booking-completion
       envFilePath: '.env',
     }),
     ScheduleModule.forRoot(),
+    EventEmitterModule.forRoot(),
 
     PrismaModule,
 

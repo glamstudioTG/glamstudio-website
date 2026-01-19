@@ -4,6 +4,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Events } from 'src/events/events';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AvailabilityService } from 'src/availability/availability.service';
 import { BookingStatus, TransactionStatus } from '@prisma/client';
@@ -13,6 +15,7 @@ export class TransactionProofService {
   constructor(
     private prisma: PrismaService,
     private availability: AvailabilityService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async uploadProof(bookingId: string, imageUrl: string) {
@@ -110,6 +113,16 @@ export class TransactionProofService {
         where: { id: proof.bookingId },
         data: { status: bookingNextStatus },
       });
+
+      if (status === TransactionStatus.APPROVED) {
+        this.eventEmitter.emit(Events.TRANSACTION_APPROVED, {
+          bookingId: proof?.bookingId,
+        });
+      } else {
+        this.eventEmitter.emit(Events.TRANSACTION_REJECTED, {
+          bookingId: proof?.bookingId,
+        });
+      }
 
       return { success: true };
     });

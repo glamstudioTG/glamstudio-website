@@ -12,12 +12,15 @@ import { hhmmToMinutes } from 'src/common/utils/time.utils';
 import { localDateToUtc } from 'src/common/utils/date.utils';
 import { BookingStatus, Prisma } from '@prisma/client';
 import { canTransition } from 'src/common/constants/booking-rules';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Events } from 'src/events/events';
 
 @Injectable()
 export class BookingService {
   constructor(
     private prisma: PrismaService,
     private availability: AvailabilityService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   private assertTransition(current: BookingStatus, next: BookingStatus) {
@@ -153,6 +156,10 @@ export class BookingService {
           duration: s.duration,
           price: s.price,
         })),
+      });
+
+      this.eventEmitter.emit(Events.BOOKING_CREATED, {
+        bookingId: booking.id,
       });
 
       return booking;
