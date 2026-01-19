@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { TransactionProofController } from './transaction-proof.controller';
 import { TransactionProofService } from './transaction-proof.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { AvailabilityService } from 'src/availability/availability.service';
 
 @Module({
-  imports: [PrismaService],
+  imports: [PrismaModule],
   controllers: [TransactionProofController],
-  providers: [TransactionProofService],
-  exports: [TransactionProofService],
+  providers: [TransactionProofService, AvailabilityService],
+  exports: [TransactionProofService, AvailabilityService],
 })
 export class TransactionProofModule {}

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { BookingCleanupService } from './booking-cleanup.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  imports: [PrismaService],
-  providers: [BookingCleanupService, PrismaService],
+  imports: [PrismaModule],
+  providers: [BookingCleanupService],
   exports: [BookingCleanupService],
 })
 export class BookingCleanupModule {}
