@@ -8,20 +8,19 @@ export class CategoryService {
   constructor(private prisma: PrismaService) {}
 
   async createCategory(dto: CreateCategoryDto) {
-
     const exists = await this.prisma.category.findUnique({
       where: { name: dto.name },
-    })
+    });
 
     if (exists) {
-          throw new UnprocessableEntityException('Categoria ya existente');
-        }
+      throw new UnprocessableEntityException('Categoria ya existente');
+    }
 
     const data = await this.prisma.category.create({
       data: dto,
     });
 
-    return data
+    return data;
   }
 
   async getAllCategories() {

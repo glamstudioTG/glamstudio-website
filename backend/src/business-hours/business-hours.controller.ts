@@ -12,8 +12,6 @@ import { BusinessHoursService } from './business-hours.service';
 import { CreateBusinessHoursDto } from './dto/create-business-hours.dto';
 import { DayOfWeek } from '@prisma/client';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
-import { WorkerGuard } from 'src/auth/guards/worker.guard';
 import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
 
 @Controller('workers/:workerId/business-hours')

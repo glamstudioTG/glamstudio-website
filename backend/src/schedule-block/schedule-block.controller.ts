@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ScheduleBlockService } from './schedule-block.service';
@@ -13,12 +14,11 @@ import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
 
 @Controller('workers/:workerId/schedule-blocks')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, AdminOrWorkerGuard)
 export class ScheduleBlockController {
   constructor(private service: ScheduleBlockService) {}
 
   @Post()
-  @UseGuards(AdminOrWorkerGuard)
   create(
     @Param('workerId') workerId: string,
     @Body() dto: CreateScheduleBlockDto,
@@ -26,14 +26,13 @@ export class ScheduleBlockController {
     return this.service.create(dto, workerId);
   }
 
-  @Get(':date')
-  getByDate(@Param('workerId') workerId: string, @Param('date') date: string) {
-    return this.service.getByDate(workerId, date);
+  @Get()
+  getByDate(@Param('workerId') workerId: string, @Query('date') date: string) {
+    return this.service.getByDate(date, workerId);
   }
 
   @Delete(':id')
-  @UseGuards(AdminOrWorkerGuard)
   delete(@Param('workerId') workerId: string, @Param('id') id: string) {
-    return this.service.delete(workerId, id);
+    return this.service.delete(id, workerId);
   }
 }

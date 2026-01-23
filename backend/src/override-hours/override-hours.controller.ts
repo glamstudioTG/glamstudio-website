@@ -5,18 +5,20 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { OverrideHoursService } from './override-hours.service';
 import { CreateOverrideHoursDto } from './dto/create-override-hours.dto';
 import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
+import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('workers/:workerId/override-hours')
 export class OverrideHoursController {
   constructor(private service: OverrideHoursService) {}
 
   @Post()
-  @UseGuards(AdminOrWorkerGuard)
+  @UseGuards(JwtGuard, AdminOrWorkerGuard)
   create(
     @Param('workerId') workerId: string,
     @Body() dto: CreateOverrideHoursDto,
@@ -24,13 +26,13 @@ export class OverrideHoursController {
     return this.service.create(workerId, dto);
   }
 
-  @Get(':date')
-  getByDate(@Param('workerId') workerId: string, @Param('date') date: string) {
+  @Get()
+  getByDate(@Param('workerId') workerId: string, @Query('date') date: string) {
     return this.service.getByDate(workerId, date);
   }
 
   @Delete(':id')
-  @UseGuards(AdminOrWorkerGuard)
+  @UseGuards(JwtGuard, AdminOrWorkerGuard)
   delete(@Param('workerId') workerId: string, @Param('id') id: string) {
     return this.service.delete(workerId, id);
   }

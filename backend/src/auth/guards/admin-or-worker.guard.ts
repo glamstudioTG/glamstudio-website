@@ -4,10 +4,13 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AdminOrWorkerGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
+  constructor(private prisma: PrismaService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     const user = req.user;
 
@@ -15,9 +18,9 @@ export class AdminOrWorkerGuard implements CanActivate {
       throw new ForbiddenException('Usuario no autenticado');
     }
 
-    const workerIdFromParam: string | undefined = req.params?.workerId;
+    const workerId: string | undefined = req.params?.workerId;
 
-    if (!workerIdFromParam) {
+    if (!workerId) {
       throw new ForbiddenException('workerId no proporcionado');
     }
 
@@ -26,11 +29,16 @@ export class AdminOrWorkerGuard implements CanActivate {
     }
 
     if (user.role === 'WORKER') {
-      if (!user.worker?.id) {
-        throw new ForbiddenException('El usuario no tiene un worker asociado');
+      const worker = await this.prisma.worker.findUnique({
+        where: { id: workerId },
+        select: { userId: true },
+      });
+
+      if (!worker) {
+        throw new ForbiddenException('El worker no existe');
       }
 
-      if (user.worker.id !== workerIdFromParam) {
+      if (worker.userId !== user.sub) {
         throw new ForbiddenException(
           'No tienes permisos para modificar este trabajador',
         );

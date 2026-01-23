@@ -6,11 +6,13 @@ import {
   Query,
   UseGuards,
   Body,
+  Post,
 } from '@nestjs/common';
 import { WorkerService } from './worker.service';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AdminGuard } from 'src/auth/guards/admin.guard';
-import { WorkerGuard } from 'src/auth/guards/worker.guard';
+import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
+import { UpdateProfileWorkerDto } from './dto/update-profile-worker.dto';
 
 @Controller('worker')
 export class WorkerController {
@@ -26,13 +28,27 @@ export class WorkerController {
     return this.service.findOne(id);
   }
 
-  @UseGuards(JwtGuard, AdminGuard, WorkerGuard)
-  @Patch(':id/categories')
+  @Post('by-services')
+  findWorkersByServices(@Body() body: { serviceIds: string[] }) {
+    return this.service.findWorkersByServiceIds(body.serviceIds);
+  }
+
+  @UseGuards(JwtGuard, AdminOrWorkerGuard)
+  @Patch(':workerId/categories')
   updateCategories(
-    @Param('id') id: string,
+    @Param('workerId') workerId: string,
     @Body() body: { categoryIds: string[] },
   ) {
-    return this.service.updateWorkerCategories(id, body.categoryIds);
+    return this.service.updateWorkerCategories(workerId, body.categoryIds);
+  }
+
+  @UseGuards(JwtGuard, AdminOrWorkerGuard)
+  @Patch(':workerId/profile')
+  updateProfile(
+    @Param('workerId') workerId: string,
+    @Body() dto: UpdateProfileWorkerDto,
+  ) {
+    return this.service.updateWorkerInfo(workerId, dto);
   }
 
   @UseGuards(JwtGuard, AdminGuard)

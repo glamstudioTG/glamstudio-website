@@ -18,6 +18,7 @@ import { BookingExpirationModule } from './booking-expiration/booking-expiration
 import { BookingCleanupModule } from './booking-cleanup/booking-cleanup.module';
 import { BookingCompletionModule } from './booking-completion/booking-completion.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,6 +33,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     BookingExpirationModule,
     BookingCleanupModule,
     BookingCompletionModule,
+
+    CloudinaryModule,
 
     BookingModule,
     ServicesModule,

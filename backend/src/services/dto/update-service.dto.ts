@@ -1,7 +1,12 @@
-import { IsString, IsNotEmpty, IsInt, IsOptional, IsNumber } from "class-validator";
+import {
+  IsString,
+  IsNotEmpty,
+  IsInt,
+  IsOptional,
+  IsNumber,
+} from 'class-validator';
 
 export class UpdateServiceDto {
-  
   @IsString()
   @IsOptional()
   name?: string;
@@ -17,4 +22,8 @@ export class UpdateServiceDto {
   @IsNumber()
   @IsOptional()
   price?: number;
+
+  @IsString()
+  @IsOptional()
+  image?: string;
 }

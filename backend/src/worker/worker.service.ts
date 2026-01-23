@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdateProfileWorkerDto } from './dto/update-profile-worker.dto';
 
 @Injectable()
 export class WorkerService {
@@ -42,6 +43,48 @@ export class WorkerService {
     return worker;
   }
 
+  async findWorkersByServiceIds(serviceIds: string[]) {
+    if (!serviceIds || serviceIds.length === 0) {
+      throw new BadRequestException('Selecciona al menos un servicio');
+    }
+
+    const workers = await this.prisma.worker.findMany({
+      where: {
+        isActive: true,
+        AND: serviceIds.map((serviceId) => ({
+          categories: {
+            some: {
+              category: {
+                services: {
+                  some: {
+                    id: serviceId,
+                  },
+                },
+              },
+            },
+          },
+        })),
+      },
+      select: {
+        id: true,
+        avatar: true,
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (workers.length === 0) {
+      throw new BadRequestException(
+        'Ningún trabajador puede realizar todos los servicios seleccionados juntos. Intenta seleccionar menos servicios o combinaciones distintas.',
+      );
+    }
+
+    return workers;
+  }
+
   async updateWorkerCategories(workerId: string, categoryIds: string[]) {
     const worker = await this.prisma.worker.findUnique({
       where: { id: workerId },
@@ -65,6 +108,21 @@ export class WorkerService {
     }
 
     return { ok: true };
+  }
+
+  async updateWorkerInfo(workerId: string, dto: UpdateProfileWorkerDto) {
+    const worker = await this.prisma.worker.findUnique({
+      where: { id: workerId },
+    });
+
+    if (!worker) {
+      throw new NotFoundException('Worker no encontrado');
+    }
+
+    return this.prisma.worker.update({
+      where: { id: workerId },
+      data: dto,
+    });
   }
 
   async deactivate(workerId: string) {
