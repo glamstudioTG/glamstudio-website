@@ -37,6 +37,10 @@ export class AvailabilityService {
 
     let baseRanges: Array<[number, number]> = [];
 
+    baseRanges = Array.from(
+      new Map(baseRanges.map(([s, e]) => [`${s}-${e}`, [s, e]])).values(),
+    ) as Array<[number, number]>;
+
     if (overrides) {
       baseRanges = [[overrides.startTime, overrides.endTime]];
     } else {
@@ -122,6 +126,10 @@ export class AvailabilityService {
       }
     }
 
-    return slots;
+    const uniqueSlots = Array.from(
+      new Map(slots.map((s) => [`${s.startMin}-${s.endMin}`, s])).values(),
+    );
+
+    return uniqueSlots;
   }
 }

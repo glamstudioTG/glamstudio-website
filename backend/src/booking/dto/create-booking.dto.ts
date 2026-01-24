@@ -1,16 +1,32 @@
 import {
-  IsString,
-  IsOptional,
-  IsDateString,
-  IsEmail,
-  IsPhoneNumber,
   IsArray,
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ArrayNotEmpty,
 } from 'class-validator';
 
 export class CreateBookingDto {
-  @IsOptional()
+  @IsUUID()
   workerId: string;
 
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsUUID('4', { each: true })
+  serviceIds: string[];
+
+  @IsString()
+  date: string; // YYYY-MM-DD
+
+  @IsString()
+  startTime: string; // HH:mm
+
+  @IsOptional()
+  @IsString()
+  comment?: string;
+
+  // Guest (solo si NO hay usuario autenticado)
   @IsOptional()
   @IsString()
   name?: string;
@@ -20,20 +36,6 @@ export class CreateBookingDto {
   email?: string;
 
   @IsOptional()
-  @IsPhoneNumber()
+  @IsString()
   phone?: string;
-
-  @IsString()
-  @IsArray()
-  serviceIds: string[];
-
-  @IsDateString()
-  date: string;
-
-  @IsString()
-  startTime: string;
-
-  @IsOptional()
-  @IsString()
-  comment?: string;
 }

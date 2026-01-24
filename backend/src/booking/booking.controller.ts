@@ -15,14 +15,24 @@ import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import type { JwtUserPayload } from 'src/auth/decorator/current-user.decorator';
 import { OptionalJwtGuard } from 'src/auth/guards/optional-jwt.guard';
 import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
+import { BookingResponseDto } from './dto/response-booking.dto';
 
 @Controller('/booking')
 export class BookingController {
   constructor(private bookingService: BookingService) {}
 
+  @UseGuards()
+  @Get('by-date/:date')
+  getByDate(@Param('date') date: string) {
+    return this.bookingService.getByDate(date);
+  }
+
   @UseGuards(OptionalJwtGuard)
   @Post()
-  create(@Body() dto: CreateBookingDto, @CurrentUser() user?: JwtUserPayload) {
+  create(
+    @Body() dto: CreateBookingDto,
+    @CurrentUser() user?: JwtUserPayload,
+  ): Promise<BookingResponseDto> {
     return this.bookingService.createBooking(dto, user?.sub);
   }
 
@@ -37,14 +47,9 @@ export class BookingController {
   confirm(@Param('id') id: string) {
     return this.bookingService.confirmBooking(id);
   }
-  @UseGuards(JwtGuard, AdminGuard)
+  @UseGuards(JwtGuard, AdminOrWorkerGuard)
   @Get()
   getAll() {
     return this.bookingService.getAll();
-  }
-
-  @Get('by-date/:date')
-  getByDate(@Param('date') date: string) {
-    return this.bookingService.getByDate(date);
   }
 }

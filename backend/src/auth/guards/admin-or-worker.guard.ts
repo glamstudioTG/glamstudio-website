@@ -20,12 +20,12 @@ export class AdminOrWorkerGuard implements CanActivate {
 
     const workerId: string | undefined = req.params?.workerId;
 
-    if (!workerId) {
-      throw new ForbiddenException('workerId no proporcionado');
-    }
-
     if (user.role === 'ADMIN') {
       return true;
+    }
+
+    if (!workerId) {
+      throw new ForbiddenException('workerId no proporcionado');
     }
 
     if (user.role === 'WORKER') {

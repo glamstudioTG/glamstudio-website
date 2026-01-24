@@ -76,7 +76,9 @@ export class TransactionProofService {
         data: { status: BookingStatus.PENDING_REVIEW },
       });
 
-      return { success: true };
+      this.eventEmitter.emit(Events.BOOKING_PROOF_UPLOADED, {
+        bookingId: booking.id,
+      });
     });
   }
 

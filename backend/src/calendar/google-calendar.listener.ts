@@ -2,7 +2,9 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Events } from 'src/events/events';
 import { GoogleCalendarService } from './google-calendar.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class GoogleCalendarListener {
   constructor(
     private prisma: PrismaService,
@@ -29,10 +31,7 @@ export class GoogleCalendarListener {
     end.setMinutes(end.getMinutes() + booking.endTime);
 
     const serviceName = booking.service.map((bs) => bs.service.name).join(', ');
-
-    const clientName = booking.user
-      ? booking.user.name
-      : booking.guestName || 'Cliente';
+    const clientName = booking.user?.name ?? booking.guestName ?? 'Cliente';
 
     const eventId = await this.googleService.createBookingEvent({
       start,

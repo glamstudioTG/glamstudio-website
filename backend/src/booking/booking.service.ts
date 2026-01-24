@@ -8,12 +8,14 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { AvailabilityService } from 'src/availability/availability.service';
-import { hhmmToMinutes } from 'src/common/utils/time.utils';
+import { hhmmToMinutes, minutesToHhmm } from 'src/common/utils/time.utils';
 import { localDateToUtc } from 'src/common/utils/date.utils';
-import { BookingStatus, Prisma } from '@prisma/client';
+import { BookingStatus } from '@prisma/client';
 import { canTransition } from 'src/common/constants/booking-rules';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Events } from 'src/events/events';
+import { BookingWithRelations } from './types/booking-relations.types';
+import { BookingResponseDto } from './dto/response-booking.dto';
 
 @Injectable()
 export class BookingService {
@@ -29,6 +31,42 @@ export class BookingService {
         `No se puede cambiar el estado de ${current} a ${next}`,
       );
     }
+  }
+
+  private mapBookingToResponse(
+    booking: BookingWithRelations,
+  ): BookingResponseDto {
+    const totalPrice = booking.service.reduce(
+      (acc, bs) => acc + (bs.price ?? 0),
+      0,
+    );
+
+    return {
+      id: booking.id,
+      status: booking.status,
+      date: booking.date.toISOString().slice(0, 10),
+      startTime: minutesToHhmm(booking.startTime),
+      endTime: minutesToHhmm(booking.endTime),
+      totalDuration: booking.totalDuration,
+      totalPrice,
+
+      client: {
+        name: booking.user?.name ?? booking.guestName!,
+        email: booking.user?.email ?? booking.guestEmail,
+      },
+
+      worker: {
+        id: booking.worker.id,
+        name: booking.worker.user.name,
+      },
+
+      services: booking.service.map((bs) => ({
+        id: bs.service.id,
+        name: bs.service.name,
+        duration: bs.duration,
+        price: bs.price!,
+      })),
+    };
   }
 
   async createBooking(dto: CreateBookingDto, userId?: string) {
@@ -147,6 +185,11 @@ export class BookingService {
                 guestPhone: dto.phone,
               }),
         },
+        include: {
+          worker: { include: { user: true } },
+          service: { include: { service: true } },
+          user: true,
+        },
       });
 
       await tx.bookingService.createMany({
@@ -162,7 +205,34 @@ export class BookingService {
         bookingId: booking.id,
       });
 
-      return booking;
+      const totalPrice = services.reduce((acc, s) => acc + s.price, 0);
+
+      return {
+        id: booking.id,
+        status: booking.status,
+        date: dto.date,
+        startTime: dto.startTime,
+        endTime: minutesToHhmm(booking.endTime),
+        totalDuration: booking.totalDuration,
+        totalPrice,
+
+        client: {
+          name: booking.user?.name ?? booking.guestName!,
+          email: booking.user?.email ?? booking.guestEmail,
+        },
+
+        worker: {
+          id: booking.worker.id,
+          name: booking.worker.user.name,
+        },
+
+        services: services.map((s) => ({
+          id: s.id,
+          name: s.name,
+          duration: s.duration,
+          price: s.price,
+        })),
+      };
     });
   }
 
@@ -246,17 +316,32 @@ export class BookingService {
     });
   }
 
-  async getByDate(date: string) {
+  async getByDate(date: string): Promise<BookingResponseDto[]> {
     const d = localDateToUtc(date);
-    return this.prisma.booking.findMany({
+
+    const bookings = await this.prisma.booking.findMany({
       where: { date: d },
       orderBy: { startTime: 'asc' },
+      include: {
+        worker: { include: { user: true } },
+        service: { include: { service: true } },
+        user: true,
+      },
     });
+
+    return bookings.map((b) => this.mapBookingToResponse(b));
   }
 
-  async getAll() {
-    return this.prisma.booking.findMany({
+  async getAll(): Promise<BookingResponseDto[]> {
+    const bookings = await this.prisma.booking.findMany({
       orderBy: [{ date: 'asc' }, { startTime: 'asc' }],
+      include: {
+        worker: { include: { user: true } },
+        service: { include: { service: true } },
+        user: true,
+      },
     });
+
+    return bookings.map((b) => this.mapBookingToResponse(b));
   }
 }

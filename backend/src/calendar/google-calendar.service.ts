@@ -1,4 +1,3 @@
-import { response } from 'express';
 import { google, calendar_v3 } from 'googleapis';
 
 export class GoogleCalendarService {
@@ -25,7 +24,7 @@ export class GoogleCalendarService {
     clientName: string;
   }) {
     const response = await this.calendar.events.insert({
-      calendarId: 'primary',
+      calendarId: process.env.GCAL_CALENDAR_ID,
       requestBody: {
         summary: `${params.serviceName} - ${params.workerName}`,
         description: `Cliente: ${params.clientName}`,
