@@ -33,10 +33,10 @@ export default function Navbar() {
           className="
             hidden md:flex items-center justify-between
             rounded-full px-8
-            bg-[#FBF9E6]/70
+            bg-[#ffc4c4]/40
             backdrop-blur-md
             shadow-[0_8px_30px_rgba(0,0,0,0.06)]
-            border border-white/40
+            border border-white/20
           "
         >
           <Link href={"/"}>

@@ -32,7 +32,7 @@ export default function NavbarContent() {
         <PopoverContent
           align="start"
           sideOffset={12}
-          className="w-56 bg-[#FBF9E6] border-[#D4AF37]/40 rounded-xl p-3"
+          className="w-56 bg-[#ffc4c4] border-[#850e35]/40 rounded-xl p-3"
         >
           <ul className="flex flex-col gap-1">
             {SERVICES_ITEMS.map((item) => {
@@ -47,14 +47,14 @@ export default function NavbarContent() {
                       group flex items-center gap-3
                       rounded-lg px-3 py-2
                       text-sm text-black/80
-                      hover:bg-[#D4AF37]/15 hover:text-black
+                      hover:bg-[#fff5e4]/40 hover:text-black
                       transition-all
                     "
                   >
                     <Icon
                       size={16}
                       className="
-                        text-[#D4AF37]
+                        text-[#850e35]
                         transition-transform duration-200
                         group-hover:translate-x-0.5
                       "
@@ -85,8 +85,8 @@ export default function NavbarContent() {
               ml-2 flex items-center justify-center
               h-9 w-9 rounded-full
               cursor-pointer
-              border border-[#D4AF37]/40
-              hover:bg-[#D4AF37]/20
+              border border-[#850e35]/40
+              hover:bg-[#ee6983]/20
               transition
             "
           >
@@ -97,7 +97,7 @@ export default function NavbarContent() {
         <PopoverContent
           align="end"
           sideOffset={12}
-          className="w-44 bg-[#FBF9E6] border-[#D4AF37]/40 p-3 rounded-xl"
+          className="w-44 bg-[#ffc4c4] border-[#850e35]/40 p-3 rounded-xl"
         >
           <button
             onClick={() => {
@@ -105,7 +105,7 @@ export default function NavbarContent() {
             }}
             className="
               w-full text-left rounded-md px-3 py-2 text-sm
-              text-black/80 hover:bg-[#D4AF37]/15 hover:text-black
+              text-black/80 hover:bg-[#fff5e4]/15 hover:text-black
               transition
             "
           >
