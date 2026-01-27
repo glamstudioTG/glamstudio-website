@@ -32,18 +32,18 @@ export default function CardService({
 
       <span className="text-sm text-gray-600">{price}</span>
 
-      <div className="w-50 h-px bg-[#D4AF37] my-1" />
+      <div className="w-50 h-px bg-[#850e35] my-1" />
 
       <p className="text-sm text-gray-700 max-w-xs">{description}</p>
 
       <div className="relative w-59.25 h-86.25 mt-4">
         <div
           className={clsx(
-            "absolute inset-0 rounded-md border-2 border-[#d6b980]",
+            "absolute inset-0 rounded-md border-2 border-[#850e35]",
             "transition-all duration-500 ease-out",
             frameOffsetMap[framePosition as keyof typeof frameOffsetMap],
             "group-hover:translate-x-0 group-hover:translate-y-0",
-            "group-hover:shadow-[0_25px_25px_rgba(214,185,128,0.8)]"
+            "group-hover:shadow-[0_25px_25px_rgba(238,105,131,0.4)]",
           )}
         />
 
@@ -76,7 +76,7 @@ export default function CardService({
 
         <TooltipContent
           side="top"
-          className="bg-[#FBF9E6]/70
+          className="bg-[#ee6983]/15
             backdrop-blur-md
             shadow-[0_8px_30px_rgba(0,0,0,0.06)]
             border border-white/40 text-black text-xs px-3 py-1.5 rounded-md"

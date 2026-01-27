@@ -35,7 +35,7 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative w-full min-h-210 bg-hero-gradient overflow-hidden flex items-center">
+      <section className="relative z-10 w-full min-h-screen bg-hero-gradient overflow-hidden flex items-center">
         <div className="absolute inset-0 flex right-0 top-1/2 -translate-y-1/2">
           <HeroImageMosaic />
         </div>
