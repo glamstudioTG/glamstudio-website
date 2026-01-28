@@ -21,7 +21,7 @@ export function GalleryGridItem({ item, area, framePosition, size }: Props) {
       <div
         className="
         absolute inset-0 z-0 rounded-xl
-        bg-[#D4AF37]/80 blur-xl
+        bg-[#850e35]/80 blur-xl
         opacity-0 group-hover:opacity-100
         transition-opacity duration-500
         shadow-[0_0_60px_rgba(212,175,55,0.9)]
@@ -30,7 +30,7 @@ export function GalleryGridItem({ item, area, framePosition, size }: Props) {
 
       <div
         className={`
-        absolute inset-0 z-10 rounded-xl border border-[#D4AF37]
+        absolute inset-0 z-10 rounded-xl border border-[#850e35]
         transition-all duration-500
         ${frameOffsetGallery[framePosition]}
         group-hover:translate-x-0 group-hover:translate-y-0

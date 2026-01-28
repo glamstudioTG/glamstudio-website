@@ -11,7 +11,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[#D4AF37] text-black hover:bg-[bg-[#D4AF37]]",
+        default: "bg-[#FFF5E4] text-black hover:bg-[bg-[#FFF5E4]]",
         destructive:
           "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
@@ -22,17 +22,17 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
       },
       size: {
-        default: "h-10 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-9 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-11 px-8 has-[>svg]:px-6",
-        icon: "size-10",
+        default: "h-11 px-8 py-6 gap-3",
+        sm: "h-10 rounded-md px-6 gap-2",
+        lg: "h-12 px-10 gap-3",
+        icon: "size-16",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 const rippleVariants = cva("absolute rounded-full size-5 pointer-events-none", {
@@ -79,7 +79,7 @@ function RippleButton({
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   React.useImperativeHandle(
     ref as any,
-    () => buttonRef.current as HTMLButtonElement
+    () => buttonRef.current as HTMLButtonElement,
   );
 
   const createRipple = React.useCallback(
@@ -103,7 +103,7 @@ function RippleButton({
         setRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
       }, 600);
     },
-    []
+    [],
   );
 
   const handleClick = React.useCallback(
@@ -113,7 +113,7 @@ function RippleButton({
         onClick(event);
       }
     },
-    [createRipple, onClick]
+    [createRipple, onClick],
   );
 
   return (
@@ -134,7 +134,7 @@ function RippleButton({
           animate={{ scale, opacity: 0 }}
           transition={transition}
           className={cn(
-            rippleVariants({ variant, className: rippleClassName })
+            rippleVariants({ variant, className: rippleClassName }),
           )}
           style={{
             top: ripple.y - 10,

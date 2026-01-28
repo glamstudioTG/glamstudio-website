@@ -17,30 +17,16 @@ import { GalleryGridItem } from "./galleryGridItem";
 
 export default function GallerySection() {
   const [activeFilter, setActiveFilter] = useState<"todo" | GalleryCategory>(
-    "todo"
+    "todo",
   );
 
   const gallery = buildGallery(galleryItems, activeFilter);
 
   return (
     <section
-      className="relative min-h-screen overflow-hidden bg-[#FFEFD3]"
+      className="relative min-h-screen overflow-hidden bg-[#FFEAEA]"
       id="gallery"
     >
-      <div
-        className="
-  absolute top-0 left-0 w-full h-68 pointer-events-none
-  bg-linear-to-b from-[#fcf5e8] via-[#fcf5e8]/80 to-transparent
-"
-      />
-
-      <div
-        className="
-  absolute bottom-0 left-0 w-full h-68 pointer-events-none
-  bg-linear-to-t from-[#fcf5e8] via-[#fcf5e8]/80 to-transparent
-"
-      />
-
       <div className="relative z-10 py-24">
         <div className="max-w-6xl mx-auto px-6">
           <header className="text-center max-w-xl mx-auto mb-14">
@@ -61,8 +47,8 @@ export default function GallerySection() {
                   px-5 py-2 rounded-full text-sm transition-all
                   ${
                     activeFilter === filter
-                      ? "bg-[#D4AF37] text-black shadow-md"
-                      : "bg-[#FDE68A]/70 text-[#696464] hover:bg-[#D4AF37]"
+                      ? "bg-[#ee6983] text-black shadow-md"
+                      : "bg-[#fff5e4]/70 text-[#696464] hover:bg-[#ffc4c4]"
                   }
                 `}
               >

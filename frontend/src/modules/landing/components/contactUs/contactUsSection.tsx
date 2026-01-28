@@ -1,13 +1,14 @@
 import ContactInfoCard from "./contactInfoCard";
 import { contactInfo } from "./contact.config";
 import { RippleButton } from "@/src/components/ui/shadcn-io/ripple-button";
+import { MessageCircleMore } from "lucide-react";
 
 export default function ContactUsSection() {
   const message = encodeURIComponent(
-    "Hola, quiero más información sobre sus servicios y disponibilidad. ¡Gracias!."
+    "Hola, quiero más información sobre sus servicios y disponibilidad. ¡Gracias!.",
   );
   return (
-    <section className="py-24 bg-[#fcf5e8]" id="contact">
+    <section className="py-24 bg-[#FFEAEA]" id="contact">
       <div className=" mx-auto px-6 text-center max-w-152.5">
         <h2 className="font-mono text-3xl md:text-6xl text-black mb-4">
           Ponte en contacto
@@ -38,7 +39,10 @@ export default function ContactUsSection() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <RippleButton>Enviar mensaje por WhatsApp</RippleButton>
+            <RippleButton>
+              <MessageCircleMore size={16} className="text-[#850E35]" />
+              Enviar mensaje por WhatsApp
+            </RippleButton>
           </a>
         </div>
         <iframe

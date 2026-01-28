@@ -11,7 +11,7 @@ export default function FooterLinks() {
           <li key={link.label}>
             <Link
               href={link.href}
-              className="text-[#000000] hover:text-[#C2A85D] transition"
+              className="text-[#000000] hover:text-[#850E35] transition"
             >
               <Shuffle text={link.label} className="text-" />
             </Link>

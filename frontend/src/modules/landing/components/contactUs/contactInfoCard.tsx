@@ -21,19 +21,19 @@ export default function ContactInfoCard({
     >
       <div
         className={`absolute inset-0 rounded-xl blur-[34px] opacity-80 
-        bg-[#C2A85D]
+        bg-[#850E35]/40
         ${
           isLeft
-            ? "translate-x-10 -translate-y-4"
-            : "-translate-x-12 -translate-y-4"
+            ? "translate-x-14 -translate-y-4"
+            : "-translate-x-14 -translate-y-4"
         }`}
       />
 
       <div
         className="relative z-10 flex items-start gap-8 bg-white rounded-xl px-6 py-6 min-h-27
-        border border-[#E6D39C] shadow-md"
+        border border-[#850E35] shadow-lg "
       >
-        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FDE68A] text-[#C2A85D] shrink-0">
+        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#FFF5E4] text-[#850E35] shrink-0">
           {icon}
         </div>
 

@@ -4,30 +4,11 @@ import meImage from "@/public/images/landing/4763f4ea1c606ab46ca79652a645a336 2.
 export default function AboutUsSection() {
   return (
     <section
-      className="relative bg-[#FFEFD3] py-24 px-4 overflow-hidden"
+      className="relative bg-[#FFEAEA] py-24 px-4 overflow-hidden"
       id="about"
     >
-      <div
-        className="
-          absolute top-0 left-0 w-full h-48 z-0 pointer-events-none
-          bg-linear-to-b
-          from-[#fcf5e8]
-          via-[#FFEFD3]/80
-          to-transparent
-        "
-      />
-
-      <div
-        className="
-          absolute bottom-0 left-0 w-full h-48 z-0 pointer-events-none
-          bg-linear-to-t
-          from-[#fcf5e8]
-          via-[#FFEFD3]/80
-          to-transparent
-        "
-      />
-
-      <div className="relative z-10 max-w-280.5 mx-auto border-2 border-[#C2A85D] rounded-xl px-8 py-16">
+      <div className="absolute left-36 bottom-16 w-255.5 h-155.75 border-2 border-[#850E35] rounded-xl" />
+      <div className="relative z-10 max-w-280.5 mx-auto bg-[#FFD7D7] rounded-xl px-8 py-16">
         <h2 className="text-center font-mono text-3xl md:text-5xl text-black mb-16 max-w-130 mx-auto">
           La historia detrás de GlamStudio
         </h2>
@@ -53,9 +34,9 @@ export default function AboutUsSection() {
           </div>
 
           <div className="relative flex justify-center">
-            <div className="absolute left-6 bottom-6 w-77.5 h-96.75 border-2 border-[#C2A85D] rounded-xl" />
+            <div className="absolute right-21 bottom-1 w-80 h-96.75 border-2 border-[#850E35] rounded-xl" />
 
-            <div className="relative z-10 rounded-xl overflow-hidden shadow-lg">
+            <div className="relative z-10 rounded-xl overflow-hidden">
               <Image
                 src={meImage}
                 alt="GlamStudio"
