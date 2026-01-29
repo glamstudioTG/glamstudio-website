@@ -11,21 +11,36 @@ import {
 import Image from "next/image";
 import { Button } from "@/src/components/ui/button";
 import { CircleAlert } from "lucide-react";
-
+import { motion } from "framer-motion";
+import { itemFadeUp } from "@/src/modules/services/hooks/animations/animations";
 type Props = {
   service: ServicetypesData;
 };
 
 export default function ServiceItem({ service }: Props) {
   return (
-    <div className="flex items-center gap-10 bg-[#FFF5E4] rounded-lg px-10 py-8 shadow-sm">
-      <div className="flex-1 w-full h-full text-center">
-        <h2 className="font-mono text-5xl text-black mb-3">{service.name}</h2>
+    <motion.div
+      variants={itemFadeUp}
+      initial="initial"
+      whileInView="enter"
+      exit="exit"
+      viewport={{ amount: 0.3 }}
+      className="flex flex-col md:flex-row
+        gap-6 md:gap-10
+        bg-[#FFF5E4]
+        rounded-lg
+        p-6 md:px-10 md:py-8
+        shadow-sm"
+    >
+      <div className="flex-1 w-full h-full text-center md:mt-14">
+        <h2 className="font-mono text-3xl md:text-5xl text-black mb-2">
+          {service.name}
+        </h2>
         <p className="text-sm text-gray-700 leading-relaxed max-w-112.5">
           {service.description}
         </p>
-        <div className="mt-10 flex justify-center items-center gap-8 min-h-15">
-          <ShimmerButton className="bg-[#850E35] text-white">
+        <div className="mt-6 flex flex-col md:flex-row gap-4 justify-center  items-center">
+          <ShimmerButton className="w-full md:w-auto bg-[#850E35] text-white">
             Solicitar esta técnica
           </ShimmerButton>
 
@@ -61,7 +76,7 @@ export default function ServiceItem({ service }: Props) {
                   <span>${service.price.toLocaleString()}</span>
                 </div>
 
-                <div className="pt-4 border-t border-[#D4AF37]/40">
+                <div className="pt-4 border-t border-[#850E35]/40">
                   <p className="text-xs text-gray-600 leading-relaxed">
                     {service.description}
                   </p>
@@ -73,7 +88,7 @@ export default function ServiceItem({ service }: Props) {
       </div>
 
       <div className="relative w-52.5 h-75 shrink-0">
-        <div className="absolute inset-0 border-2 border-[#D4AF37] rounded-lg -translate-x-1.5 translate-y-1.5 z-0" />
+        <div className="absolute inset-0 border-2 border-[#850E35] rounded-lg -translate-x-1.5 translate-y-1.5 z-0" />
         <Image
           src={service.image}
           alt={service.name}
@@ -81,6 +96,6 @@ export default function ServiceItem({ service }: Props) {
           className="rounded-lg object-cover relative z-10"
         />
       </div>
-    </div>
+    </motion.div>
   );
 }
