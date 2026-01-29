@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${greatVibes.variable} ${merriweather.variable} antialiased overflow-x-hidden bg-[#FFEFD3] `}
+        className={`${greatVibes.variable} ${merriweather.variable} antialiased relative overflow-x-hidden bg-[#FFEFD3] `}
       >
         <Navbar />
         {children}

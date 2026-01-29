@@ -53,10 +53,10 @@ export default function Navbar() {
           className="
             flex md:hidden items-center justify-between
             rounded-full px-6 py-3
-            bg-[#FBF9E6]/75
+            bg-[#ffc4c4]/40
             backdrop-blur-md
             shadow-md
-            border border-white/40
+            border border-white/20
           "
         >
           <Link href={"/"}>

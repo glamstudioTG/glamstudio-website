@@ -16,6 +16,6 @@ export const contactInfo: ContactInfoItem[] = [
   {
     icon: <Mail size={18} />,
     title: "Correo",
-    description: "info@glamstudio.com",
+    description: "cuentaoficialltatiana@gmail.com",
   },
 ];

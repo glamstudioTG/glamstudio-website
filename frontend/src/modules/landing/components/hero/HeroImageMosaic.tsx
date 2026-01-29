@@ -24,8 +24,23 @@ const images = [
   { src: rightBottom, w: 220, h: 280, top: 305, left: 205 },
 ];
 
-export default function HeroImageMosaic() {
+export default function HeroImageMosaic({
+  scale = "desktop",
+}: {
+  scale?: "desktop" | "mobile";
+}) {
   const maxLeft = Math.max(...images.map((img) => img.left + img.w));
+
+  const scaleFactor = scale === "mobile" ? 0.65 : 1;
+
+  const totalWidth = Math.max(...images.map((i) => i.left + i.w));
+  const centerOffset =
+    scale === "mobile" ? (280 - totalWidth * scaleFactor) / 2 : 0;
+
+  const containerWidth = scale === "mobile" ? 280 : totalWidth;
+  const offsetX =
+    scale === "mobile" ? (containerWidth - totalWidth * scaleFactor) / 2 : 0;
+
   const containerVariants = {
     hidden: {},
     visible: {
@@ -60,7 +75,10 @@ export default function HeroImageMosaic() {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: false, amount: 0.3 }}
-      className="relative w-130 h-160"
+      className={`
+        relative
+        ${scale === "mobile" ? "w-70 h-90" : "w-130 h-160"}
+      `}
     >
       {images.map((img, i) => {
         const delay = (maxLeft - img.left + img.w) * 0.003;
@@ -70,13 +88,11 @@ export default function HeroImageMosaic() {
             key={i}
             custom={{ delay }}
             variants={itemVariants}
-            initial="hidden"
-            animate="visible"
             style={{
-              width: img.w,
-              height: img.h,
-              top: img.top,
-              left: img.left,
+              width: img.w * scaleFactor,
+              height: img.h * scaleFactor,
+              top: img.top * scaleFactor,
+              left: img.left * scaleFactor + offsetX,
             }}
             className="absolute overflow-hidden rounded-2xl"
           >
