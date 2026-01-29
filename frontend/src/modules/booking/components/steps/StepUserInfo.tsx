@@ -34,7 +34,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
   };
 
   return (
-    <div className="rounded-xl bg-[#E6CDAA] p-8 space-y-6">
+    <div className="rounded-xl bg-[#EDB9B9] p-8 space-y-6">
       <StepHeader title="Tus detalles" step={2} icon={User} />
 
       <div className="grid grid-cols-2 gap-6">
@@ -54,7 +54,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
               placeholder="Tatiana Gomez"
               className="text-black "
             />
-            <InputGroupAddon className="text-[#D4A64E]">
+            <InputGroupAddon className="text-[#850E35]">
               <User />
             </InputGroupAddon>
           </InputGroup>
@@ -77,7 +77,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
               placeholder="tatianagomez@gmail.com"
               className="text-black"
             />
-            <InputGroupAddon className="text-[#D4A64E]">
+            <InputGroupAddon className="text-[#850E35]">
               <MailIcon />
             </InputGroupAddon>
           </InputGroup>
@@ -99,7 +99,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
               placeholder="Ingresa un número de teléfono válido"
               className="text-black"
             />
-            <InputGroupAddon className="text-[#D4A64E]">
+            <InputGroupAddon className="text-[#850E35]">
               <PhoneCall />
             </InputGroupAddon>
           </InputGroup>
@@ -131,7 +131,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
 
       <div className="flex justify-end gap-4 pt-4">
         <button
-          className="rounded-full border border-[#D4A64E] px-6 py-2 text-sm text-black"
+          className="rounded-full border border-[#850E35] px-6 py-2 text-sm text-black cursor-pointer"
           onClick={navigation.prevStep}
         >
           Volver a fecha y hora
@@ -140,7 +140,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
         <button
           disabled={!isValid}
           onClick={handleNext}
-          className="rounded-full bg-[#D4A64E] px-6 py-2 text-sm font-medium text-black disabled:opacity-40"
+          className="rounded-full bg-[#850E35] px-6 py-2 text-sm font-medium text-white disabled:opacity-40 cursor-pointer"
         >
           Siguiente: Servicios
         </button>

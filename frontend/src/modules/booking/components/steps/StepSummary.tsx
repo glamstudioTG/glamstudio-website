@@ -1,4 +1,6 @@
+import StepHeader from "../../service/StepUtils/StepHeader";
 import { StepProps } from "../../types/booking.types";
+import { TicketCheck } from "lucide-react";
 
 export default function StepSummary({ booking, navigation }: StepProps) {
   const { date, time, userInfo, services } = booking.state;
@@ -6,13 +8,8 @@ export default function StepSummary({ booking, navigation }: StepProps) {
   const totalPrice = services.reduce((acc, s) => acc + s.price, 0);
 
   return (
-    <div className="rounded-xl bg-[#E6CDAA] p-8 space-y-8 max-w-[85%] mx-auto">
-      <div className="flex items-center justify-between">
-        <h3 className="font-mono text-3xl font-semibold text-black">
-          Revisión y recibo
-        </h3>
-        <span className="text-sm text-black/60">Paso 4 de 4</span>
-      </div>
+    <div className="rounded-xl bg-[#EDB9B9] p-8 space-y-8 max-w-[85%] mx-auto">
+      <StepHeader title="Elige fecha y hora" step={3} icon={TicketCheck} />
 
       <div className="grid grid-cols-12 gap-8">
         <div className="col-span-8 space-y-6">
@@ -77,9 +74,8 @@ export default function StepSummary({ booking, navigation }: StepProps) {
           </section>
         </div>
 
-        {/* Columna derecha (acciones rápidas) */}
         <div className="col-span-4">
-          <div className="rounded-xl bg-[#F7E6CC] p-5 space-y-4 text-sm">
+          <div className="rounded-xl bg-[#FFF5E4] p-5 space-y-4 text-sm">
             <h4 className="font-semibold text-black">
               ¿Necesitas hacer algún cambio?
             </h4>
@@ -120,12 +116,12 @@ export default function StepSummary({ booking, navigation }: StepProps) {
         <div className="flex gap-4">
           <button
             onClick={() => navigation.prevStep()}
-            className="rounded-full border border-[#D4A64E] px-6 py-2 text-sm text-black"
+            className="rounded-full border border-[#850E35] px-6 py-2 text-sm text-black cursor-pointer"
           >
             Volver
           </button>
 
-          <button className="rounded-full bg-[#D4A64E] px-6 py-2 text-sm font-medium text-black">
+          <button className="rounded-full bg-[#850E35] px-6 py-2 text-sm font-medium text-white cursor-pointer">
             Confirmar cita y pagar
           </button>
         </div>

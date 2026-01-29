@@ -15,7 +15,7 @@ export default function StepHeader({
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-row gap-3">
-        <Icon size={30} className="text-[#D4A64E]" />
+        <Icon size={30} className="text-[#850E35]" />
         <h2 className="text-black text-4xl font-mono">{title}</h2>
       </div>
       <span className="text-sm text-black/60">Paso {step} de 4</span>

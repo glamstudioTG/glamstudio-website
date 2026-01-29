@@ -7,19 +7,19 @@ interface Props {
 export default function SelectedServicesSummary({ booking }: Props) {
   const totalPrice = booking.state.services.reduce(
     (acc, s) => acc + s.price,
-    0
+    0,
   );
 
   const totalDuration = booking.state.services.reduce(
     (acc, s) => acc + s.duration,
-    0
+    0,
   );
 
   return (
     <div
       className="
         rounded-xl
-        bg-[#F7E6CC]
+        bg-[#f2e9db]
         p-5
         space-y-4
         text-black

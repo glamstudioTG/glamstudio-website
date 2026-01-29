@@ -29,7 +29,7 @@ export default function StepDateTime({ booking, navigation }: StepProps) {
   };
 
   return (
-    <div className="max-w-[85%] rounded-xl bg-[#E6CDAA] p-8 space-y-6 m-auto">
+    <div className="max-w-[85%] rounded-xl bg-[#EDB9B9] p-8 space-y-6 m-auto">
       <StepHeader title="Elige fecha y hora" step={3} icon={Calendar1} />
 
       <div className="grid grid-cols-12 gap-8">
@@ -53,21 +53,21 @@ export default function StepDateTime({ booking, navigation }: StepProps) {
               partiallyBooked: (date) =>
                 isDayPartiallyBooked(date, availability),
             }}
-            className="w-full rounded-xl border border-[#D4A64E] bg-[#F0DDC1] p-4 text-black"
+            className="w-full rounded-xl border border-[#850E35] bg-[#FFF5E4] p-4 text-black"
           />
           <legend className="mt-4 flex flex-wrap items-center justify-center gap-5 text-xs text-black/70">
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full border border-[#D4A64E] bg-white" />
+              <span className="h-3 w-3 rounded-full border border-[#850E35] bg-white" />
               <span>Disponible</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-[#D4A64E]" />
+              <span className="h-3 w-3 rounded-full bg-[#f9a2b2] " />
               <span>Seleccionado</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full border border-[#D4A64E] bg-[#F7E6CC]" />
+              <span className="h-3 w-3 rounded-full border border-[#850E35] bg-[#f3c785]" />
               <span>Pocos cupos</span>
             </div>
 
@@ -79,7 +79,7 @@ export default function StepDateTime({ booking, navigation }: StepProps) {
         </div>
 
         <div className="col-span-1 flex justify-center">
-          <div className="h-full w-px bg-[#D4A64E]/40" />
+          <div className="h-full w-px bg-[#850E35]/40" />
         </div>
 
         <div className="col-span-4">
@@ -102,8 +102,8 @@ export default function StepDateTime({ booking, navigation }: StepProps) {
                 onClick={() => booking.setTime(time)}
                 className={`h-12 rounded-lg border text-sm font-medium transition ${
                   selectedTime === time
-                    ? "border-[#D4A64E] bg-[#D4A64E] text-black"
-                    : "border-[#D4A64E]/40 bg-white/60 text-black hover:bg-white"
+                    ? "border-[#850E35] bg-[#850E35] text-white"
+                    : "border-[#850E35]/40 bg-white/60 text-black hover:bg-white"
                 }`}
               >
                 {time}
@@ -115,7 +115,7 @@ export default function StepDateTime({ booking, navigation }: StepProps) {
 
       <div className="flex justify-end gap-4 pt-4">
         <button
-          className="rounded-full border border-[#D4A64E] px-6 py-2 text-sm text-black"
+          className="rounded-full border border-[#850E35] px-6 py-2 text-sm text-black cursor-pointer"
           onClick={navigation.prevStep}
         >
           Volver
@@ -124,7 +124,7 @@ export default function StepDateTime({ booking, navigation }: StepProps) {
         <button
           disabled={!selectedDate || !selectedTime}
           onClick={handleNext}
-          className="rounded-full bg-[#D4A64E] px-6 py-2 text-sm font-medium text-black disabled:opacity-40"
+          className="rounded-full bg-[#850E35] px-6 py-2 text-sm font-medium text-white disabled:opacity-40 cursor-pointer"
         >
           Siguiente
         </button>

@@ -18,14 +18,14 @@ type Props = {
 
 export default function ServiceItem({ service }: Props) {
   return (
-    <div className="flex items-center gap-10 bg-[#F6E2C6] rounded-lg px-10 py-8 shadow-sm">
+    <div className="flex items-center gap-10 bg-[#FFF5E4] rounded-lg px-10 py-8 shadow-sm">
       <div className="flex-1 w-full h-full text-center">
         <h2 className="font-mono text-5xl text-black mb-3">{service.name}</h2>
         <p className="text-sm text-gray-700 leading-relaxed max-w-112.5">
           {service.description}
         </p>
         <div className="mt-10 flex justify-center items-center gap-8 min-h-15">
-          <ShimmerButton className="bg-[#E0C49C] text-black">
+          <ShimmerButton className="bg-[#850E35] text-white">
             Solicitar esta técnica
           </ShimmerButton>
 
@@ -34,13 +34,13 @@ export default function ServiceItem({ service }: Props) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="hover:bg-white/30 "
+                className="hover:bg-white/50 "
               >
-                <CircleAlert className="text-[#D4AF37]" size={80} />
+                <CircleAlert className="text-[#850E35]" size={80} />
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="bg-[#F6E2C6] border-[#D4AF37]">
+            <DialogContent className="bg-[#FFF5E4]/95 border-[#850E35]">
               <DialogHeader>
                 <DialogTitle className="font-mono text-2xl text-black">
                   Información de la técnica

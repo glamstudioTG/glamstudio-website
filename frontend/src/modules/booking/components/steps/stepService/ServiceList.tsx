@@ -22,7 +22,7 @@ export default function ServiceList({ booking }: ServiceListProps) {
     booking.setServices(
       exists
         ? booking.state.services.filter((s) => s.id !== service.id)
-        : [...booking.state.services, service]
+        : [...booking.state.services, service],
     );
   };
 
@@ -30,7 +30,7 @@ export default function ServiceList({ booking }: ServiceListProps) {
     <div className="space-y-4 max-h-82.5 overflow-y-auto p-5">
       {visibleServices.map((service) => {
         const selected = booking.state.services.some(
-          (s) => s.id === service.id
+          (s) => s.id === service.id,
         );
 
         return (
@@ -42,7 +42,7 @@ export default function ServiceList({ booking }: ServiceListProps) {
             <span
               className={`
                 pointer-events-none absolute inset-0 rounded-xl
-                bg-[#D4AF37]/70
+                bg-[#850E35]/70
                 blur-md
                 transition-opacity duration-300 ease-out
                 ${selected ? "opacity-100" : "opacity-0"}
@@ -54,9 +54,9 @@ export default function ServiceList({ booking }: ServiceListProps) {
                 relative z-10 grid grid-cols-[1fr_auto_auto]
                 items-center gap-6
                 rounded-xl px-5 py-4
-                bg-[#F0DDC1]
+                bg-[#FFF5E4]
                 transition-colors duration-300 ease-out
-                ${selected ? "border border-[#D4AF37]" : ""}
+                ${selected ? "border border-[#850E35]/70" : ""}
               `}
             >
               <div>
@@ -73,7 +73,7 @@ export default function ServiceList({ booking }: ServiceListProps) {
                 <p className="text-xs text-black/60">{service.duration} min</p>
               </div>
 
-              <div className="w-8 flex justify-end text-[#D4A64E]">
+              <div className="w-8 flex justify-end text-[#850E35]">
                 {selected ? <Trash size={18} /> : <Plus size={18} />}
               </div>
             </div>

@@ -29,7 +29,7 @@ export default function BookingSection() {
   });
 
   return (
-    <section className="mx-auto max-w-6xl space-y-10 py-16 ">
+    <section className="bg-[#FFEAEA] mx-auto max-w-6xl space-y-10 py-16 ">
       <BookingStepper
         currentStep={navigation.currentStep}
         steps={STEPS}

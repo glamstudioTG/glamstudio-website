@@ -6,7 +6,7 @@ import { Calendar } from "@/src/components/ui/shadcn-io/calendar/calendar";
 
 export default function Calendar08() {
   const [date, setDate] = React.useState<Date | undefined>(
-    new Date(2025, 5, 12)
+    new Date(2025, 5, 12),
   );
 
   return (

@@ -19,7 +19,7 @@ export default function StepServices({ booking, navigation }: StepProps) {
   };
 
   return (
-    <div className="rounded-xl bg-[#E6CDAA] p-8 space-y-8 max-w-270 mx-auto">
+    <div className="rounded-xl bg-[#EDB9B9] p-8 space-y-8 max-w-270 mx-auto">
       <div className="">
         <StepHeader step={1} title="Selecciona un servicio" icon={Sparkles} />
       </div>
@@ -45,7 +45,7 @@ export default function StepServices({ booking, navigation }: StepProps) {
         <button
           onClick={handleNext}
           disabled={booking.state.services.length === 0}
-          className="rounded-full bg-[#D4A64E] px-6 py-2 text-sm font-medium disabled:opacity-40"
+          className="rounded-full bg-[#850E35] px-6 py-2 text-white text-sm font-medium disabled:opacity-40 cursor-pointer"
         >
           Siguiente
         </button>

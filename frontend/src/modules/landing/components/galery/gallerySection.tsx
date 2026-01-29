@@ -109,7 +109,6 @@ export default function GallerySection() {
                   height: 520,
                 }}
               >
-                {/* GRANDE 1 */}
                 {mobileItems[0] && (
                   <GalleryGridItem
                     item={mobileItems[0]}
@@ -120,7 +119,6 @@ export default function GallerySection() {
                   />
                 )}
 
-                {/* PEQUEÑAS */}
                 {mobileItems[1] && (
                   <GalleryGridItem
                     item={mobileItems[1]}
@@ -141,7 +139,6 @@ export default function GallerySection() {
                   />
                 )}
 
-                {/* GRANDE 2 */}
                 {mobileItems[3] && (
                   <GalleryGridItem
                     item={mobileItems[3]}

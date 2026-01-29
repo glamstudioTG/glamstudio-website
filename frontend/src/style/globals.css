@@ -144,24 +144,24 @@ body {
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
-@layer base {
+/* @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
   }
-}
+} */
 
 @keyframes goldPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(212, 166, 78, 0.6);
+    box-shadow: 0 0 0 0 rgba(133, 14, 53, 0.6);
   }
   70% {
-    box-shadow: 0 0 0 12px rgba(212, 166, 78, 0);
+    box-shadow: 0 0 0 12px rgba(133, 14, 53, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(212, 166, 78, 0);
+    box-shadow: 0 0 0 0 rgba(133, 14, 53, 0);
   }
 }
 

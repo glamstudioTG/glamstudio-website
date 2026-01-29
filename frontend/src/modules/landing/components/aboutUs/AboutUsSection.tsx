@@ -65,11 +65,9 @@ export default function AboutUsSection() {
       id="about"
       className="relative bg-[#FFEAEA] py-24 px-4 overflow-x-hidden"
     >
-      {/* Marco decorativo */}
       <div className="hidden md:block absolute left-36 bottom-16 w-255.5 h-155.75 border-2 border-[#850E35] rounded-xl" />
 
       <div className="relative z-10 max-w-6xl mx-auto bg-[#FFD7D7] rounded-xl px-6 md:px-8 py-16 overflow-hidden">
-        {/* TÍTULO */}
         <motion.h2
           variants={titleVariants}
           initial="initial"
@@ -82,7 +80,6 @@ export default function AboutUsSection() {
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-          {/* TEXTO */}
           <motion.div
             variants={textContainerVariants}
             initial="initial"
@@ -103,7 +100,6 @@ export default function AboutUsSection() {
             ))}
           </motion.div>
 
-          {/* IMAGEN */}
           <motion.div
             variants={imageVariants}
             initial="initial"

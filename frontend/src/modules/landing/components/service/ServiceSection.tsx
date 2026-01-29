@@ -8,7 +8,6 @@ export default function ServiceSection() {
   return (
     <section className="py-32">
       <div className="max-w-7xl mx-auto px-6 flex flex-col gap-16">
-        {/* HEADER */}
         <div className="flex flex-col items-center gap-2 text-center">
           <h2 className="text-5xl md:text-6xl text-black font-mono">
             Servicios
@@ -18,7 +17,6 @@ export default function ServiceSection() {
           </p>
         </div>
 
-        {/* CARDS */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-10"
           initial="hidden"

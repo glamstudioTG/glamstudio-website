@@ -7,7 +7,7 @@ export default function BookingStepper({
   navigation,
 }: BookingStepperProps) {
   return (
-    <div className="mx-auto mt-10 w-[80%] rounded-xl bg-[#E6CDAA] px-10 py-8">
+    <div className="mx-auto mt-10 w-[80%] rounded-xl bg-[#EE6983]/80 px-10 py-8">
       <div
         className="grid items-center"
         style={{
@@ -28,9 +28,9 @@ export default function BookingStepper({
                     className={[
                       "flex h-12 w-12 items-center justify-center rounded-full border-4 text-sm font-medium transition-all duration-300",
                       isActive &&
-                        "bg-[#D4A64E] border-[#D4A64E] text-black animate-[goldPulse_1.8s_infinite]",
+                        "bg-[#850E35] border-[#850E35] text-white animate-[goldPulse_1.8s_infinite]",
                       isCompleted &&
-                        "bg-[#D4A64E]/80 border-[#D4A64E]/80 text-black",
+                        "bg-[#850E35]/80 border-[#850E35]/80 text-black",
                       !isActive &&
                         !isCompleted &&
                         "border-white/60 text-black/70 font-bold",
@@ -49,11 +49,11 @@ export default function BookingStepper({
                 <div className="flex items-center">
                   <div className="relative h-1.5 w-full rounded-full bg-white/30 overflow-hidden">
                     {isCompleted && (
-                      <div className="absolute inset-0 rounded-full bg-[#D4A64E]" />
+                      <div className="absolute inset-0 rounded-full bg-[#850E35]" />
                     )}
 
                     {isActive && (
-                      <div className="absolute left-0 top-0 h-full w-1/2 rounded-full bg-[#D4A64E]">
+                      <div className="absolute left-0 top-0 h-full w-1/2 rounded-full bg-[#850E35]">
                         <div
                           className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
                           style={{
@@ -62,10 +62,10 @@ export default function BookingStepper({
                             background: `
                               linear-gradient(
                                 90deg,
-                                rgba(212,166,78,1) 0%,
-                                rgba(212,166,78,0.8) 40%,
-                                rgba(212,166,78,0.3) 70%,
-                                rgba(212,166,78,0) 100%
+                                rgba(133, 14, 53, 1) 0%,
+                                rgba(133, 14, 53, 0.8) 40%,
+                                rgba(133, 14, 53, 0.3) 70%,
+                                rgba(133, 14, 53, 0) 100%
                               )
                             `,
                             filter:

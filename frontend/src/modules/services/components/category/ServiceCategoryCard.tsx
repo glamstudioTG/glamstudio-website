@@ -27,7 +27,7 @@ export default function ServiceCategoryCard({ category, direction }: Props) {
   const toggle = () => setOpen(open === "services" ? undefined : "services");
 
   return (
-    <div className="bg-[#E3D4BF] rounded-xl p-6 shadow-lg">
+    <div className="bg-[#FFD7D7] rounded-xl p-6 shadow-lg">
       <div className="grid grid-cols-1 md:grid-cols-2 items-center">
         <div
           className={`flex ${

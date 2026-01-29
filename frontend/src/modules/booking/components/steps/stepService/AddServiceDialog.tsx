@@ -45,7 +45,7 @@ export default function AddServiceDialog({ onSelect, selectedIds }: Props) {
   const suggestions = useMemo(() => {
     if (!query) return MOCK_SERVICES.slice(0, 3);
     return MOCK_SERVICES.filter((s) =>
-      s.name.toLowerCase().includes(query.toLowerCase())
+      s.name.toLowerCase().includes(query.toLowerCase()),
     ).slice(0, 3);
   }, [query]);
 
@@ -53,7 +53,7 @@ export default function AddServiceDialog({ onSelect, selectedIds }: Props) {
     <Dialog open={open} onOpenChange={setOpen}>
       {/* SOLO abre el modal */}
       <DialogTrigger asChild>
-        <button className="rounded-full border border-[#D4A64E] px-4 py-2 text-sm text-black">
+        <button className="rounded-full border border-[#850E35] px-4 py-2 text-sm text-black">
           + Añadir más servicios
         </button>
       </DialogTrigger>
@@ -84,7 +84,7 @@ export default function AddServiceDialog({ onSelect, selectedIds }: Props) {
             text-sm
             outline-none
             mt-3
-            focus:border-[#D4A64E]
+            focus:border-[#850E35]
           "
         />
 
