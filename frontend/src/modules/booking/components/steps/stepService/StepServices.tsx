@@ -1,14 +1,27 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { StepProps } from "../../../types/booking.types";
 import StepHeader from "../../../service/StepUtils/StepHeader";
 import ServiceBrowser from "./ServiceBrowser";
 import SelectedServicesSummary from "./SelectedServicesSummary";
 import AddServiceDialog from "./AddServiceDialog";
 import { Sparkles } from "lucide-react";
+import { motion, easeOut } from "framer-motion";
+import { WORKERS } from "./ServiceCatalog";
+import ServiceWorkerGrid from "./ServiceWorkerGrid";
 
 export default function StepServices({ booking, navigation }: StepProps) {
+  const compatibleWorkers = useMemo(() => {
+    if (booking.state.services.length === 0) return [];
+
+    const serviceIds = booking.state.services.map((s) => s.id);
+
+    return WORKERS.filter((worker) =>
+      serviceIds.every((serviceId) => worker.services.includes(serviceId)),
+    );
+  }, [booking.state.services]);
+
   useEffect(() => {
     navigation.setContext(booking.state);
   }, [booking.state]);
@@ -18,38 +31,116 @@ export default function StepServices({ booking, navigation }: StepProps) {
     navigation.nextStep();
   };
 
-  return (
-    <div className="rounded-xl bg-[#EDB9B9] p-8 space-y-8 max-w-270 mx-auto">
-      <div className="">
-        <StepHeader step={1} title="Selecciona un servicio" icon={Sparkles} />
-      </div>
+  const blockFade = {
+    hidden: { opacity: 0, y: 16 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: easeOut },
+    },
+  };
 
-      <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-8">
+  return (
+    <div
+      className="
+        rounded-xl bg-[#EDB9B9]
+        p-5 sm:p-6 lg:p-8
+        space-y-6
+        max-w-7xl mx-auto
+      "
+    >
+      <motion.div variants={blockFade} initial="hidden" animate="visible">
+        <StepHeader step={1} title="Selecciona un servicio" icon={Sparkles} />
+      </motion.div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+        <div className="lg:col-span-8 order-1 space-y-6">
           <ServiceBrowser booking={booking} />
+          {booking.state.services.length > 0 &&
+            !booking.state.selectedWorker && (
+              <p className="mb-2 text-xs text-[#850E35]">
+                Debes elegir un especialista para continuar
+              </p>
+            )}
+
+          {booking.state.services.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: easeOut }}
+              className="
+          rounded-xl
+          bg-[#FDEAF2]
+          p-5
+          border border-[#850E35]/10
+        "
+            >
+              <h4 className="mb-3 text-sm font-medium text-black">
+                Selecciona tu especialista
+              </h4>
+
+              <ServiceWorkerGrid
+                workers={compatibleWorkers}
+                selected={booking.state.selectedWorker}
+                onSelect={booking.setSelectedWorker}
+              />
+            </motion.div>
+          )}
         </div>
 
-        <div className="col-span-4 space-y-4">
-          <div className="flex justify-end mb-16">
+        <div className="lg:col-span-4 order-2 space-y-4">
+          <motion.div
+            variants={blockFade}
+            initial="hidden"
+            animate="visible"
+            className="flex justify-center lg:justify-end"
+          >
             <AddServiceDialog
               selectedIds={booking.state.services.map((s) => s.id)}
-              onSelect={(service) => booking.addService(service)}
+              onSelect={booking.addService}
             />
-          </div>
+          </motion.div>
 
-          <SelectedServicesSummary booking={booking} />
+          <motion.div
+            variants={blockFade}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.1 }}
+            className="lg:sticky lg:top-24"
+          >
+            <SelectedServicesSummary booking={booking} />
+          </motion.div>
         </div>
       </div>
 
-      <div className="flex justify-end gap-4">
+      <motion.div
+        variants={blockFade}
+        initial="hidden"
+        animate="visible"
+        className="
+          flex flex-col-reverse gap-3 pt-4
+          sm:flex-row sm:justify-between
+          lg:justify-end
+        "
+      >
         <button
           onClick={handleNext}
-          disabled={booking.state.services.length === 0}
-          className="rounded-full bg-[#850E35] px-6 py-2 text-white text-sm font-medium disabled:opacity-40 cursor-pointer"
+          disabled={
+            booking.state.services.length === 0 || !booking.state.selectedWorker
+          }
+          className="
+            w-full sm:w-auto
+            rounded-full bg-[#850E35]
+            px-6 py-3
+            text-white text-sm font-medium
+            disabled:opacity-40
+            transition-all
+            enabled:hover:scale-[1.03]
+          "
         >
           Siguiente
         </button>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { LucideIcon } from "lucide-react";
 
 type StepHeaderProps = {
   title: string;
-  step: number;
+  step?: number;
   icon: LucideIcon;
 };
 
@@ -18,7 +18,7 @@ export default function StepHeader({
         <Icon size={30} className="text-[#850E35]" />
         <h2 className="text-black text-4xl font-mono">{title}</h2>
       </div>
-      <span className="text-sm text-black/60">Paso {step} de 4</span>
+      <span className="text-sm text-black/60">Paso {step} de 5</span>
     </div>
   );
 }

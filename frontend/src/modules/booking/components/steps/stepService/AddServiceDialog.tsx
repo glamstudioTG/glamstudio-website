@@ -51,23 +51,22 @@ export default function AddServiceDialog({ onSelect, selectedIds }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* SOLO abre el modal */}
       <DialogTrigger asChild>
-        <button className="rounded-full border border-[#850E35] px-4 py-2 text-sm text-black">
+        <button className="rounded-full border border-[#850E35] px-4 py-2 text-sm text-black cursor-pointer">
           + Añadir más servicios
         </button>
       </DialogTrigger>
 
       <DialogContent
         className="
-          max-w-xl
-          rounded-2xl
-          bg-black/5
-          text-black
-          backdrop-blur
-          shadow-2xl
-          border-transparent
-        "
+        text-black
+        max-w-xl rounded-2xl
+        bg-black/5 backdrop-blur
+        shadow-2xl
+        border-transparent
+        animate-in fade-in zoom-in-95
+        duration-200
+      "
       >
         <DialogTitle>Selecciona otro servicio</DialogTitle>
 
@@ -101,7 +100,7 @@ export default function AddServiceDialog({ onSelect, selectedIds }: Props) {
                   setOpen(false);
                 }}
                 className={`
-                  w-full rounded-lg px-4 py-3 text-left transition
+                  w-full rounded-lg px-4 py-3 text-left transition cursor-pointer
                   ${
                     isSelected
                       ? "opacity-40 cursor-not-allowed"

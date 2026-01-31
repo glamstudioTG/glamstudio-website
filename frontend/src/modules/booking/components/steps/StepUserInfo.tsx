@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { motion, easeOut, easeInOut } from "framer-motion";
 import { StepProps } from "../../types/booking.types";
 import StepHeader from "../../service/StepUtils/StepHeader";
 import {
@@ -15,17 +17,47 @@ import {
   isValidPhone,
 } from "../../service/serviceErrorUserInputs";
 
+const containerVariants = {
+  initial: { opacity: 0, y: 24 },
+  enter: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.45,
+      ease: easeOut,
+      staggerChildren: 0.08,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 12,
+    transition: { duration: 0.3, ease: easeInOut },
+  },
+};
+
+const fieldVariants = {
+  idle: { x: 0, opacity: 1 },
+  error: {
+    x: [0, -6, 6, -4, 4, 0],
+    transition: { duration: 0.35 },
+  },
+};
+
 export default function StepUserInfo({ booking, navigation }: StepProps) {
+  useEffect(() => {
+    navigation.setContext(booking.state);
+  }, [booking.state]);
+
   const user = booking.state.userInfo ?? {
     name: "",
     email: "",
     phone: "",
     note: "",
   };
+
   const nameValid = user.name.trim().length > 0;
   const emailValid = isValidEmail(user.email);
   const phoneValid = isValidPhone(user.phone);
-
   const isValid = nameValid && emailValid && phoneValid;
 
   const handleNext = () => {
@@ -34,11 +66,26 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
   };
 
   return (
-    <div className="rounded-xl bg-[#EDB9B9] p-8 space-y-6">
+    <motion.div
+      variants={containerVariants}
+      initial="initial"
+      animate="enter"
+      exit="exit"
+      className="
+        rounded-xl bg-[#EDB9B9]
+        p-5 sm:p-6 md:p-8
+        space-y-6
+      "
+    >
       <StepHeader title="Tus detalles" step={2} icon={User} />
 
-      <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-1.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+        <motion.div
+          initial={false}
+          animate={!nameValid && user.name ? "error" : "idle"}
+          variants={fieldVariants}
+          className="space-y-1.5"
+        >
           <div className="flex justify-between text-xs text-black/70">
             <label>Nombre completo</label>
             <span>Requerido</span>
@@ -46,44 +93,56 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
 
           <InputGroup>
             <InputGroupInput
-              aria-invalid={!nameValid}
               value={user.name}
+              aria-invalid={!nameValid}
               onChange={(e) =>
                 booking.setUserInfo({ ...user, name: e.target.value })
               }
               placeholder="Tatiana Gomez"
-              className="text-black "
+              className="text-black"
             />
             <InputGroupAddon className="text-[#850E35]">
               <User />
             </InputGroupAddon>
           </InputGroup>
-        </div>
+        </motion.div>
 
-        <div className="space-y-1.5">
+        <motion.div
+          initial={false}
+          animate={user.email && !emailValid ? "error" : "idle"}
+          variants={fieldVariants}
+          className="space-y-1.5"
+        >
           <div className="flex justify-between text-xs text-black/70">
             <label>Correo</label>
-            <span className="italic">Perdemos enviar confirmaciones aquí</span>
+            <span className="italic hidden sm:inline">
+              Enviamos confirmaciones aquí
+            </span>
           </div>
 
           <InputGroup>
             <InputGroupInput
-              aria-invalid={user.email !== "" && !emailValid}
               type="email"
               value={user.email}
+              aria-invalid={user.email !== "" && !emailValid}
               onChange={(e) =>
                 booking.setUserInfo({ ...user, email: e.target.value })
               }
-              placeholder="tatianagomez@gmail.com"
+              placeholder="correo@email.com"
               className="text-black"
             />
             <InputGroupAddon className="text-[#850E35]">
               <MailIcon />
             </InputGroupAddon>
           </InputGroup>
-        </div>
+        </motion.div>
 
-        <div className="col-span-2 space-y-1.5">
+        <motion.div
+          initial={false}
+          animate={user.phone && !phoneValid ? "error" : "idle"}
+          variants={fieldVariants}
+          className="md:col-span-2 space-y-1.5"
+        >
           <div className="flex justify-between text-xs text-black/70">
             <label>Número</label>
             <span>Requerido</span>
@@ -91,24 +150,27 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
 
           <InputGroup>
             <InputGroupInput
-              aria-invalid={user.phone !== "" && !phoneValid}
               value={user.phone}
+              aria-invalid={user.phone !== "" && !phoneValid}
               onChange={(e) =>
                 booking.setUserInfo({ ...user, phone: e.target.value })
               }
-              placeholder="Ingresa un número de teléfono válido"
+              placeholder="Número de teléfono"
               className="text-black"
             />
             <InputGroupAddon className="text-[#850E35]">
               <PhoneCall />
             </InputGroupAddon>
           </InputGroup>
-        </div>
+        </motion.div>
 
-        <div className="col-span-2 space-y-1.5">
+        <motion.div
+          variants={fieldVariants}
+          className="md:col-span-2 space-y-1.5"
+        >
           <div className="flex justify-between text-xs text-black/70">
             <label>Notas para tu especialista</label>
-            <span className="italic">¿Hay algo que debamos saber?</span>
+            <span className="italic">Opcional</span>
           </div>
 
           <InputGroup>
@@ -117,8 +179,8 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
               onChange={(e) =>
                 booking.setUserInfo({ ...user, note: e.target.value })
               }
-              placeholder="Ej. Preferencias de estilos, sensibilidad, detalles de acceso"
-              className="text-black"
+              placeholder="Preferencias, sensibilidad, detalles especiales"
+              className="text-black min-h-24"
             />
             <InputGroupAddon align="block-end">
               <InputGroupText className="text-xs text-black/50">
@@ -126,25 +188,44 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="flex justify-end gap-4 pt-4">
+      <motion.div
+        variants={fieldVariants}
+        className="
+          flex flex-col-reverse gap-3 pt-4
+          sm:flex-row sm:justify-between
+          md:justify-end md:gap-4
+        "
+      >
         <button
-          className="rounded-full border border-[#850E35] px-6 py-2 text-sm text-black cursor-pointer"
           onClick={navigation.prevStep}
+          className="
+            w-full sm:w-auto
+            rounded-full border border-[#850E35]
+            px-6 py-3 text-sm text-black
+            hover:bg-white/40 transition
+          "
         >
-          Volver a fecha y hora
+          Volver
         </button>
 
         <button
           disabled={!isValid}
           onClick={handleNext}
-          className="rounded-full bg-[#850E35] px-6 py-2 text-sm font-medium text-white disabled:opacity-40 cursor-pointer"
+          className="
+            w-full sm:w-auto
+            rounded-full bg-[#850E35]
+            px-6 py-3 text-sm font-medium text-white
+            transition-all
+            disabled:opacity-40
+            enabled:hover:scale-[1.03]
+          "
         >
-          Siguiente: Servicios
+          Siguiente
         </button>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

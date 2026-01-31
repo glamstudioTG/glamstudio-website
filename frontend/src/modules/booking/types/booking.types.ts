@@ -10,6 +10,7 @@ export type BookingService = {
   featured?: boolean;
   totalPrice?: number;
   totalDuration?: number;
+  workers?: BookingWorker[];
 };
 
 export type DayAvailability = {
@@ -27,15 +28,27 @@ export type UserInfo = {
 };
 
 export type BookingState = {
+  draft: BookingDraft;
+  booking: Booking | null;
+};
+
+export type BookingDraft = {
   step: number;
   services: BookingService[];
+  selectedWorker: BookingWorker | null;
   date: Date | null;
   time: string | null;
   userInfo: UserInfo | null;
-  paymentProof: File | string | null;
 };
 
-export type StepValidator = () => boolean;
+export type Booking = BookingDraft & {
+  id: string;
+  paymentProof: File | null;
+  status: "PENDING_PAYMENT" | "CONFIRMED" | "CANCELLED";
+  expiresAt: Date;
+};
+
+export type StepValidator = (ctx: BookingDraft) => boolean;
 
 export type UseStepNavigationProps = {
   totalSteps: number;
@@ -59,8 +72,20 @@ export type StepProps = {
 };
 
 export interface BookingForm {
-  state: {
-    services: BookingService[];
-  };
+  state: BookingDraft;
+
   setServices: (services: BookingService[]) => void;
+  addService: (service: BookingService) => void;
+
+  setSelectedWorker: (worker: BookingWorker) => void;
+  setDate: (date: Date) => void;
+  setTime: (time: string) => void;
+  setUserInfo: (user: UserInfo) => void;
+}
+
+export interface BookingWorker {
+  id: string;
+  name: string;
+  avatar?: string;
+  services: string[];
 }

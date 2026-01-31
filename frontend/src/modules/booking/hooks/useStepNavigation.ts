@@ -6,6 +6,7 @@ export default function useStepNavigation({
   validators,
 }: UseStepNavigationProps) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [direction, setDirection] = useState<1 | -1>(1);
   const [context, setContext] = useState<unknown>(null);
 
   const canGoNext = useMemo(() => {
@@ -15,16 +16,20 @@ export default function useStepNavigation({
 
   const nextStep = useCallback(() => {
     if (!canGoNext) return;
+    setDirection(1);
     setCurrentStep((prev) => (prev < totalSteps ? prev + 1 : prev));
   }, [canGoNext, totalSteps]);
 
   const prevStep = useCallback(() => {
+    setDirection(-1);
     setCurrentStep((prev) => (prev > 1 ? prev - 1 : prev));
   }, []);
 
   const goToStep = useCallback(
     (step: number) => {
       if (step < 1 || step > totalSteps) return;
+
+      setDirection(step > currentStep ? 1 : -1);
 
       if (step <= currentStep) return setCurrentStep(step);
 
@@ -37,13 +42,13 @@ export default function useStepNavigation({
 
       setCurrentStep(step);
     },
-    [totalSteps, currentStep, validators]
+    [totalSteps, currentStep, validators],
   );
 
   return {
     currentStep,
     totalSteps,
-
+    direction,
     canGoNext,
 
     nextStep,

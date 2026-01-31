@@ -1,4 +1,23 @@
 import { BookingService } from "../../../types/booking.types";
+import { BookingWorker } from "@/src/modules/booking/types/booking.types";
+
+export const WORKERS: BookingWorker[] = [
+  {
+    id: "w1",
+    name: "Ana Rodríguez",
+    services: ["1", "2", "3", "4", "5"],
+  },
+  {
+    id: "w2",
+    name: "Laura Gómez",
+    services: ["1", "3", "5"],
+  },
+  {
+    id: "w3",
+    name: "Camila Torres",
+    services: ["2", "4"],
+  },
+];
 
 export const SERVICES_CATALOG: BookingService[] = [
   {

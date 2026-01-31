@@ -1,9 +1,18 @@
 import { useCallback, useMemo, useState } from "react";
-import { BookingState, BookingService, UserInfo } from "../types/booking.types";
+import {
+  BookingDraft,
+  BookingService,
+  UserInfo,
+  BookingWorker,
+  Booking,
+} from "../types/booking.types";
 import { initialBookingState } from "../utils/initialBookingState";
 
 export function useBookingForm() {
-  const [state, setState] = useState<BookingState>(initialBookingState);
+  const [state, setState] = useState<BookingDraft>(initialBookingState);
+
+  const [booking, setBooking] = useState<Booking | null>(null);
+  const [paymentProof, setPaymentProof] = useState<File | null>(null);
 
   const totalDuration = useMemo(() => {
     return state.services.reduce((acc, s) => acc + s.duration, 0);
@@ -17,6 +26,28 @@ export function useBookingForm() {
     setState((prev) => ({
       ...prev,
       services,
+      date: null,
+      time: null,
+    }));
+  }, []);
+
+  const confirmBooking = useCallback(async () => {
+    const fakeBooking: Booking = {
+      ...state,
+      id: crypto.randomUUID(),
+      paymentProof: null,
+      status: "PENDING_PAYMENT",
+      expiresAt: new Date(Date.now() + 30 * 60 * 1000),
+    };
+
+    setBooking(fakeBooking);
+    return fakeBooking.id;
+  }, [state]);
+
+  const setSelectedWorker = useCallback((worker: BookingWorker) => {
+    setState((prev) => ({
+      ...prev,
+      selectedWorker: worker,
       date: null,
       time: null,
     }));
@@ -55,13 +86,6 @@ export function useBookingForm() {
     }));
   }, []);
 
-  const setPaymentProof = useCallback((file: File) => {
-    setState((prev) => ({
-      ...prev,
-      paymentProof: file,
-    }));
-  }, []);
-
   const nextStep = () => {
     setState((prev) => ({
       ...prev,
@@ -78,9 +102,10 @@ export function useBookingForm() {
 
   return {
     state,
-
+    booking,
     totalDuration,
     totalPrice,
+    paymentProof,
 
     setServices,
     addService,
@@ -88,6 +113,8 @@ export function useBookingForm() {
     setTime,
     setUserInfo,
     setPaymentProof,
+    setSelectedWorker,
+    confirmBooking,
 
     nextStep,
     prevStep,

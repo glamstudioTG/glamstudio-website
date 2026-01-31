@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, AnimatePresence } from "framer-motion";
 import { BookingForm } from "../../../types/booking.types";
 
 interface Props {
@@ -16,31 +19,35 @@ export default function SelectedServicesSummary({ booking }: Props) {
   );
 
   return (
-    <div
+    <motion.div
+      layout
       className="
-        rounded-xl
-        bg-[#f2e9db]
-        p-5
-        space-y-4
-        text-black
+        rounded-xl bg-[#f2e9db] p-5 space-y-4 text-black
         shadow-[0_8px_20px_rgba(0,0,0,0.08)]
       "
     >
       <h4 className="font-bold text-sm">Servicios seleccionados</h4>
 
-      <div className="space-y-2">
-        {booking.state.services.map((s) => (
-          <div
-            key={s.id}
-            className="flex justify-between text-sm text-black/80"
-          >
-            <span>
-              {s.name} · {s.duration} min
-            </span>
-            <span>${s.price.toLocaleString()}</span>
-          </div>
-        ))}
-      </div>
+      <motion.div layout className="space-y-2">
+        <AnimatePresence mode="popLayout">
+          {booking.state.services.map((s) => (
+            <motion.div
+              key={s.id}
+              layout
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="flex justify-between text-sm text-black/80"
+            >
+              <span>
+                {s.name} · {s.duration} min
+              </span>
+              <span>${s.price.toLocaleString()}</span>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
 
       <div className="border-t border-black/10 pt-3 space-y-1 text-sm">
         <div className="flex justify-between">
@@ -58,6 +65,6 @@ export default function SelectedServicesSummary({ booking }: Props) {
         <span>Total</span>
         <span>${totalPrice.toLocaleString()}</span>
       </div>
-    </div>
+    </motion.div>
   );
 }

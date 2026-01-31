@@ -1,10 +1,10 @@
-import { BookingState } from "../types/booking.types";
+import { BookingDraft } from "../types/booking.types";
 
-export const initialBookingState: BookingState = {
+export const initialBookingState: BookingDraft = {
   step: 1,
   services: [],
+  selectedWorker: null,
   date: null,
   time: null,
   userInfo: null,
-  paymentProof: null,
 };
