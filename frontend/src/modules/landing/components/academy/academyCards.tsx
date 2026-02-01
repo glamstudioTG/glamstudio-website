@@ -13,6 +13,19 @@ interface Props {
   course: AcademyCourse;
 }
 
+export function getWhatsAppCourseLink(courseTitle: string) {
+  const phone = "573122724820";
+
+  const message = `
+Hola, buen día.
+Me gustaría recibir información detallada sobre el curso "${courseTitle}".
+Quedo atento(a) a su respuesta.
+Muchas gracias.
+  `.trim();
+
+  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+}
+
 export default function AcademyCard({ course }: Props) {
   return (
     <div
@@ -97,7 +110,7 @@ export default function AcademyCard({ course }: Props) {
               </div>
 
               <a
-                href={`https://wa.me/57XXXXXXXXXX?text=Hola, quiero información sobre el curso ${course.title}`}
+                href={getWhatsAppCourseLink(course.title)}
                 target="_blank"
                 className="
                   block

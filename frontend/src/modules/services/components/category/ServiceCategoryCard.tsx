@@ -1,12 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CategoryTypesData } from "../types";
+import { Category } from "../../types/category.types";
 import { CornerAccentButton } from "@/src/components/ui/shadcn-io/corner-accent-button";
 import {
   Accordion,
   AccordionItem,
   AccordionContent,
+  AccordionTrigger,
 } from "@/src/components/ui/shadcn-io/accordion/accordion";
 import ServiceItem from "./ServiceItem";
 import Image from "next/image";
@@ -15,9 +16,11 @@ import { Button } from "@/src/components/ui/shadcn-io/shimmerButton/button";
 import { Eye, EyeClosed } from "lucide-react";
 import { itemFadeUp } from "../../hooks/animations/animations";
 import { useState } from "react";
+import { slugify } from "../../hooks/slugifi/slugify";
+import Link from "next/link";
 
 type Props = {
-  category: CategoryTypesData;
+  category: Category;
   direction: "normal" | "reverse";
 };
 
@@ -26,15 +29,15 @@ export default function ServiceCategoryCard({ category, direction }: Props) {
   const [open, setOpen] = useState<string | undefined>(undefined);
 
   const isOpen = open === "services";
-  const toggle = () => setOpen(open === "services" ? undefined : "services");
 
   return (
     <motion.div
+      layout
+      id={slugify(category.name)}
       variants={itemFadeUp}
-      initial="initial"
+      initial={false}
       whileInView="enter"
-      exit="exit"
-      viewport={{ amount: 0.3 }}
+      viewport={{ once: true }}
       className="bg-[#FFD7D7] rounded-xl p-6 md:p-10 shadow-lg"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
@@ -52,7 +55,7 @@ export default function ServiceCategoryCard({ category, direction }: Props) {
               `}
             />
             <Image
-              src={imageProof}
+              src={category.image || imageProof}
               alt={category.name}
               width={237}
               height={343}
@@ -75,15 +78,19 @@ export default function ServiceCategoryCard({ category, direction }: Props) {
           </p>
 
           <div className="mt-8 flex flex-col md:flex-row gap-4 md:gap-8 justify-center md:justify-start">
-            <CornerAccentButton
-              accentColor="bg-[#E3D4BF] cursor-pointer min-w-]"
-              className="cursor-pointer min-w-50"
-            >
-              Reservar ahora
-            </CornerAccentButton>
+            <Link href={"/booking"}>
+              <CornerAccentButton
+                accentColor="bg-[#E3D4BF] cursor-pointer"
+                className="cursor-pointer min-w-50 m-auto"
+              >
+                Reservar ahora
+              </CornerAccentButton>
+            </Link>
 
             <Button
-              onClick={toggle}
+              onClick={() =>
+                setOpen(open === "services" ? undefined : "services")
+              }
               variant="ghost"
               className="text-black hover:bg-[#850E35]/30 min-h-12.25 max-w-40 flex gap-2 cursor-pointer m-auto"
             >
@@ -108,33 +115,30 @@ export default function ServiceCategoryCard({ category, direction }: Props) {
         </div>
       </div>
 
-      <Accordion
-        type="single"
-        collapsible
-        value={open}
-        onValueChange={setOpen}
-        className="mt-6"
-      >
-        <AccordionItem value="services">
-          <AccordionContent>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35 }}
-              className="mt-10"
-            >
-              <div className="h-px w-full bg-[#850E35] mb-6" />
+      <div className="relative z-20 w-full">
+        <Accordion
+          type="single"
+          collapsible
+          value={open}
+          onValueChange={setOpen}
+          className="mt-6"
+        >
+          <AccordionItem value="services">
+            <AccordionTrigger className="sr-only" />
+            <AccordionContent>
+              <div className="mt-10">
+                <div className="h-px w-full bg-[#850E35] mb-6" />
 
-              <div className="grid grid-cols-1 gap-6">
-                {category.services.map((service) => (
-                  <ServiceItem key={service.id} service={service} />
-                ))}
+                <div className="grid grid-cols-1 gap-6">
+                  {category.services.map((service) => (
+                    <ServiceItem key={service.id} service={service} />
+                  ))}
+                </div>
               </div>
-            </motion.div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
     </motion.div>
   );
 }

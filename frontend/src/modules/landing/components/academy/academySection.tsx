@@ -48,7 +48,7 @@ export default function AcademySection() {
   const remainder = total % 3;
 
   return (
-    <section className="py-24 bg-[#FFEAEA]">
+    <section className="py-24 bg-[#FFEAEA]" id="academy">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           variants={headerVariants}

@@ -1,27 +1,27 @@
 "use client";
 
-import leftTop from "@/public/images/landing/hero/top-left.png";
-import centerTop from "@/public/images/landing/hero/top-center.png";
-import rightTop from "@/public/images/landing/hero/top-right.png";
-import leftCenter from "@/public/images/landing/hero/center-left.png";
-import centerCenter from "@/public/images/landing/hero/center-center.png";
-import rightCenter from "@/public/images/landing/hero/center-right.png";
-import leftBottom from "@/public/images/landing/hero/bottom-left.png";
-import rightBottom from "@/public/images/landing/hero/bottom-center.png";
+import leftTop from "@/public/images/landing/hero-2/top-left.png";
+import centerTop from "@/public/images/landing/hero-2/top-center.png";
+import leftCenter from "@/public/images/landing/hero-2/center-left.png";
+import centerCenter from "@/public/images/landing/hero-2/center-center.png";
+import rightCenter from "@/public/images/landing/hero-2/center-right.png";
+import leftBottom from "@/public/images/landing/hero-2/bottom-left.png";
+import rightBottom from "@/public/images/landing/hero-2/bottom-right.png";
+import centerBottom from "@/public/images/landing/hero-2/bottom-center.png";
 import Image from "next/image";
 import { motion, easeOut, delay } from "framer-motion";
 
 const images = [
-  { src: leftTop, w: 220, h: 290, top: -110, left: 35 },
-  { src: centerTop, w: 270, h: 300, top: -117, left: 155 },
-  { src: rightTop, w: 240, h: 210, top: 15, left: 368 },
+  { src: leftTop, w: 150, h: 180, top: -30, left: 68 },
+  { src: centerTop, w: 180, h: 190, top: -60, left: 230 },
 
-  { src: leftCenter, w: 220, h: 260, top: 100, left: 10 },
-  { src: centerCenter, w: 220, h: 260, top: 110, left: 205 },
-  { src: rightCenter, w: 250, h: 220, top: 220, left: 368 },
+  { src: leftCenter, w: 170, h: 160, top: 155, left: 48 },
+  { src: centerCenter, w: 190, h: 180, top: 130, left: 220 },
+  { src: rightCenter, w: 128, h: 128, top: 75, left: 413 },
 
-  { src: leftBottom, w: 180, h: 220, top: 320, left: 35 },
-  { src: rightBottom, w: 220, h: 280, top: 305, left: 205 },
+  { src: leftBottom, w: 140, h: 130, top: 318, left: 78 },
+  { src: centerBottom, w: 185, h: 150, top: 313, left: 226 },
+  { src: rightBottom, w: 150, h: 160, top: 205, left: 413 },
 ];
 
 export default function HeroImageMosaic({
@@ -96,7 +96,12 @@ export default function HeroImageMosaic({
             }}
             className="absolute overflow-hidden rounded-2xl"
           >
-            <Image src={img.src} alt="" fill className="object-contain" />
+            <Image
+              src={img.src}
+              alt=""
+              fill
+              className="object-cover rounded-2xl"
+            />
           </motion.div>
         );
       })}

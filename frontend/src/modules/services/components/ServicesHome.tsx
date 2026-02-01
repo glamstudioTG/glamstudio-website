@@ -11,7 +11,6 @@ export default function ServiceHome() {
         variants={sectionHeader}
         initial="initial"
         whileInView="enter"
-        exit="exit"
         viewport={{ amount: 0.6 }}
         className="font-mono text-black text-5xl md:text-6xl text-center mb-24"
       >

@@ -174,9 +174,7 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
           </div>
         </div>
 
-        {/* COLUMNA DERECHA */}
         <div className="space-y-6">
-          {/* RESUMEN */}
           <div className="rounded-xl bg-white p-6 space-y-4 text-sm">
             <h4 className="font-semibold text-black">Resumen de tu cita</h4>
 
@@ -215,7 +213,6 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
         </div>
       </div>
 
-      {/* ACTIONS */}
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between pt-4">
         <button
           onClick={navigation.prevStep}

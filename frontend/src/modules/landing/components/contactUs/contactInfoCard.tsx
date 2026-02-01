@@ -26,7 +26,7 @@ export default function ContactInfoCard({
           className={`
             absolute inset-0
             rounded-xl blur-[34px] opacity-80
-            bg-[#850E35]/40
+            bg-[#F7ADB7]/60
             pointer-events-none
             ${
               isLeft

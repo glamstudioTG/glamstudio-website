@@ -6,15 +6,19 @@ export const footerLinks = [
 ];
 
 const message = encodeURIComponent(
-  "Hola, quiero más información sobre sus servicios y disponibilidad. ¡Gracias!."
+  "Hola, quiero más información sobre sus servicios y disponibilidad. ¡Gracias!.",
 );
 
 export const socialLinks = [
-  { label: "Instagram", href: "#", icon: "instagram" },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/glamstudiotg?igsh=em1jNjg0OTFkd3px",
+    icon: "instagram",
+  },
   { label: "Facebook", href: "#", icon: "facebook" },
   {
     label: "WhatsApp",
-    href: `https://wa.me/573144455235?text=${message}`,
+    href: `https://wa.me/573122724820?text=${message}`,
     icon: "whatsapp",
   },
 ];

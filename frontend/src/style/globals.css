@@ -183,3 +183,12 @@ body {
     #fff5e4 100%
   );
 }
+
+@keyframes sectionPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(133, 14, 53, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(133, 14, 53, 0);
+  }
+}

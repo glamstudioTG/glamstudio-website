@@ -21,7 +21,7 @@ export default function AcademyCTASection() {
             className="mt-4 bg-[#8E4B5D] hover:bg-[#7a3f4f] text-white px-8 py-6 rounded-md text-sm font-medium flex items-center gap-2"
           >
             <a
-              href="https://wa.me/573000000000?text=Hola%20quiero%20información%20sobre%20los%20cursos%20de%20GlamStudio%20Academy"
+              href="https://wa.me/573122724820?text=Hola%2C%20buen%20día.%20Me%20interesa%20recibir%20información%20detallada%20sobre%20los%20cursos%20disponibles%20en%20GlamStudio%20Academy.%20Quedo%20atento%20a%20su%20respuesta.%20Muchas%20gracias."
               target="_blank"
               rel="noopener noreferrer"
             >

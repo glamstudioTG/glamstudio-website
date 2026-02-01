@@ -4,6 +4,7 @@ import { CornerAccentButton } from "@/src/components/ui/shadcn-io/corner-accent-
 import { MagneticButton } from "@/src/components/ui/shadcn-io/magnetic-button";
 import HeroImageMosaic from "./HeroImageMosaic";
 import { motion, easeOut } from "framer-motion";
+import Link from "next/link";
 
 export default function HeroSection() {
   const textContainer = {
@@ -114,10 +115,16 @@ export default function HeroSection() {
             variants={textItem}
             className="flex items-center gap-4 pt-2"
           >
-            <CornerAccentButton className=" text-center">
-              Reserva tu cita
-            </CornerAccentButton>
-            <MagneticButton>Ver nuestros servicios</MagneticButton>
+            <Link href={"/booking"}>
+              <CornerAccentButton className=" text-center cursor-pointer">
+                Reserva tu cita
+              </CornerAccentButton>
+            </Link>
+            <Link href={"/services"}>
+              <MagneticButton className="cursor-pointer">
+                Ver nuestros servicios
+              </MagneticButton>
+            </Link>
           </motion.div>
         </motion.div>
 

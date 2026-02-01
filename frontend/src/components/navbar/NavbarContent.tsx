@@ -10,10 +10,14 @@ import {
   PopoverContent,
 } from "@/src/components/ui/shadcn-io/popover/popover";
 import { useCloseOnScroll } from "./useScrollDirection";
+import { scrollToId } from "@/lib/scrollToId";
+import { useRouter } from "next/navigation";
 
 export default function NavbarContent() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+
+  const router = useRouter();
 
   useCloseOnScroll(() => {
     setServicesOpen(false);
@@ -42,7 +46,12 @@ export default function NavbarContent() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={() => setServicesOpen(false)}
+                    onClick={() => {
+                      router.push("/services");
+                      setTimeout(() => {
+                        scrollToId("cejas");
+                      }, 50);
+                    }}
                     className="
                       group flex items-center gap-3
                       rounded-lg px-3 py-2
@@ -71,6 +80,10 @@ export default function NavbarContent() {
       {NAV_ITEMS.filter((i) => i.label !== "Servicios").map((item) => (
         <Link
           key={item.href}
+          onClick={() => {
+            scrollToId("cejas");
+            setServicesOpen(false);
+          }}
           href={item.href}
           className="text-sm font-medium text-black/80 hover:text-black transition"
         >
