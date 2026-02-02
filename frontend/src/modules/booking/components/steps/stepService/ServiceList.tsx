@@ -3,40 +3,27 @@
 import { Trash, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookingForm, BookingService } from "../../../types/booking.types";
-import { SERVICES_CATALOG } from "./ServiceCatalog";
 
-interface ServiceListProps {
+interface Props {
   booking: BookingForm;
+  services: BookingService[];
 }
 
-export default function ServiceList({ booking }: ServiceListProps) {
-  const baseServices = SERVICES_CATALOG.filter((s) => s.featured);
-
-  const selectedExtraServices = booking.state.services
-    .filter((selected) => !baseServices.some((base) => base.id === selected.id))
-    .slice()
-    .reverse();
-
-  const visibleServices = [...selectedExtraServices, ...baseServices];
-
+export default function ServiceList({ booking, services }: Props) {
   const toggleService = (service: BookingService) => {
     const exists = booking.state.services.some((s) => s.id === service.id);
 
-    booking.setServices(
-      exists
-        ? booking.state.services.filter((s) => s.id !== service.id)
-        : [...booking.state.services, { ...service }],
-    );
+    if (exists) {
+      booking.removeService(service.id);
+    } else {
+      booking.addService(service);
+    }
   };
 
   return (
     <div className="space-y-4 max-h-82.5 overflow-y-auto p-5">
-      {visibleServices.map((service) => {
+      {services.map((service) => {
         const selected = booking.state.services.some(
-          (s) => s.id === service.id,
-        );
-
-        const selectedService = booking.state.services.find(
           (s) => s.id === service.id,
         );
 
@@ -49,13 +36,11 @@ export default function ServiceList({ booking }: ServiceListProps) {
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="space-y-2"
           >
-            {/* BOTÓN SERVICIO */}
             <motion.button
               layout
               onClick={() => toggleService(service)}
               className="group relative w-full text-left"
             >
-              {/* glow */}
               <motion.span
                 aria-hidden
                 initial={{ opacity: 0 }}
@@ -105,6 +90,7 @@ export default function ServiceList({ booking }: ServiceListProps) {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.6, opacity: 0 }}
                         transition={{ duration: 0.2 }}
+                        className="cursor-pointer"
                       >
                         <Trash size={18} />
                       </motion.span>
@@ -115,6 +101,7 @@ export default function ServiceList({ booking }: ServiceListProps) {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.6, opacity: 0 }}
                         transition={{ duration: 0.2 }}
+                        className="cursor-pointer"
                       >
                         <Plus size={18} />
                       </motion.span>

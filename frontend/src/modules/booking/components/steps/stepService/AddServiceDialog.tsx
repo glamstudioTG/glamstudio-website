@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -8,30 +8,8 @@ import {
   DialogTitle,
 } from "@/src/components/ui/shadcn-io/dialog/dialog";
 import { BookingService } from "../../../types/booking.types";
-
-const MOCK_SERVICES: BookingService[] = [
-  {
-    id: "3",
-    name: "Diseño de cejas",
-    description: "Perfilado profesional",
-    price: 50000,
-    duration: 30,
-  },
-  {
-    id: "4",
-    name: "Tinte de cejas",
-    description: "Color uniforme",
-    price: 60000,
-    duration: 25,
-  },
-  {
-    id: "5",
-    name: "Lifting de pestañas",
-    description: "Curvatura natural",
-    price: 120000,
-    duration: 60,
-  },
-];
+import { useDebouncedValue } from "../../../hooks/query/useDebouncedValue";
+import { useSearchServicesQuery } from "../../../hooks/query/step1.queries";
 
 interface Props {
   onSelect: (service: BookingService) => void;
@@ -42,15 +20,19 @@ export default function AddServiceDialog({ onSelect, selectedIds }: Props) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
 
-  const suggestions = useMemo(() => {
-    if (!query) return MOCK_SERVICES.slice(0, 3);
-    return MOCK_SERVICES.filter((s) =>
-      s.name.toLowerCase().includes(query.toLowerCase()),
-    ).slice(0, 3);
-  }, [query]);
+  const debouncedQuery = useDebouncedValue(query, 400);
+
+  const { data: suggestions = [], isLoading } =
+    useSearchServicesQuery(debouncedQuery);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+        if (!open) setQuery("");
+      }}
+    >
       <DialogTrigger asChild>
         <button className="rounded-full border border-[#850E35] px-4 py-2 text-sm text-black cursor-pointer">
           + Añadir más servicios
@@ -88,6 +70,14 @@ export default function AddServiceDialog({ onSelect, selectedIds }: Props) {
         />
 
         <div className="mt-4 space-y-2">
+          {isLoading && (
+            <p className="text-xs text-black/60">Buscando servicios…</p>
+          )}
+
+          {!isLoading && suggestions.length === 0 && query.length >= 2 && (
+            <p className="text-xs text-black/50">No se encontraron servicios</p>
+          )}
+
           {suggestions.map((service) => {
             const isSelected = selectedIds.includes(service.id);
 
@@ -100,13 +90,13 @@ export default function AddServiceDialog({ onSelect, selectedIds }: Props) {
                   setOpen(false);
                 }}
                 className={`
-                  w-full rounded-lg px-4 py-3 text-left transition cursor-pointer
-                  ${
-                    isSelected
-                      ? "opacity-40 cursor-not-allowed"
-                      : "hover:bg-[#FDEAF2]/40"
-                  }
-                `}
+          w-full rounded-lg px-4 py-3 text-left transition
+          ${
+            isSelected
+              ? "opacity-40 cursor-not-allowed"
+              : "hover:bg-[#FDEAF2]/40"
+          }
+        `}
               >
                 <p className="text-sm font-medium">{service.name}</p>
                 <p className="text-xs text-black/60">

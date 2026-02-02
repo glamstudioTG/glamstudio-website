@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { BookingWorker } from "../../../types/booking.types";
+import { ServiceWorkerSkeleton } from "./loading";
 
 interface Props {
   workers: BookingWorker[];
@@ -15,11 +16,7 @@ export default function ServiceWorkerGrid({
   onSelect,
 }: Props) {
   if (workers.length === 0) {
-    return (
-      <p className="text-sm text-black/60">
-        No hay especialistas que realicen todos los servicios seleccionados.
-      </p>
-    );
+    return <ServiceWorkerSkeleton />;
   }
 
   return (
@@ -38,7 +35,7 @@ export default function ServiceWorkerGrid({
               ${
                 active
                   ? "border-[#850E35]/70 bg-[#FDEAF2]"
-                  : "border-black/10 bg-white"
+                  : "border-black/10 bg-white hover:bg-[#FDEAF2] cursor-pointer"
               }
             `}
           >

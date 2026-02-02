@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { StepProps } from "../../../types/booking.types";
 import StepHeader from "../../../service/StepUtils/StepHeader";
 import ServiceBrowser from "./ServiceBrowser";
@@ -8,23 +8,24 @@ import SelectedServicesSummary from "./SelectedServicesSummary";
 import AddServiceDialog from "./AddServiceDialog";
 import { Sparkles } from "lucide-react";
 import { motion, easeOut } from "framer-motion";
-import { WORKERS } from "./ServiceCatalog";
 import ServiceWorkerGrid from "./ServiceWorkerGrid";
+import { useWorkersByServicesMutation } from "../../../hooks/query/step1.queries";
 
 export default function StepServices({ booking, navigation }: StepProps) {
-  const compatibleWorkers = useMemo(() => {
-    if (booking.state.services.length === 0) return [];
+  const workersMutation = useWorkersByServicesMutation();
+
+  useEffect(() => {
+    if (booking.state.services.length === 0) return;
 
     const serviceIds = booking.state.services.map((s) => s.id);
-
-    return WORKERS.filter((worker) =>
-      serviceIds.every((serviceId) => worker.services.includes(serviceId)),
-    );
+    workersMutation.mutate(serviceIds);
   }, [booking.state.services]);
 
   useEffect(() => {
     navigation.setContext(booking.state);
-  }, [booking.state]);
+  }, [booking.state.services, booking.state.selectedWorker]);
+
+  const compatibleWorkers = workersMutation.data ?? [];
 
   const handleNext = () => {
     if (booking.state.services.length === 0) return;
@@ -135,6 +136,7 @@ export default function StepServices({ booking, navigation }: StepProps) {
             text-white text-sm font-medium
             disabled:opacity-40
             transition-all
+            cursor-pointer
             enabled:hover:scale-[1.03]
           "
         >

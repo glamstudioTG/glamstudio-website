@@ -1,5 +1,3 @@
-import { AuthToken } from "./token.types";
-
 const TOKEN_KEY = "auth_token";
 
 export const tokenService = {

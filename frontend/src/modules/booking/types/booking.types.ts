@@ -1,16 +1,22 @@
 import { useBookingForm } from "../hooks/useBookingForm";
 import useStepNavigation from "../hooks/useStepNavigation";
 
+export type BookingStatus =
+  | "PENDING_PAYMENT"
+  | "PENDING_REVIEW"
+  | "CONFIRMED"
+  | "CANCELLED"
+  | "COMPLETED";
+
 export type BookingService = {
   id: string;
   name: string;
   description: string;
   duration: number;
   price: number;
-  featured?: boolean;
+  isFeature?: boolean;
   totalPrice?: number;
   totalDuration?: number;
-  workers?: BookingWorker[];
 };
 
 export type DayAvailability = {
@@ -33,7 +39,6 @@ export type BookingState = {
 };
 
 export type BookingDraft = {
-  step: number;
   services: BookingService[];
   selectedWorker: BookingWorker | null;
   date: Date | null;
@@ -44,7 +49,7 @@ export type BookingDraft = {
 export type Booking = BookingDraft & {
   id: string;
   paymentProof: File | null;
-  status: "PENDING_PAYMENT" | "CONFIRMED" | "CANCELLED";
+  status: BookingStatus;
   expiresAt: Date;
 };
 
@@ -76,16 +81,19 @@ export interface BookingForm {
 
   setServices: (services: BookingService[]) => void;
   addService: (service: BookingService) => void;
+  removeService: (serviceId: string) => void;
 
   setSelectedWorker: (worker: BookingWorker) => void;
   setDate: (date: Date) => void;
   setTime: (time: string) => void;
   setUserInfo: (user: UserInfo) => void;
+
+  confirmBooking: () => Promise<string>;
 }
 
 export interface BookingWorker {
   id: string;
   name: string;
   avatar?: string;
-  services: string[];
+  categoryIds: string[];
 }
