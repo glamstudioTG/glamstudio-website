@@ -23,6 +23,29 @@ export class CategoryService {
     return data;
   }
 
+  async getCategoriesWhitService() {
+    return this.prisma.category.findMany({
+      orderBy: { createdAt: 'asc' },
+      include: {
+        services: {
+          orderBy: {
+            createdAt: 'asc',
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            duration: true,
+            price: true,
+            image: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+      },
+    });
+  }
+
   async getAllCategories() {
     return await this.prisma.category.findMany();
   }

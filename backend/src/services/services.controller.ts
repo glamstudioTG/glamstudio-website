@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ServicesService } from './services.service';
@@ -18,14 +19,24 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 export class ServicesController {
   constructor(private serviceService: ServicesService) {}
 
-  @Get('category/:id')
-  getServiceByCategory(@Param('id') id: string) {
-    return this.serviceService.getServiceByCategory(id);
+  @Get('search')
+  searchServices(@Query('q') q: string) {
+    return this.serviceService.searchServicesByName(q);
   }
 
   @Get()
   getServices() {
     return this.serviceService.getServices();
+  }
+
+  @Get('featured')
+  getFeaturedServices() {
+    return this.serviceService.getFeaturedServices();
+  }
+
+  @Get('category/:id')
+  getServiceByCategory(@Param('id') id: string) {
+    return this.serviceService.getServiceByCategory(id);
   }
 
   @Get(':id')

@@ -10,7 +10,6 @@ import {
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import type { JwtUserPayload } from 'src/auth/decorator/current-user.decorator';
 import { OptionalJwtGuard } from 'src/auth/guards/optional-jwt.guard';

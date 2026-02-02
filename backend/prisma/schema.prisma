@@ -97,6 +97,7 @@ model Service {
   duration    Int
   price       Float
   image       String?
+  isFeature   Boolean?
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])

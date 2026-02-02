@@ -24,6 +24,22 @@ export class ServicesService {
     });
   }
 
+  async searchServicesByName(query: string) {
+    if (!query || query.trim().length < 2) {
+      return [];
+    }
+
+    return this.prisma.service.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: 'insensitive',
+        },
+      },
+      take: 5,
+    });
+  }
+
   async getServices() {
     return await this.prisma.service.findMany({
       include: { category: true },
@@ -60,6 +76,17 @@ export class ServicesService {
         },
       },
       include: { category: true },
+    });
+  }
+
+  async getFeaturedServices() {
+    return this.prisma.service.findMany({
+      where: {
+        isFeature: true,
+      },
+      include: {
+        category: true,
+      },
     });
   }
 
