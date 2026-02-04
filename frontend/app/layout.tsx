@@ -4,6 +4,7 @@ import "../src/style/globals.css";
 import Footer from "@/src/components/footer/Footer";
 import Navbar from "@/src/components/navbar/Navbar";
 import { Providers } from "./providers";
+import { AuthProvider } from "@/src/hooks/auth/AuthContext";
 
 const greatVibes = Great_Vibes({
   subsets: ["latin"],
@@ -38,11 +39,13 @@ export default function RootLayout({
       className={`${greatVibes.variable} ${merriweather.variable}`}
     >
       <body className="antialiased relative overflow-x-hidden bg-[#FFEFD3]">
-        <Providers>
-          <Navbar />
-          {children}
-          <Footer />
-        </Providers>
+        <AuthProvider>
+          <Providers>
+            <Navbar />
+            {children}
+            <Footer />
+          </Providers>
+        </AuthProvider>
       </body>
     </html>
   );

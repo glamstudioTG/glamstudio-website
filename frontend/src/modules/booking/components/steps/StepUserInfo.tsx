@@ -16,6 +16,7 @@ import {
   isValidEmail,
   isValidPhone,
 } from "../../service/serviceErrorUserInputs";
+import { useAuth } from "@/src/hooks/auth/AuthContext";
 
 const containerVariants = {
   initial: { opacity: 0, y: 24 },
@@ -44,20 +45,34 @@ const fieldVariants = {
 };
 
 export default function StepUserInfo({ booking, navigation }: StepProps) {
-  useEffect(() => {
-    navigation.setContext(booking.state);
-  }, [booking.state]);
-
-  const user = booking.state.userInfo ?? {
+  const draftUser = booking.state.userInfo ?? {
     name: "",
     email: "",
     phone: "",
     note: "",
   };
 
-  const nameValid = user.name.trim().length > 0;
-  const emailValid = isValidEmail(user.email);
-  const phoneValid = isValidPhone(user.phone);
+  useEffect(() => {
+    navigation.setContext(booking.state);
+  }, [booking.state]);
+
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) return;
+
+    booking.setUserInfo({
+      id: user.id,
+      name: user.name ?? "",
+      email: user.email ?? "",
+      phone: user.phone ?? "",
+      note: "",
+    });
+  }, [user]);
+
+  const nameValid = draftUser.name.trim().length > 0;
+  const emailValid = isValidEmail(draftUser.email ?? "");
+  const phoneValid = isValidPhone(draftUser.phone);
   const isValid = nameValid && emailValid && phoneValid;
 
   const handleNext = () => {
@@ -82,7 +97,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
         <motion.div
           initial={false}
-          animate={!nameValid && user.name ? "error" : "idle"}
+          animate={!nameValid && draftUser.name ? "error" : "idle"}
           variants={fieldVariants}
           className="space-y-1.5"
         >
@@ -93,10 +108,10 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
 
           <InputGroup>
             <InputGroupInput
-              value={user.name}
+              value={draftUser.name}
               aria-invalid={!nameValid}
               onChange={(e) =>
-                booking.setUserInfo({ ...user, name: e.target.value })
+                booking.setUserInfo({ ...draftUser, name: e.target.value })
               }
               placeholder="Tatiana Gomez"
               className="text-black"
@@ -109,7 +124,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
 
         <motion.div
           initial={false}
-          animate={user.email && !emailValid ? "error" : "idle"}
+          animate={draftUser.email && !emailValid ? "error" : "idle"}
           variants={fieldVariants}
           className="space-y-1.5"
         >
@@ -123,10 +138,10 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
           <InputGroup>
             <InputGroupInput
               type="email"
-              value={user.email}
-              aria-invalid={user.email !== "" && !emailValid}
+              value={draftUser.email}
+              aria-invalid={draftUser.email !== "" && !emailValid}
               onChange={(e) =>
-                booking.setUserInfo({ ...user, email: e.target.value })
+                booking.setUserInfo({ ...draftUser, email: e.target.value })
               }
               placeholder="correo@email.com"
               className="text-black"
@@ -139,7 +154,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
 
         <motion.div
           initial={false}
-          animate={user.phone && !phoneValid ? "error" : "idle"}
+          animate={draftUser.phone && !phoneValid ? "error" : "idle"}
           variants={fieldVariants}
           className="md:col-span-2 space-y-1.5"
         >
@@ -150,10 +165,10 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
 
           <InputGroup>
             <InputGroupInput
-              value={user.phone}
-              aria-invalid={user.phone !== "" && !phoneValid}
+              value={draftUser.phone}
+              aria-invalid={draftUser.phone !== "" && !phoneValid}
               onChange={(e) =>
-                booking.setUserInfo({ ...user, phone: e.target.value })
+                booking.setUserInfo({ ...draftUser, phone: e.target.value })
               }
               placeholder="Número de teléfono"
               className="text-black"
@@ -175,16 +190,16 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
 
           <InputGroup>
             <InputGroupTextarea
-              value={user.note}
+              value={draftUser.note}
               onChange={(e) =>
-                booking.setUserInfo({ ...user, note: e.target.value })
+                booking.setUserInfo({ ...draftUser, note: e.target.value })
               }
               placeholder="Preferencias, sensibilidad, detalles especiales"
               className="text-black min-h-24"
             />
             <InputGroupAddon align="block-end">
               <InputGroupText className="text-xs text-black/50">
-                {120 - (user.note?.length ?? 0)} caracteres
+                {120 - (draftUser.note?.length ?? 0)} caracteres
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>

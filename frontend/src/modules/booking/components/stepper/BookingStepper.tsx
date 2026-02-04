@@ -41,9 +41,9 @@ export default function BookingStepper({
                       "relative flex h-12 w-12 items-center justify-center rounded-full border-4 text-sm font-medium",
                       "transition-colors duration-300",
                       isActive &&
-                        "bg-[#850E35] border-[#850E35] text-white animate-[goldPulse_1.8s_infinite]",
+                        "bg-[#FFC6C5] border-[#FFC6C5] text-black animate-[goldPulse_1.8s_infinite]",
                       isCompleted &&
-                        "bg-[#850E35]/80 border-[#850E35]/80 text-black",
+                        "bg-[#FFC6C5]/80 border-[#FFC6C5]/80 text-black",
                       !isActive &&
                         !isCompleted &&
                         "border-white/60 text-black/70 font-bold",
@@ -66,7 +66,7 @@ export default function BookingStepper({
                   <div className="relative h-1.5 w-full rounded-full bg-white/30 overflow-hidden">
                     {isCompleted && (
                       <motion.div
-                        className="absolute inset-0 rounded-full bg-[#850E35]"
+                        className="absolute inset-0 rounded-full bg-[#FFC6C5]"
                         initial={{ scaleX: 0 }}
                         animate={{ scaleX: 1 }}
                         style={{ transformOrigin: "left" }}
@@ -98,9 +98,9 @@ export default function BookingStepper({
                   transition={{ type: "spring", stiffness: 260, damping: 18 }}
                   className={[
                     "relative flex h-10 w-10 items-center justify-center rounded-full border-2 text-xs font-semibold",
-                    isActive && "bg-[#850E35] border-[#850E35] text-white",
+                    isActive && "bg-[#FFC6C5] border-[#FFC6C5] text-black",
                     isCompleted &&
-                      "bg-[#850E35]/80 border-[#850E35]/80 text-black",
+                      "bg-[#FFC6C5]/80 border-[#FFC6C5]/80 text-black",
                     !isActive &&
                       !isCompleted &&
                       "border-white/60 text-black/70",
@@ -127,7 +127,7 @@ export default function BookingStepper({
             }}
             style={{ transformOrigin: "left" }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="h-full rounded-full bg-[#850E35]"
+            className="h-full rounded-full bg-[#FFC6C5]"
           />
         </div>
       </div>

@@ -12,12 +12,16 @@ import {
 import { useCloseOnScroll } from "./useScrollDirection";
 import { scrollToId } from "@/lib/scrollToId";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/src/hooks/auth/AuthContext";
+import AuthDialog from "../auth/AuthDialog";
 
 export default function NavbarContent() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
   const router = useRouter();
+
+  const { isAuthenticated, logout } = useAuth();
 
   useCloseOnScroll(() => {
     setServicesOpen(false);
@@ -112,32 +116,38 @@ export default function NavbarContent() {
           sideOffset={12}
           className="w-44 bg-[#ffc4c4] border-[#850e35]/40 p-3 rounded-xl"
         >
-          <button
-            onClick={() => {
-              setProfileOpen(false);
-            }}
-            className="
-              w-full text-left rounded-md px-3 py-2 text-sm
-              text-black/80 hover:bg-[#fff5e4]/15 hover:text-black
-              transition
-            "
-          >
-            Iniciar sesión
-          </button>
+          {!isAuthenticated && (
+            <AuthDialog
+              trigger={
+                <button
+                  className="
+            w-full text-left rounded-md px-3 py-2 text-sm
+            text-black/80 hover:bg-[#fff5e4]/15 hover:text-black
+            transition cursor-pointer
+          "
+                >
+                  Iniciar sesión
+                </button>
+              }
+            />
+          )}
 
-          <button
-            onClick={() => {
-              setProfileOpen(false);
-              console.log("logout");
-            }}
-            className="
-              w-full text-left rounded-md px-3 py-2 text-sm
-              text-black/80 hover:bg-red-500/10 hover:text-red-600
-              transition
-            "
-          >
-            Cerrar sesión
-          </button>
+          {isAuthenticated && (
+            <button
+              onClick={() => {
+                logout();
+                setProfileOpen(false);
+                router.push("/");
+              }}
+              className="
+        w-full text-left rounded-md px-3 py-2 text-sm
+        text-black/80 hover:bg-red-500/10 hover:text-red-600
+        transition cursor-pointer
+      "
+            >
+              Cerrar sesión
+            </button>
+          )}
         </PopoverContent>
       </Popover>
     </nav>

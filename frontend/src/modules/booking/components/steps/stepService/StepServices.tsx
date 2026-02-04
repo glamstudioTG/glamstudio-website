@@ -44,7 +44,7 @@ export default function StepServices({ booking, navigation }: StepProps) {
   return (
     <div
       className="
-        rounded-xl bg-[#EDB9B9]
+        rounded-xl bg-[#F18398]/56
         p-5 sm:p-6 lg:p-8
         space-y-6
         max-w-7xl mx-auto

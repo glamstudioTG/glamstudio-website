@@ -31,9 +31,9 @@ export default function HeroSection() {
     <section
       className="
         relative isolate w-full
-        h-svh md:min-h-screen
-        bg-hero-gradient
-        overflow-x-hidden
+      h-screen
+      bg-soft-wave
+      overflow-hidden
       "
     >
       <div className="md:hidden h-full flex flex-col">

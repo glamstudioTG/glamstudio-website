@@ -1,6 +1,7 @@
 "use client";
 
 import leftTop from "@/public/images/landing/hero-2/top-left.png";
+// import rightTop from "@/public/images/landing/hero-2/top-left.png";
 import centerTop from "@/public/images/landing/hero-2/top-center.png";
 import leftCenter from "@/public/images/landing/hero-2/center-left.png";
 import centerCenter from "@/public/images/landing/hero-2/center-center.png";
@@ -9,19 +10,20 @@ import leftBottom from "@/public/images/landing/hero-2/bottom-left.png";
 import rightBottom from "@/public/images/landing/hero-2/bottom-right.png";
 import centerBottom from "@/public/images/landing/hero-2/bottom-center.png";
 import Image from "next/image";
-import { motion, easeOut, delay } from "framer-motion";
+import { motion, easeOut } from "framer-motion";
 
 const images = [
-  { src: leftTop, w: 150, h: 180, top: -30, left: 68 },
-  { src: centerTop, w: 180, h: 190, top: -60, left: 230 },
+  { src: leftTop, w: 150, h: 180, top: -18, left: 46 },
+  { src: centerTop, w: 190, h: 190, top: -30, left: 200 },
+  // { src: rightTop, w: 120, h: 124, top: -30, left: 394 },
 
-  { src: leftCenter, w: 170, h: 160, top: 155, left: 48 },
-  { src: centerCenter, w: 190, h: 180, top: 130, left: 220 },
-  { src: rightCenter, w: 128, h: 128, top: 75, left: 413 },
+  { src: leftCenter, w: 175, h: 170, top: 165, left: 31 },
+  { src: centerCenter, w: 190, h: 180, top: 163, left: 210 },
+  { src: rightCenter, w: 116, h: 128, top: 97, left: 404 },
 
-  { src: leftBottom, w: 140, h: 130, top: 318, left: 78 },
-  { src: centerBottom, w: 185, h: 150, top: 313, left: 226 },
-  { src: rightBottom, w: 150, h: 160, top: 205, left: 413 },
+  { src: leftBottom, w: 85, h: 120, top: 338, left: 138 },
+  { src: centerBottom, w: 175, h: 150, top: 347, left: 226 },
+  { src: rightBottom, w: 130, h: 160, top: 228, left: 403 },
 ];
 
 export default function HeroImageMosaic({

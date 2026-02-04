@@ -6,4 +6,5 @@ export const initialBookingState: BookingDraft = {
   date: null,
   time: null,
   userInfo: null,
+  isGuest: true,
 };

@@ -192,3 +192,31 @@ body {
     box-shadow: 0 0 0 20px rgba(133, 14, 53, 0);
   }
 }
+
+@layer utilities {
+  .bg-soft-wave {
+    background: radial-gradient(
+      circle at center,
+      #ffffff 0%,
+      #fdecef 30%,
+      #f7cfd6 55%,
+      #f0b6c1 75%,
+      #e9aab7 100%
+    );
+  }
+
+  .bg-soft-wave::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.15) 35%,
+      rgba(255, 255, 255, 0.05) 55%,
+      transparent 70%
+    );
+    filter: blur(60px);
+    pointer-events: none;
+  }
+}

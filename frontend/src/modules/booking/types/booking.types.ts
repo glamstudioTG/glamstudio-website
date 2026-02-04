@@ -28,7 +28,7 @@ export type DayAvailability = {
 export type UserInfo = {
   id?: string;
   name: string;
-  email: string;
+  email?: string;
   phone: string;
   note?: string;
 };
@@ -44,6 +44,7 @@ export type BookingDraft = {
   date: Date | null;
   time: string | null;
   userInfo: UserInfo | null;
+  isGuest: boolean;
 };
 
 export type Booking = BookingDraft & {

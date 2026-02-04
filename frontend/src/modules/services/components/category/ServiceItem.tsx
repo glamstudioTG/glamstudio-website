@@ -17,6 +17,18 @@ type Props = {
   service: Service;
 };
 
+const formtatMinutes = (minutes: number) => {
+  if (!minutes || minutes <= 0) return "0 min";
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  if (hours === 0) return `${remainingMinutes} min`;
+  if (remainingMinutes === 0) return `${hours} horas`;
+
+  return `${hours} h ${remainingMinutes} min`;
+};
+
 export default function ServiceItem({ service }: Props) {
   return (
     <div
@@ -65,7 +77,7 @@ export default function ServiceItem({ service }: Props) {
               <div className="mt-6 space-y-4 text-sm text-gray-800">
                 <div className="flex justify-between">
                   <span className="font-medium">Duración</span>
-                  <span>{service.duration} min</span>
+                  <span>{formtatMinutes(service.duration)} </span>
                 </div>
 
                 <div className="flex justify-between">

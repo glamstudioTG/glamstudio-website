@@ -33,19 +33,10 @@ export class HttpClient {
   }
 
   private buildHeaders(options: RequestOptions): HeadersInit {
-    const headers: Record<string, string> = {
+    return {
       ...this.defaultHeaders,
       ...options.headers,
     };
-
-    if (options.auth !== false) {
-      const token = tokenService.get();
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
-      }
-    }
-
-    return headers;
   }
 
   private buildUrl(path: string): string {
