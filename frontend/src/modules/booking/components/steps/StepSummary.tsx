@@ -4,6 +4,7 @@ import { motion, AnimatePresence, easeOut } from "framer-motion";
 import StepHeader from "../../service/StepUtils/StepHeader";
 import { StepProps } from "../../types/booking.types";
 import { TicketCheck } from "lucide-react";
+import { minutesToTime } from "../../utils/time";
 
 const container = {
   initial: { opacity: 0, y: 24, filter: "blur(6px)" },
@@ -38,11 +39,18 @@ export default function StepSummary({ booking, navigation }: StepProps) {
   const { date, time, userInfo, services } = booking.state;
   const totalPrice = services.reduce((acc, s) => acc + s.price, 0);
 
-  const handleConfirm = async () => {
-    const bookingId = await booking.confirmBooking();
-    navigation.nextStep();
-  };
+  const startMinutes = time ? Number(time) : null;
+  const timeLabel = startMinutes !== null ? minutesToTime(startMinutes) : "-";
 
+  const handleConfirm = async () => {
+    try {
+      const bookingId = await booking.confirmBooking();
+      navigation.nextStep();
+    } catch (e) {
+      console.error(e);
+      alert("Error creando la reserva");
+    }
+  };
   return (
     <motion.div
       variants={container}
@@ -79,7 +87,7 @@ export default function StepSummary({ booking, navigation }: StepProps) {
               </motion.span>
 
               <motion.span variants={row}>Horario</motion.span>
-              <motion.span variants={row}>{time || "-"}</motion.span>
+              <motion.span variants={row}>{timeLabel}</motion.span>
 
               <motion.span variants={row}>Ubicación</motion.span>
               <motion.span variants={row}>
@@ -207,10 +215,9 @@ export default function StepSummary({ booking, navigation }: StepProps) {
             onClick={() => navigation.prevStep()}
             className="
               w-full sm:w-auto
-              rounded-full
-              border border-[#850E35]
-              px-6 py-3
-              text-sm text-black
+            rounded-full border border-[#850E35]
+            px-6 py-3 text-sm text-black
+            hover:bg-white/40 transition cursor-pointer
             "
           >
             Volver
@@ -222,10 +229,11 @@ export default function StepSummary({ booking, navigation }: StepProps) {
             onClick={handleConfirm}
             className="
               w-full sm:w-auto
-              rounded-full
-              bg-[#850E35]
-              px-6 py-3
-              text-sm font-medium text-white
+            rounded-full bg-[#850E35]
+            px-6 py-3 text-sm font-medium text-white
+            transition-all
+            disabled:opacity-40 cursor-pointer
+            enabled:hover:scale-[1.03]
             "
           >
             Confirmar cita y pagar

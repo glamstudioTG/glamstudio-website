@@ -19,10 +19,11 @@ export type BookingService = {
   totalDuration?: number;
 };
 
-export type DayAvailability = {
-  date: string;
-  totalSlots: number;
-  bookedSlots: number;
+export type AvailableSlot = {
+  startMin: number;
+  endMin: number;
+  start: string;
+  end: string;
 };
 
 export type UserInfo = {
@@ -42,7 +43,7 @@ export type BookingDraft = {
   services: BookingService[];
   selectedWorker: BookingWorker | null;
   date: Date | null;
-  time: string | null;
+  time: string | null; // "08:00"
   userInfo: UserInfo | null;
   isGuest: boolean;
 };
@@ -52,6 +53,33 @@ export type Booking = BookingDraft & {
   paymentProof: File | null;
   status: BookingStatus;
   expiresAt: Date;
+};
+
+export type BookingResponse = {
+  id: string;
+  status: BookingStatus;
+  date: string;
+  startTime: string;
+  endTime: string;
+  totalDuration: number;
+  totalPrice: number;
+
+  client: {
+    name: string;
+    email: string;
+  };
+
+  worker: {
+    id: string;
+    name: string;
+  };
+
+  services: {
+    id: string;
+    name: string;
+    duration: number;
+    price: number;
+  }[];
 };
 
 export type StepValidator = (ctx: BookingDraft) => boolean;

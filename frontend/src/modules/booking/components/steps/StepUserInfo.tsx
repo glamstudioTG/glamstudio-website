@@ -220,7 +220,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
             w-full sm:w-auto
             rounded-full border border-[#850E35]
             px-6 py-3 text-sm text-black
-            hover:bg-white/40 transition
+            hover:bg-white/40 transition cursor-pointer
           "
         >
           Volver
@@ -234,7 +234,7 @@ export default function StepUserInfo({ booking, navigation }: StepProps) {
             rounded-full bg-[#850E35]
             px-6 py-3 text-sm font-medium text-white
             transition-all
-            disabled:opacity-40
+            disabled:opacity-40 cursor-pointer
             enabled:hover:scale-[1.03]
           "
         >

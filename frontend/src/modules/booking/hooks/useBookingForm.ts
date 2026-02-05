@@ -5,13 +5,19 @@ import {
   UserInfo,
   BookingWorker,
   Booking,
+  BookingResponse,
 } from "../types/booking.types";
 import { initialBookingState } from "../utils/initialBookingState";
+import { useCreateBooking } from "./query/useCreateBooking";
 
 export function useBookingForm() {
   const [state, setState] = useState<BookingDraft>(initialBookingState);
-  const [booking, setBooking] = useState<Booking | null>(null);
+  const [booking, setBooking] = useState<Booking | null | BookingResponse>(
+    null,
+  );
   const [paymentProof, setPaymentProof] = useState<File | null>(null);
+
+  const createBookingMutation = useCreateBooking();
 
   const totalDuration = useMemo(
     () => state.services.reduce((acc, s) => acc + s.duration, 0),
@@ -71,37 +77,13 @@ export function useBookingForm() {
     setState((prev) => ({ ...prev, userInfo: user }));
   }, []);
 
-  const buildCreateBookingPayload = useCallback(() => {
-    if (!state.selectedWorker || !state.date || !state.time) {
-      throw new Error("Booking incompleto");
-    }
-
-    return {
-      workerId: state.selectedWorker.id,
-      serviceIds: state.services.map((s) => s.id),
-      date: state.date.toISOString(),
-      startTime: Number(state.time),
-      guestName: state.userInfo?.name,
-      guestEmail: state.userInfo?.email,
-      guestPhone: state.userInfo?.phone,
-      comment: state.userInfo?.note,
-    };
-  }, [state]);
-
   const confirmBooking = useCallback(async () => {
-    const payload = buildCreateBookingPayload();
-    const fakeBookingId = crypto.randomUUID();
+    const bookingResponse = await createBookingMutation.mutateAsync(state);
 
-    setBooking({
-      id: fakeBookingId,
-      ...state,
-      paymentProof: null,
-      status: "PENDING_PAYMENT",
-      expiresAt: new Date(Date.now() + 30 * 60 * 1000),
-    });
+    setBooking(bookingResponse);
 
-    return fakeBookingId;
-  }, [buildCreateBookingPayload, state]);
+    return bookingResponse.id;
+  }, [state, createBookingMutation]);
 
   return {
     state,
@@ -120,7 +102,5 @@ export function useBookingForm() {
     setTime,
     setUserInfo,
     setPaymentProof,
-
-    buildCreateBookingPayload,
   };
 }
