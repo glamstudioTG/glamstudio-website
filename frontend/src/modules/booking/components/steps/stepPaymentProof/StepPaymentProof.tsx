@@ -7,6 +7,9 @@ import { StepProps } from "../../../types/booking.types";
 import StepHeader from "../../../service/StepUtils/StepHeader";
 import nequi from "@/public/images/landing/nequi.svg";
 import { CopyButton } from "@/src/components/animate-ui/components/buttons/copy";
+import { useUploadTransactionProof } from "../../../hooks/query/useUploadTransactionProof";
+import { useUploadThing } from "@/src/lib/client/uploadthing";
+import { isBookingWithProof } from "../../../utils/isBookingWithProof";
 
 export default function StepPaymentProof({ booking, navigation }: StepProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -15,7 +18,42 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
     return URL.createObjectURL(booking.paymentProof);
   }, [booking.paymentProof]);
 
-  const handleClickUpload = () => {
+  const { startUpload, isUploading } = useUploadThing("transactionProof", {
+    onClientUploadComplete: (res) => {
+      const imageUrl = res[0].url;
+    },
+    onUploadError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const uploadProofMutation = useUploadTransactionProof();
+
+  const handleSubmitProof = async () => {
+    if (!booking.booking || !booking.paymentProof || isUploading) return;
+
+    try {
+      const uploadResult = await startUpload([booking.paymentProof]);
+
+      if (!uploadResult || uploadResult.length === 0) {
+        throw new Error("UploadThing no devolvió URL");
+      }
+
+      const imageUrl = uploadResult[0].url;
+
+      await uploadProofMutation.mutateAsync({
+        bookingId: booking.booking.id,
+        imageUrl,
+      });
+
+      navigation.nextStep();
+    } catch (err) {
+      console.error(err);
+      alert("Error enviando comprobante");
+    }
+  };
+
+  const openFilePicker = () => {
     fileInputRef.current?.click();
   };
 
@@ -115,7 +153,7 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
               </p>
 
               <div
-                onClick={handleClickUpload}
+                onClick={openFilePicker}
                 className="
                   cursor-pointer
                   rounded-xl border border-dashed border-[#850E35]/40
@@ -165,11 +203,12 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
                 )}
               </div>
 
-              {booking.booking?.paymentProof && (
-                <p className="text-xs text-green-700">
-                  Comprobante cargado correctamente
-                </p>
-              )}
+              {isBookingWithProof(booking.booking) &&
+                booking.booking.paymentProof && (
+                  <p className="text-xs text-green-700">
+                    Comprobante cargado correctamente
+                  </p>
+                )}
             </div>
           </div>
         </div>
@@ -203,7 +242,6 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
             </div>
           </div>
 
-          {/* RECOMENDACIONES */}
           <div className="rounded-xl bg-[#FDEAF2] p-5 space-y-2 text-xs text-black/70">
             <p>• Llegar 10 minutos antes de tu hora programada.</p>
             <p>• Asistir sin maquillaje en la zona a tratar.</p>
@@ -225,11 +263,19 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
         </button>
 
         <button
-          disabled={!booking.paymentProof}
+          disabled={
+            !booking.paymentProof ||
+            isUploading ||
+            uploadProofMutation.isPending
+          }
+          onClick={handleSubmitProof}
           className="
+            w-full sm:w-auto
             rounded-full bg-[#850E35]
-            px-6 py-2 text-sm font-medium text-white
-            disabled:opacity-40
+            px-6 py-3 text-sm font-medium text-white
+            transition-all
+            disabled:opacity-40 cursor-pointer
+            enabled:hover:scale-[1.03]
           "
         >
           Enviar comprobante y confirmar reserva
