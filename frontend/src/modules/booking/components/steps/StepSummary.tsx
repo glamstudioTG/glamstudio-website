@@ -5,6 +5,7 @@ import StepHeader from "../../service/StepUtils/StepHeader";
 import { StepProps } from "../../types/booking.types";
 import { TicketCheck } from "lucide-react";
 import { minutesToTime } from "../../utils/time";
+import { Spinner } from "@/src/components/ui/shadcn-io/spinner/spinner";
 
 const container = {
   initial: { opacity: 0, y: 24, filter: "blur(6px)" },
@@ -43,6 +44,8 @@ export default function StepSummary({ booking, navigation }: StepProps) {
   const timeLabel = startMinutes !== null ? minutesToTime(startMinutes) : "-";
 
   const handleConfirm = async () => {
+    if (isLoading) return;
+
     try {
       const bookingId = await booking.confirmBooking();
       navigation.nextStep();
@@ -51,6 +54,9 @@ export default function StepSummary({ booking, navigation }: StepProps) {
       alert("Error creando la reserva");
     }
   };
+
+  const isLoading = booking.isCreatingBooking;
+
   return (
     <motion.div
       variants={container}
@@ -224,19 +230,28 @@ export default function StepSummary({ booking, navigation }: StepProps) {
           </motion.button>
 
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
+            whileHover={{ scale: isLoading ? 1 : 1.05 }}
+            whileTap={{ scale: isLoading ? 1 : 0.97 }}
+            disabled={isLoading}
             onClick={handleConfirm}
             className="
-              w-full sm:w-auto
+            w-full sm:w-auto
             rounded-full bg-[#850E35]
             px-6 py-3 text-sm font-medium text-white
             transition-all
-            disabled:opacity-40 cursor-pointer
-            enabled:hover:scale-[1.03]
-            "
+            disabled:opacity-60
+            disabled:cursor-not-allowed
+            flex items-center justify-center gap-2 cursor-pointer
+          "
           >
-            Confirmar cita y pagar
+            {isLoading ? (
+              <>
+                <Spinner className="text-white size-5" />
+                Creando reserva...
+              </>
+            ) : (
+              "Confirmar cita y pagar"
+            )}
           </motion.button>
         </div>
       </motion.div>

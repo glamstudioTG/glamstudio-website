@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { UploadCloud, AlertCircle } from "lucide-react";
 import { StepProps } from "../../../types/booking.types";
@@ -10,8 +10,12 @@ import { CopyButton } from "@/src/components/animate-ui/components/buttons/copy"
 import { useUploadTransactionProof } from "../../../hooks/query/useUploadTransactionProof";
 import { useUploadThing } from "@/src/lib/client/uploadthing";
 import { isBookingWithProof } from "../../../utils/isBookingWithProof";
+import BookingConfirmationModal from "./BookingConfirmationModal";
+import { Spinner } from "@/src/components/ui/shadcn-io/spinner/spinner";
 
 export default function StepPaymentProof({ booking, navigation }: StepProps) {
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const previewUrl = useMemo(() => {
     if (!booking.paymentProof) return null;
@@ -29,8 +33,10 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
 
   const uploadProofMutation = useUploadTransactionProof();
 
+  const isSubmitting = isUploading || uploadProofMutation.isPending;
+
   const handleSubmitProof = async () => {
-    if (!booking.booking || !booking.paymentProof || isUploading) return;
+    if (!booking.booking || !booking.paymentProof || isSubmitting) return;
 
     try {
       const uploadResult = await startUpload([booking.paymentProof]);
@@ -46,7 +52,7 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
         imageUrl,
       });
 
-      navigation.nextStep();
+      setShowConfirmation(true);
     } catch (err) {
       console.error(err);
       alert("Error enviando comprobante");
@@ -263,24 +269,33 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
         </button>
 
         <button
-          disabled={
-            !booking.paymentProof ||
-            isUploading ||
-            uploadProofMutation.isPending
-          }
+          disabled={!booking.paymentProof || isSubmitting}
           onClick={handleSubmitProof}
           className="
-            w-full sm:w-auto
-            rounded-full bg-[#850E35]
-            px-6 py-3 text-sm font-medium text-white
-            transition-all
-            disabled:opacity-40 cursor-pointer
-            enabled:hover:scale-[1.03]
-          "
+    w-full sm:w-auto
+    rounded-full bg-[#850E35]
+    px-6 py-3 text-sm font-medium text-white
+    transition-all
+    disabled:opacity-50
+    disabled:cursor-not-allowed
+    flex items-center justify-center gap-2 cursor-pointer
+  "
         >
-          Enviar comprobante y confirmar reserva
+          {isSubmitting ? (
+            <>
+              <Spinner className="text-white size-5" />
+              Enviando comprobante...
+            </>
+          ) : (
+            "Enviar comprobante y confirmar reserva"
+          )}
         </button>
       </div>
+      <BookingConfirmationModal
+        open={showConfirmation}
+        workerName={booking.state.selectedWorker?.name}
+        onClose={() => setShowConfirmation(false)}
+      />
     </motion.div>
   );
 }

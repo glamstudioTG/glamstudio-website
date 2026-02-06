@@ -21,7 +21,10 @@ export default function NavbarContent() {
 
   const router = useRouter();
 
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
+
+  const canAccessPanel =
+    isAuthenticated && (user?.role === "WORKER" || user?.role === "ADMIN");
 
   useCloseOnScroll(() => {
     setServicesOpen(false);
@@ -130,6 +133,22 @@ export default function NavbarContent() {
                 </button>
               }
             />
+          )}
+
+          {canAccessPanel && (
+            <button
+              onClick={() => {
+                router.push("/workerPanel");
+                setProfileOpen(false);
+              }}
+              className="
+      w-full text-left rounded-md px-3 py-2 text-sm
+      text-black/80 hover:bg-[#fff5e4]/15 hover:text-black
+      transition cursor-pointer
+    "
+            >
+              Ir al panel
+            </button>
           )}
 
           {isAuthenticated && (

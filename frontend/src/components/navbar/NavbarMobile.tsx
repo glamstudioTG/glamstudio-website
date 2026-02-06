@@ -3,8 +3,11 @@
 import { useRef, useState } from "react";
 import { Menu, X, ChevronLeft, User } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { NAV_ITEMS, SERVICES_ITEMS } from "./header.data";
 import { useCloseOnScroll, useOnClickOutside } from "./useScrollDirection";
+import { useAuth } from "@/src/hooks/auth/AuthContext";
+import AuthDialog from "../auth/AuthDialog";
 
 type View = "main" | "services" | "profile";
 
@@ -12,45 +15,53 @@ export default function NavbarMobile() {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<View>("main");
 
-  const menuRef = useRef<HTMLDivElement>(null);
+  // ⬅️ ESTE ref ahora envuelve TODO
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useCloseOnScroll(() => {
-    setOpen(false);
-  });
+  const router = useRouter();
+  const { isAuthenticated, user, logout } = useAuth();
+
+  const canAccessPanel =
+    isAuthenticated && (user?.role === "WORKER" || user?.role === "ADMIN");
 
   const closeAll = () => {
     setOpen(false);
     setView("main");
   };
 
-  useOnClickOutside(menuRef, () => {
-    if (open) closeAll;
+  useCloseOnScroll(closeAll);
+
+  useOnClickOutside(containerRef, () => {
+    if (open) closeAll();
   });
 
   return (
-    <>
+    <div ref={containerRef} className="relative">
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          if (open) closeAll();
+          else setOpen(true);
+        }}
         className="p-2 rounded-md hover:bg-black/5 transition text-black"
       >
         {open ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {open && (
-        <div className="fixed top-full left-0 w-full bg-[#ffc4c4] shadow-lg rounded-b-2xl mt-2 overflow-hidden">
+        <div className="fixed top-full left-0 w-full bg-[#ffc4c4] shadow-lg rounded-b-2xl mt-2 overflow-hidden z-50">
           <div className="relative w-full overflow-x-hidden">
             <div
               className={`
-        flex w-[300%]
-        transition-transform duration-300 ease-out
-        ${
-          view === "main"
-            ? "translate-x-0"
-            : view === "services"
-              ? "-translate-x-1/3"
-              : "-translate-x-2/3"
-        }
-      `}
+                flex w-[300%]
+                transition-transform duration-300 ease-out
+                ${
+                  view === "main"
+                    ? "translate-x-0"
+                    : view === "services"
+                      ? "-translate-x-1/3"
+                      : "-translate-x-2/3"
+                }
+              `}
             >
               <div className="w-full p-6">
                 <nav className="flex flex-col gap-6">
@@ -119,31 +130,46 @@ export default function NavbarMobile() {
                 </button>
 
                 <div className="flex flex-col gap-4">
-                  <button
-                    onClick={() => {
-                      console.log("login");
-                      closeAll();
-                    }}
-                    className="text-left text-base text-black"
-                  >
-                    Iniciar sesión
-                  </button>
+                  {!isAuthenticated && (
+                    <AuthDialog
+                      trigger={
+                        <button className="text-left text-base text-black">
+                          Iniciar sesión
+                        </button>
+                      }
+                    />
+                  )}
 
-                  <button
-                    onClick={() => {
-                      console.log("logout");
-                      closeAll();
-                    }}
-                    className="text-left text-base text-red-600"
-                  >
-                    Cerrar sesión
-                  </button>
+                  {canAccessPanel && (
+                    <button
+                      onClick={() => {
+                        router.push("/workerPanel");
+                        closeAll();
+                      }}
+                      className="text-left text-base text-black"
+                    >
+                      Ir al panel
+                    </button>
+                  )}
+
+                  {isAuthenticated && (
+                    <button
+                      onClick={() => {
+                        logout();
+                        closeAll();
+                        router.push("/");
+                      }}
+                      className="text-left text-base text-red-600"
+                    >
+                      Cerrar sesión
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
