@@ -1,6 +1,5 @@
 import { BookingDraft, BookingResponse } from "../../types/booking.types";
 import { httpClient } from "@/src/lib/http/http-client";
-import { minutesToTime } from "../../utils/time";
 
 export const BookingApi = {
   create(draft: BookingDraft): Promise<BookingResponse> {
