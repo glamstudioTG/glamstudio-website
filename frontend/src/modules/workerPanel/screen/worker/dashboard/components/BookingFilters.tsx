@@ -1,5 +1,5 @@
 import { Input } from "@/src/components/ui/shadcn-io/input/input";
-import { WorkerBookingFilters } from "../../types/workerPanel.type";
+import { WorkerBookingFilters } from "@/src/modules/workerPanel/types/workerPanel.type";
 
 type Props = {
   onChange: (filters: WorkerBookingFilters) => void;

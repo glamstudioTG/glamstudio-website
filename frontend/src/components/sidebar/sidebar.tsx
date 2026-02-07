@@ -6,7 +6,7 @@ import {
   LayoutDashboard,
   Calendar,
   Users,
-  CreditCard,
+  CheckCheck,
   ShieldCheck,
   LogOut,
 } from "lucide-react";
@@ -16,8 +16,13 @@ import Image from "next/image";
 
 const navItems = [
   {
+    label: "Reservas pendientes",
+    href: "/admin/workerPanel",
+    icon: CheckCheck,
+  },
+  {
     label: "Historial de reservas",
-    href: "/workerPanel",
+    href: "/admin/workerPanel/history",
     icon: LayoutDashboard,
   },
   {

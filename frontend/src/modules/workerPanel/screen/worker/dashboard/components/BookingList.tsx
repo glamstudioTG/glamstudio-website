@@ -1,9 +1,9 @@
-import BookingCard from "./BookingCard";
-import { useWorkerBookings } from "../../hooks/use-worker-bookings";
-import { WorkerBookingFilters } from "../../types/workerPanel.type";
+import BookingCard from "../../../utils/BookingCard";
+import { useWorkerBookings } from "../../../../hooks/use-worker-bookings";
+import { WorkerBookingFilters } from "../../../../types/workerPanel.type";
 import { Skeleton } from "@/src/components/ui/shadcn-io/skeleton/skeleton";
-import BookingCardSkeleton from "./utils/BookingCardSkeleton";
-import EmptyBookingsState from "./utils/EmptyBookingsState";
+import BookingCardSkeleton from "../../../utils/BookingCardSkeleton";
+import EmptyBookingsState from "../../../utils/EmptyBookingsState";
 
 type Props = {
   workerId: string;

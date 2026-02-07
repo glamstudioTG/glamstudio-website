@@ -1,14 +1,18 @@
 import { Calendar } from "lucide-react";
 import Link from "next/link";
 
-export default function DashboardHeader() {
+export default function DashboardHeader({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
       <div>
-        <h1 className="text-5xl font-mono text-gray-900 mb-2">Reservas</h1>
-        <p className="text-sm text-gray-500">
-          Gestionar citas y verificar pagos.
-        </p>
+        <h1 className="text-5xl font-mono text-gray-900 mb-2">{title}</h1>
+        <p className="text-sm text-gray-500">{description}</p>
       </div>
 
       <div className="flex gap-3">

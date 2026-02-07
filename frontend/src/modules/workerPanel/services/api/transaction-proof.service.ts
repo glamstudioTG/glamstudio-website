@@ -4,6 +4,7 @@ import {
   TransactionProofFilters,
   TransactionProofListResponse,
 } from "../../types/transaction-proof.types";
+import { cleanFilters } from "../../utils/clean-filters";
 
 export type ReviewTransactionPayload = {
   status: "APPROVED" | "REJECTED";
@@ -29,15 +30,19 @@ class TransactionProofService {
     >(`/booking/worker/${workerId}/pending?${params.toString()}`, "GET");
   }
 
-  getHistory(page: number, filters?: TransactionProofFilters) {
+  getHistory(
+    workerId: string,
+    page: number,
+    filters?: TransactionProofFilters,
+  ) {
     const params = new URLSearchParams({
       page: String(page),
-      ...filters,
+      ...cleanFilters(filters),
     });
 
     return httpClient.request<
       TransactionProofListResponse<TransactionProofCardItem>
-    >(`/booking/history?${params.toString()}`, "GET");
+    >(`/booking/worker/${workerId}/history?${params.toString()}`, "GET");
   }
 }
 

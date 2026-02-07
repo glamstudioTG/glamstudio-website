@@ -1,7 +1,7 @@
-import ZoomableProofImage from "./utils/ZoomableProofImage";
-import { useReviewTransactionProof } from "../../hooks/use-review-transaction-proof";
-import { PropsBookingCard } from "../../types/workerPanel.type";
-import { formatMinutesToHour } from "./utils/formatMinutesToHour";
+import ZoomableProofImage from "./ZoomableProofImage";
+import { useReviewTransactionProof } from "@/src/modules/workerPanel/hooks/use-review-transaction-proof";
+import { PropsBookingCard } from "@/src/modules/workerPanel/types/workerPanel.type";
+import { formatMinutesToHour } from "./formatMinutesToHour";
 import { Spinner } from "@/src/components/ui/shadcn-io/spinner/spinner";
 
 export default function BookingCard({

@@ -1,11 +1,9 @@
 "use client";
 
-import DashboardHeader from "./components/DashboardHeader";
-import BookingFilters from "./components/BookingFilters";
-import BookingList from "./components/BookingList";
+import DashboardHeader from "../../utils/DashboardHeader";
 import { useAuth } from "@/src/hooks/auth/AuthContext";
 import { useState } from "react";
-import { WorkerBookingFilters } from "../types/workerPanel.type";
+import { WorkerBookingFilters } from "../../../types/workerPanel.type";
 import { useParams } from "next/navigation";
 import PendingTransactionProofs from "./components/PendingTransactionProofs";
 
@@ -34,7 +32,10 @@ export default function WorkerPanelSection() {
   return (
     <section className="min-h-screen bg-[#fdf0f0] p-6">
       <div className="mx-auto max-w-7xl">
-        <DashboardHeader />
+        <DashboardHeader
+          title="Reservas"
+          description="Gestionar citas y verificar pagos."
+        />
         <PendingTransactionProofs workerId={workerId} />
       </div>
     </section>

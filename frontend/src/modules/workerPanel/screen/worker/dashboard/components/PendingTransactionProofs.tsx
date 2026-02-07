@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { usePendingTransactionProofs } from "../../hooks/use-review-transaction-proof";
-import BookingCard from "./BookingCard";
-import BookingCardSkeleton from "./utils/BookingCardSkeleton";
-import EmptyBookingsState from "./utils/EmptyBookingsState";
-import TransactionProofFilters from "./utils/TransactionProofFilters";
-import { TransactionProofFilters as Filters } from "../../types/transaction-proof.types";
+import { usePendingTransactionProofs } from "@/src/modules/workerPanel/hooks/use-review-transaction-proof";
+import BookingCard from "../../../utils/BookingCard";
+import BookingCardSkeleton from "../../../utils/BookingCardSkeleton";
+import EmptyBookingsState from "../../../utils/EmptyBookingsState";
+import TransactionProofFilters from "../../../utils/TransactionProofFilters";
+import { TransactionProofFilters as Filters } from "@/src/modules/workerPanel/types/transaction-proof.types";
 
 export default function PendingTransactionProofs({
   workerId,
@@ -38,7 +38,7 @@ export default function PendingTransactionProofs({
 
   return (
     <div className="mt-6 space-y-4">
-      <TransactionProofFilters onChange={setFilters} />
+      <TransactionProofFilters onChange={setFilters} value={filters} />
 
       <h2 className="text-sm font-medium text-black">
         Pendientes por aprobar ({data.meta.total})
@@ -58,12 +58,22 @@ export default function PendingTransactionProofs({
       ))}
 
       <div className="flex justify-center gap-2 pt-4">
-        <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+          className="rounded-full border px-4 py-1 text-sm disabled:opacity-40 text-[#850E35] cursor-pointer"
+        >
           Anterior
         </button>
+
+        <span className="text-sm text-gray-500 flex items-center ">
+          Página {page} de {data.meta.totalPages}
+        </span>
+
         <button
           disabled={page >= data.meta.totalPages}
           onClick={() => setPage((p) => p + 1)}
+          className="rounded-full border px-4 py-1 text-sm disabled:opacity-40 text-[#850E35] cursor-pointer"
         >
           Siguiente
         </button>

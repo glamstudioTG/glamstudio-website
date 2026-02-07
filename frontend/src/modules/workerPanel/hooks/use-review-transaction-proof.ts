@@ -19,9 +19,15 @@ export function useReviewTransactionProof() {
       status: "APPROVED" | "REJECTED";
     }) => transactionProofService.review(proofId, { status }),
 
-    onSuccess: () => {
+    onSuccess: (_, __, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ["tp", "pending"],
+        predicate: (query) =>
+          query.queryKey[0] === "tp" && query.queryKey[1] === "pending",
+      });
+
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "tp" && query.queryKey[1] === "history",
       });
     },
   });
@@ -33,16 +39,32 @@ export function usePendingTransactionProofs(
   filters?: TransactionProofFilters,
 ) {
   return useQuery({
-    queryKey: ["tp", "pending", workerId, page, filters],
+    queryKey: ["tp", "pending", workerId, page, JSON.stringify(filters ?? {})],
     queryFn: () => transactionProofService.getPending(workerId, page, filters),
-    placeholderData: keepPreviousData,
     enabled: !!workerId,
+
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
+    retry: false,
   });
 }
-export function useTransactionProofHistory(page: number) {
+
+export function useTransactionProofHistory(
+  workerId: string,
+  page: number,
+  filters?: TransactionProofFilters,
+) {
   return useQuery({
-    queryKey: ["transaction-proofs", "history", page],
-    queryFn: () => transactionProofService.getHistory(page),
-    placeholderData: keepPreviousData,
+    queryKey: ["tp", "history", workerId, page, JSON.stringify(filters ?? {})],
+    queryFn: () => transactionProofService.getHistory(workerId, page, filters),
+    enabled: !!workerId,
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
   });
 }
