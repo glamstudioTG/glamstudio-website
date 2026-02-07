@@ -38,13 +38,9 @@ export default function RootLayout({
       lang="es"
       className={`${greatVibes.variable} ${merriweather.variable}`}
     >
-      <body className="antialiased relative overflow-x-hidden bg-[#FFEFD3]">
+      <body className="antialiased relative overflow-x-hidden bg-[#FFEAEA]">
         <AuthProvider>
-          <Providers>
-            <Navbar />
-            {children}
-            <Footer />
-          </Providers>
+          <Providers>{children}</Providers>
         </AuthProvider>
       </body>
     </html>

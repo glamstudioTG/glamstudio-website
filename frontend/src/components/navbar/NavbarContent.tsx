@@ -138,7 +138,7 @@ export default function NavbarContent() {
           {canAccessPanel && (
             <button
               onClick={() => {
-                router.push("/workerPanel");
+                router.push("/admin/workerPanel");
                 setProfileOpen(false);
               }}
               className="

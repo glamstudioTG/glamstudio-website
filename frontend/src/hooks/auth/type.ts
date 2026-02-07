@@ -5,6 +5,8 @@ export type AuthUser = {
   email: string;
   phone: string;
   role: string;
+  isWorker: boolean;
+  workerId: string | null;
 };
 
 export type AuthContextType = {

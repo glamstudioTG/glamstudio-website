@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import Logo from "@/public/logos/IMG_2865-removebg-preview 4-1.png";
+import Logo from "@/public/logos/glamLogo.png";
 import NavbarContent from "./NavbarContent";
 import NavbarMobile from "./NavbarMobile";
 import { useScrollDirection } from "./useScrollDirection";
@@ -22,7 +22,7 @@ export default function Navbar() {
       }}
       transition={{ duration: 0.35, ease: "easeInOut" }}
     >
-      <div className="mx-auto max-w-7xl px-6 py-4">
+      <div className="mx-auto max-w-7xl px-6 py-2">
         <motion.div
           animate={{
             scale: isHidden ? 0.92 : 1,
@@ -40,7 +40,7 @@ export default function Navbar() {
           "
         >
           <Link href={"/"}>
-            <Image src={Logo} alt="Glam Studio" width={120} height={40} />
+            <Image src={Logo} alt="Glam Studio" width={60} height={60} />
           </Link>
           <NavbarContent />
         </motion.div>
@@ -52,7 +52,7 @@ export default function Navbar() {
           transition={{ duration: 0.25 }}
           className="
             flex md:hidden items-center justify-between
-            rounded-full px-6 py-3
+            rounded-full px-6 py-1
             bg-[#ffc4c4]/40
             backdrop-blur-md
             shadow-md
@@ -60,7 +60,7 @@ export default function Navbar() {
           "
         >
           <Link href={"/"}>
-            <Image src={Logo} alt="Glam Studio" width={100} height={32} />
+            <Image src={Logo} alt="Glam Studio" width={60} height={60} />
           </Link>
           <NavbarMobile />
         </motion.div>

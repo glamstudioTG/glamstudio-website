@@ -143,7 +143,7 @@ export default function NavbarMobile() {
                   {canAccessPanel && (
                     <button
                       onClick={() => {
-                        router.push("/workerPanel");
+                        router.push("/admin/workerPanel");
                         closeAll();
                       }}
                       className="text-left text-base text-black"

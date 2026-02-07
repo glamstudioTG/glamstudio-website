@@ -2,13 +2,15 @@ import { AuthUser } from "@/src/hooks/auth/type";
 import { httpClient } from "@/src/lib/http/http-client";
 
 export const AuthApi = {
-  login(email: string, password: string) {
-    return httpClient.request<AuthUser>(
+  async login(email: string, password: string) {
+    await httpClient.request<AuthUser>(
       "/auth/login",
       "POST",
       { email, password },
       { auth: false },
     );
+
+    return this.me();
   },
 
   register(payload: {
