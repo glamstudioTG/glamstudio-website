@@ -27,7 +27,7 @@ const navItems = [
   },
   {
     label: "Mis horarios y bloqueos",
-    href: "/workerPanel/schedule",
+    href: "/admin/workerPanel/schedule-managment",
     icon: Calendar,
   },
   {

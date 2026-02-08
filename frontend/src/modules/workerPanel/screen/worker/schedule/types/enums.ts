@@ -1,0 +1,29 @@
+export enum BookingStatus {
+  PENDING_PAYMENT = "PENDING_PAYMENT",
+  PENDING_REVIEW = "PENDING_REVIEW",
+  CONFIRMED = "CONFIRMED",
+  CANCELLED = "CANCELLED",
+  COMPLETED = "COMPLETED",
+}
+
+export enum TransactionStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+}
+
+export enum Role {
+  CLIENT = "CLIENT",
+  WORKER = "WORKER",
+  ADMIN = "ADMIN",
+}
+
+export enum DayOfWeek {
+  SUNDAY = "SUNDAY",
+  MONDAY = "MONDAY",
+  TUESDAY = "TUESDAY",
+  WEDNESDAY = "WEDNESDAY",
+  THURSDAY = "THURSDAY",
+  FRIDAY = "FRIDAY",
+  SATURDAY = "SATURDAY",
+}
