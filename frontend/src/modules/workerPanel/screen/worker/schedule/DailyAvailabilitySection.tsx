@@ -4,7 +4,7 @@ import { useAuth } from "@/src/hooks/auth/AuthContext";
 import { useParams } from "next/navigation";
 import DashboardHeader from "../../utils/DashboardHeader";
 import DailyAvailabilityList from "./components/cards/DailyAvailabilityList";
-import SectionState from "./utils/SectionState";
+import SectionState from "../../utils/SectionState";
 
 export default function DailyAvailabilitySection() {
   const { user, loading } = useAuth();

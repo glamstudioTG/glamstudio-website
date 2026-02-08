@@ -6,14 +6,34 @@ import { useState } from "react";
 import { WorkerBookingFilters } from "../../../types/workerPanel.type";
 import { useParams } from "next/navigation";
 import PendingTransactionProofs from "./components/PendingTransactionProofs";
+import SectionState from "../../utils/SectionState";
 
 export default function WorkerPanelSection() {
   const { user, loading } = useAuth();
   const { workerId: workerIdParam } = useParams<{ workerId: string }>();
   const [filters, setFilters] = useState<WorkerBookingFilters>({});
 
-  if (loading) return null;
-  if (!user) return <p className="text-black">No autorizado</p>;
+  if (loading) {
+    return (
+      <section className="min-h-screen bg-[#fdf0f0] p-6">
+        <SectionState
+          title="Cargando disponibilidad…"
+          description="Estamos preparando la información del trabajador."
+        />
+      </section>
+    );
+  }
+  if (!user) {
+    return (
+      <section className="min-h-screen bg-[#fdf0f0] p-6">
+        <SectionState
+          variant="error"
+          title="Acceso no autorizado"
+          description="Debes iniciar sesión para ver la disponibilidad del trabajador."
+        />
+      </section>
+    );
+  }
 
   let workerId: string | null = null;
 

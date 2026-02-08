@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -9,10 +10,12 @@ import {
   CheckCheck,
   ShieldCheck,
   LogOut,
+  Menu,
+  X,
 } from "lucide-react";
 import clsx from "clsx";
-import glamLogo from "@/public/logos/glamLogo.png";
 import Image from "next/image";
+import glamLogo from "@/public/logos/glamLogo.png";
 
 const navItems = [
   {
@@ -35,7 +38,6 @@ const navItems = [
     href: "/workerPanel/clients",
     icon: Users,
   },
-
   {
     label: "Admin",
     href: "/workerPanel/admin",
@@ -45,49 +47,104 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r bg-[#faf0f3] px-4 py-6">
-      <div className="mb-4 flex items-center justify-center ">
-        <Link href={"/"}>
-          <Image
-            src={glamLogo}
-            alt="glamStudio Logo"
-            width={100}
-            height={110}
-          />
-        </Link>
-      </div>
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        aria-label="Abrir menú"
+        className="
+          fixed top-4 left-4 z-[1000]
+          rounded-xl bg-[#B0154E] text-white
+          p-2 shadow-xl
+          md:hidden
+        "
+      >
+        <Menu size={22} />
+      </button>
 
-      <nav className="flex flex-1 flex-col gap-1">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-[900] bg-black/40 md:hidden"
+        />
+      )}
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={clsx(
-                "flex items-center gap-3 rounded-lg px-4 py-2 text-sm transition",
-                isActive
-                  ? "bg-pink-100 text-pink-700"
-                  : "text-gray-600 hover:bg-[#FFD7D7]/30",
-              )}
-            >
-              <Icon size={18} />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-
-      <Link href={"/"}>
-        <button className="flex items-center gap-3 rounded-lg px-4 py-2 text-sm text-red-500 w-full font-bold hover:bg-red-100 cursor-pointer">
-          <LogOut size={18} />
-          Logout
+      <aside
+        className={clsx(
+          "fixed top-0 left-0 z-950 h-screen w-64",
+          "flex flex-col border-r bg-[#faf0f3] px-4 py-6",
+          "transition-transform duration-300 ease-out",
+          "md:static md:translate-x-0",
+          open ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        <button
+          onClick={() => setOpen(false)}
+          aria-label="Cerrar menú"
+          className="absolute right-4 top-4 md:hidden text-black"
+        >
+          <X size={22} />
         </button>
-      </Link>
-    </aside>
+
+        {/* LOGO */}
+        <div className="mb-6 flex items-center justify-center">
+          <Link href="/" onClick={() => setOpen(false)}>
+            <Image
+              src={glamLogo}
+              alt="GlamStudio Logo"
+              width={100}
+              height={110}
+              priority
+            />
+          </Link>
+        </div>
+
+        {/* NAV */}
+        <nav className="flex flex-1 flex-col gap-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className={clsx(
+                  "flex items-center gap-3 rounded-lg px-4 py-2 text-sm transition",
+                  isActive
+                    ? "bg-pink-100 text-pink-700"
+                    : "text-gray-600 hover:bg-[#FFD7D7]/30",
+                )}
+              >
+                <Icon size={18} />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* LOGOUT */}
+        <Link href="/" onClick={() => setOpen(false)}>
+          <button className="mt-4 flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-100">
+            <LogOut size={18} />
+            Logout
+          </button>
+        </Link>
+      </aside>
+    </>
   );
 }

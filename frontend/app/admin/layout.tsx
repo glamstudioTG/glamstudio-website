@@ -7,7 +7,7 @@ export default function WorkerPanelLayout({
 }) {
   return (
     <div className="flex min-h-screen overflow-hidden bg-[#fdf0f0]">
-      <div className="hidden md:block">
+      <div>
         <Sidebar />
       </div>
 

@@ -78,7 +78,6 @@ export default function ContactUsSection() {
   return (
     <section className="py-24 bg-[#FFEAEA]" id="contact">
       <div className="mx-auto px-6 text-center max-w-152.5">
-        {/* TITLE */}
         <motion.h2
           variants={headerVariants}
           initial="initial"

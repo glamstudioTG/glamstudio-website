@@ -66,7 +66,6 @@ export default function CreateScheduleBlockDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {/* SELECTOR TIPO */}
         <div className="flex gap-2 mt-4">
           {["full", "range"].map((t) => (
             <button
@@ -83,7 +82,6 @@ export default function CreateScheduleBlockDialog({
           ))}
         </div>
 
-        {/* FORM DINÁMICO */}
         <AnimatePresence mode="wait">
           {type === "full" ? (
             <motion.div
@@ -144,7 +142,6 @@ export default function CreateScheduleBlockDialog({
           )}
         </AnimatePresence>
 
-        {/* 🔥 RAZÓN */}
         <div className="mt-4">
           <label className="text-sm font-medium text-black">
             Motivo del bloqueo
