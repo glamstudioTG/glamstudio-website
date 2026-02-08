@@ -7,12 +7,14 @@ import { JwtGuard } from './guards/jwt-auth.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from 'src/users/users.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { UserContextService } from './user-context.service';
 
 @Module({
   imports: [
     ConfigModule,
     PassportModule,
-
+    PrismaModule,
     UsersModule,
 
     JwtModule.registerAsync({
@@ -27,11 +29,7 @@ import { UsersModule } from 'src/users/users.module';
 
   controllers: [AuthController],
 
-  providers: [
-    AuthService,
-    JwtGuard,
-    JwtStrategy,
-  ],
+  providers: [AuthService, UserContextService, JwtGuard, JwtStrategy],
 
   exports: [JwtGuard],
 })

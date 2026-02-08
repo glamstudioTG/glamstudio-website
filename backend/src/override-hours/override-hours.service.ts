@@ -41,6 +41,13 @@ export class OverrideHoursService {
     return this.prisma.overrideHours.findMany({ where: { workerId, date: d } });
   }
 
+  async getAllByWorker(workerId: string) {
+    return this.prisma.overrideHours.findMany({
+      where: { workerId },
+      orderBy: { date: 'desc' },
+    });
+  }
+
   async delete(workerId: string, id: string) {
     const override = await this.prisma.overrideHours.findUnique({
       where: { id },

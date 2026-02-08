@@ -11,7 +11,7 @@ import { Type } from 'class-transformer';
 
 class BookingClientDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsEmail()
@@ -20,58 +20,58 @@ class BookingClientDto {
 
 class BookingWorkerDto {
   @IsUUID()
-  id: string;
+  id!: string;
 
   @IsString()
-  name: string;
+  name!: string;
 }
 
 class BookingServiceItemDto {
   @IsUUID()
-  id: string;
+  id!: string;
 
   @IsString()
-  name: string;
+  name!: string;
 
   @IsNumber()
-  duration: number;
+  duration!: number;
 
   @IsNumber()
-  price: number;
+  price!: number;
 }
 
 export class BookingResponseDto {
   @IsUUID()
-  id: string;
+  id!: string;
 
   @IsString()
-  status: string;
+  status!: string;
 
   @IsString()
-  date: string;
+  date!: string;
 
   @IsString()
-  startTime: string;
+  startTime!: string;
 
   @IsString()
-  endTime: string;
+  endTime!: string;
 
   @IsNumber()
-  totalDuration: number;
+  totalDuration!: number;
 
   @IsNumber()
-  totalPrice: number;
+  totalPrice!: number;
 
   @ValidateNested()
   @Type(() => BookingClientDto)
-  client: BookingClientDto;
+  client!: BookingClientDto;
 
   @ValidateNested()
   @Type(() => BookingWorkerDto)
-  worker: BookingWorkerDto;
+  worker!: BookingWorkerDto;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => BookingServiceItemDto)
-  services: BookingServiceItemDto[];
+  services!: BookingServiceItemDto[];
 }

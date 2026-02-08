@@ -2,8 +2,8 @@ import { IsPhoneNumber, IsString } from 'class-validator';
 
 export class UpdateUserDto {
   @IsString()
-  name: string;
-  
+  name!: string;
+
   @IsPhoneNumber()
-  phone: string;
+  phone!: string;
 }

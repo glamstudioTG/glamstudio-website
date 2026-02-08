@@ -77,6 +77,13 @@ export class ScheduleBlockService {
     });
   }
 
+  async getAllByWorker(workerId: string) {
+    return this.prisma.scheduleBlock.findMany({
+      where: { workerId },
+      orderBy: { date: 'desc' },
+    });
+  }
+
   async delete(id: string, workerId?: string) {
     const block = await this.prisma.scheduleBlock.findUnique({
       where: { id },

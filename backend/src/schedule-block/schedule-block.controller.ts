@@ -26,6 +26,11 @@ export class ScheduleBlockController {
     return this.service.create(dto, workerId);
   }
 
+  @Get('all')
+  getAll(@Param('workerId') workerId: string) {
+    return this.service.getAllByWorker(workerId);
+  }
+
   @Get()
   getByDate(@Param('workerId') workerId: string, @Query('date') date: string) {
     return this.service.getByDate(date, workerId);

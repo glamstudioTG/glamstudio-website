@@ -9,7 +9,7 @@ import {
 export class CreateServiceDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsString()
   @IsOptional()
@@ -17,12 +17,12 @@ export class CreateServiceDto {
 
   @IsInt()
   @IsNotEmpty()
-  duration: number;
+  duration!: number;
 
   @IsNumber()
   @IsNotEmpty()
-  price: number;
+  price!: number;
 
   @IsString()
-  image: string;
+  image!: string;
 }

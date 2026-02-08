@@ -16,6 +16,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Events } from 'src/events/events';
 import { BookingWithRelations } from './types/booking-relations.types';
 import { BookingResponseDto } from './dto/response-booking.dto';
+import { GetWorkerBookingsDto } from './dto/get-worker-bookings.dto';
 
 @Injectable()
 export class BookingService {
@@ -104,17 +105,18 @@ export class BookingService {
     }
 
     const hasUser = !!userId;
+
+    if (hasUser) {
+      dto.name = undefined;
+      dto.email = undefined;
+      dto.phone = undefined;
+    }
+
     const hasGuest = !!dto.name && !!dto.email && !!dto.phone;
 
     if (!hasUser && !hasGuest) {
       throw new BadRequestException(
         'Debe existir un usuario autenticado o datos completos del invitado',
-      );
-    }
-
-    if (hasUser && hasGuest) {
-      throw new BadRequestException(
-        'No se puede crear una reserva con usuario y datos de invitado al mismo tiempo',
       );
     }
 
@@ -343,5 +345,77 @@ export class BookingService {
     });
 
     return bookings.map((b) => this.mapBookingToResponse(b));
+  }
+
+  async getByWorker(
+    workerId: string,
+    filters: GetWorkerBookingsDto,
+  ): Promise<BookingResponseDto[]> {
+    const where: any = {
+      workerId,
+    };
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+    if (filters.from && filters.to) {
+      where.date = {
+        gte: localDateToUtc(filters.from),
+        lte: localDateToUtc(filters.to),
+      };
+    }
+
+    if (filters.period) {
+      const now = new Date();
+      let from: Date;
+
+      switch (filters.period) {
+        case 'day':
+          from = new Date(now.setHours(0, 0, 0, 0));
+          break;
+        case 'week':
+          from = new Date(now.setDate(now.getDate() - 7));
+          break;
+        case 'month':
+          from = new Date(now.setMonth(now.getMonth() - 1));
+          break;
+      }
+
+      where.date = { gte: from };
+    }
+
+    if (filters.search) {
+      where.OR = [
+        { user: { name: { contains: filters.search, mode: 'insensitive' } } },
+        { guestName: { contains: filters.search, mode: 'insensitive' } },
+      ];
+    }
+
+    const bookings = await this.prisma.booking.findMany({
+      where,
+      include: {
+        worker: { include: { user: true } },
+        service: { include: { service: true } },
+        user: true,
+        transactionProofs: {
+          orderBy: { uploadedAt: 'desc' },
+          take: 1,
+        },
+      },
+      orderBy: {
+        date: filters.order === 'oldest' ? 'asc' : 'desc',
+      },
+    });
+
+    return bookings.map((b) => ({
+      ...this.mapBookingToResponse(b),
+      transactionProof: b.transactionProofs[0]
+        ? {
+            id: b.transactionProofs[0].id,
+            imageUrl: b.transactionProofs[0].imageUrl,
+            status: b.transactionProofs[0].status,
+          }
+        : null,
+    }));
   }
 }

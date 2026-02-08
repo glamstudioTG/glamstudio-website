@@ -3,5 +3,5 @@ import { TransactionStatus } from '@prisma/client';
 
 export class ReviewTransactionProofDto {
   @IsEnum(TransactionStatus)
-  status: TransactionStatus;
+  status!: TransactionStatus;
 }

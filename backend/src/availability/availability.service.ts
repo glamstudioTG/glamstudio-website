@@ -23,13 +23,19 @@ export class AvailabilityService {
       where: { workerId: null, date: dateUtc },
     });
 
-    if (GlobalBlocks.some((b) => b.startTime == null && b.endTime == null)) {
-      return [];
-    }
-
     const workerBlocks = await this.prisma.scheduleBlock.findMany({
       where: { workerId, date: dateUtc },
     });
+
+    const allBlocks = [...GlobalBlocks, ...workerBlocks];
+
+    const hasFullDayBlock = allBlocks.some(
+      (b) => b.startTime == null && b.endTime == null,
+    );
+
+    if (hasFullDayBlock) {
+      return [];
+    }
 
     const overrides = await this.prisma.overrideHours.findFirst({
       where: { workerId, date: dateUtc },

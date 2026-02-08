@@ -4,11 +4,11 @@ const TIME_REGEX = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 export class CreateOverrideHoursDto {
   @IsDateString()
-  date: string;
+  date!: string;
 
   @Matches(TIME_REGEX)
-  startTime: string;
+  startTime!: string;
 
   @Matches(TIME_REGEX)
-  endTime: string;
+  endTime!: string;
 }

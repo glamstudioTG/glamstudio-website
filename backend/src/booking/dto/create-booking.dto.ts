@@ -9,24 +9,23 @@ import {
 
 export class CreateBookingDto {
   @IsUUID()
-  workerId: string;
+  workerId!: string;
 
   @IsArray()
   @ArrayNotEmpty()
   @IsUUID('4', { each: true })
-  serviceIds: string[];
+  serviceIds!: string[];
 
   @IsString()
-  date: string; // YYYY-MM-DD
+  date!: string;
 
   @IsString()
-  startTime: string; // HH:mm
+  startTime!: string;
 
   @IsOptional()
   @IsString()
   comment?: string;
 
-  // Guest (solo si NO hay usuario autenticado)
   @IsOptional()
   @IsString()
   name?: string;

@@ -17,6 +17,16 @@ import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 export class OverrideHoursController {
   constructor(private service: OverrideHoursService) {}
 
+  @Get('all')
+  getAll(@Param('workerId') workerId: string) {
+    return this.service.getAllByWorker(workerId);
+  }
+
+  @Get()
+  getByDate(@Param('workerId') workerId: string, @Query('date') date: string) {
+    return this.service.getByDate(workerId, date);
+  }
+
   @Post()
   @UseGuards(JwtGuard, AdminOrWorkerGuard)
   create(
@@ -24,11 +34,6 @@ export class OverrideHoursController {
     @Body() dto: CreateOverrideHoursDto,
   ) {
     return this.service.create(workerId, dto);
-  }
-
-  @Get()
-  getByDate(@Param('workerId') workerId: string, @Query('date') date: string) {
-    return this.service.getByDate(workerId, date);
   }
 
   @Delete(':id')
