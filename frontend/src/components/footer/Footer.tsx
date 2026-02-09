@@ -30,7 +30,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto border-t border-[#850E35]" />
 
       <div className="text-center text-sm text-[#716D6D] py-6">
-        © 2025 GlamStudio. All rights reserved.
+        © 2026 Esteban Catañeda. All rights reserved.
       </div>
     </footer>
   );

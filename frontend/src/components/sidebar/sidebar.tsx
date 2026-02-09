@@ -29,13 +29,13 @@ const navItems = [
     icon: LayoutDashboard,
   },
   {
-    label: "Mis horarios y bloqueos",
+    label: "Gestion de bloqueos",
     href: "/admin/workerPanel/schedule-managment",
     icon: Calendar,
   },
   {
-    label: "Clientes",
-    href: "/workerPanel/clients",
+    label: "Gestion de horario",
+    href: "/admin/workerPanel/bussines-hours",
     icon: Users,
   },
   {
@@ -66,7 +66,7 @@ export default function Sidebar() {
         onClick={() => setOpen(true)}
         aria-label="Abrir menú"
         className="
-          fixed top-4 left-4 z-[1000]
+          fixed top-4 left-4 
           rounded-xl bg-[#B0154E] text-white
           p-2 shadow-xl
           md:hidden
@@ -78,14 +78,14 @@ export default function Sidebar() {
       {open && (
         <div
           onClick={() => setOpen(false)}
-          className="fixed inset-0 z-[900] bg-black/40 md:hidden"
+          className="fixed inset-0 z-900 bg-black/40 md:hidden"
         />
       )}
 
       <aside
         className={clsx(
           "fixed top-0 left-0 z-950 h-screen w-64",
-          "flex flex-col border-r bg-[#faf0f3] px-4 py-6",
+          "flex flex-col border-r-2 bg-[#faf0f3] border-gray-400/20 px-4 py-6",
           "transition-transform duration-300 ease-out",
           "md:static md:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full",
@@ -99,7 +99,6 @@ export default function Sidebar() {
           <X size={22} />
         </button>
 
-        {/* LOGO */}
         <div className="mb-6 flex items-center justify-center">
           <Link href="/" onClick={() => setOpen(false)}>
             <Image
@@ -112,7 +111,6 @@ export default function Sidebar() {
           </Link>
         </div>
 
-        {/* NAV */}
         <nav className="flex flex-1 flex-col gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -126,7 +124,7 @@ export default function Sidebar() {
                 className={clsx(
                   "flex items-center gap-3 rounded-lg px-4 py-2 text-sm transition",
                   isActive
-                    ? "bg-pink-100 text-pink-700"
+                    ? "bg-pink-100 text-[#850E35]"
                     : "text-gray-600 hover:bg-[#FFD7D7]/30",
                 )}
               >
@@ -137,7 +135,6 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {/* LOGOUT */}
         <Link href="/" onClick={() => setOpen(false)}>
           <button className="mt-4 flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-100">
             <LogOut size={18} />

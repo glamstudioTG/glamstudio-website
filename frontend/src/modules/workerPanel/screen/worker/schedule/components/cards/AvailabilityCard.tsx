@@ -8,7 +8,7 @@ type Props = {
 
 const COLORS = {
   red: "bg-red-100 text-red-700 border-red-200",
-  orange: "bg-orange-100 text-orange-700 border-orange-200",
+  orange: "bg-[#D4AF37]/40 text-orange-700 border-orange-200",
 };
 
 export default function AvailabilityCard({

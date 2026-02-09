@@ -1,8 +1,6 @@
 "use client";
 
 import { useAvailabilityHistory } from "../../hooks/useAvailabilityHistory";
-import { mapAvailabilityHistory } from "../../utils/mapAvailabilityHistory";
-import { AvailabilityHistoryCard } from "./AvailabilityHistoryCard";
 import CreateScheduleBlockDialog from "../Modals/CreateBlockModal";
 import { useState } from "react";
 import CreateOverrideHoursDialog from "../Modals/OverrideHoursModal";
