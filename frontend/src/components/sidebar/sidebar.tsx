@@ -40,7 +40,7 @@ const navItems = [
   },
   {
     label: "Admin",
-    href: "/workerPanel/admin",
+    href: "/admin/adminPanel",
     icon: ShieldCheck,
   },
 ];

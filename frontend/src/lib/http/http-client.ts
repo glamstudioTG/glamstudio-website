@@ -46,7 +46,7 @@ export class HttpClient {
   ): Promise<Response> {
     const headers = this.buildHeaders(options);
 
-    return fetch(this.buildUrl(path), {
+    return fetch(this.buildUrl(path, options.params), {
       method,
       headers,
       credentials: "include",
@@ -109,8 +109,20 @@ export class HttpClient {
     };
   }
 
-  private buildUrl(path: string): string {
-    return `${this.baseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+  private buildUrl(path: string, params?: RequestOptions["params"]): string {
+    const url = new URL(
+      `${this.baseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`,
+    );
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, String(value));
+        }
+      });
+    }
+
+    return url.toString();
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {

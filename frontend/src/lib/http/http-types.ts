@@ -8,4 +8,5 @@ export interface HttpClientConfig {
 export interface RequestOptions {
   auth?: boolean;
   headers?: Record<string, string>;
+  params?: Record<string, string | number | boolean | undefined>;
 }
