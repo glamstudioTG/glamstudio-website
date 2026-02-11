@@ -1,8 +1,9 @@
 import { httpClient } from "@/src/lib/http/http-client";
 import { ScheduleBlock } from "../types/schedule-block.types";
+import { CreateScheduleBlockDto } from "../types/schedule-block.types";
 
 export const AdminScheduleBlocksService = {
-  create(dto: Partial<ScheduleBlock>) {
+  createGlobal(dto: CreateScheduleBlockDto) {
     return httpClient.request<ScheduleBlock>(
       "/admin/schedule-blocks",
       "POST",
@@ -10,21 +11,24 @@ export const AdminScheduleBlocksService = {
     );
   },
 
-  getByDate(date: string) {
+  getAllGlobal() {
     return httpClient.request<ScheduleBlock[]>(
-      `/admin/schedule-blocks/${date}`,
+      "/admin/schedule-blocks/global",
       "GET",
     );
   },
 
-  getGlobalDat4e(date: string) {
+  getGlobalByDate(date: string) {
     return httpClient.request<ScheduleBlock[]>(
-      `/admin/schedule-block/global/:date`,
+      `/admin/schedule-blocks/global/${date}`,
       "GET",
     );
   },
 
-  delete(id: string) {
-    return httpClient.request<void>(`/admin/schedule-blocks/${id}`, "DELETE");
+  deleteGlobal(id: string) {
+    return httpClient.request<void>(
+      `/admin/schedule-blocks/global/${id}`,
+      "DELETE",
+    );
   },
 };

@@ -1,12 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminScheduleBlocksService } from "../../services/admin-schedule-blocks.service";
 import { adminQueryKeys } from "../queryKeys";
 
-export function useGetGlobalScheduleBlocks(date: string) {
-  return useQuery({
-    queryKey: adminQueryKeys.scheduleBlocks(date),
-    queryFn: () => AdminScheduleBlocksService.getGlobalDat4e(date),
-    enabled: !!date,
-    staleTime: 1000 * 60 * 5,
+export function useDeleteGlobalScheduleBlock() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => AdminScheduleBlocksService.deleteGlobal(id),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: adminQueryKeys.all,
+      });
+    },
   });
 }

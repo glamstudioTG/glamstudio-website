@@ -21,7 +21,7 @@ export default function BusinessHoursDay({
   const hasHours = items.length > 0;
 
   return (
-    <div className="w-full max-w-[700px] rounded-xl border bg-white p-4">
+    <div className="w-full max-w-175 rounded-xl border bg-white p-4">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span

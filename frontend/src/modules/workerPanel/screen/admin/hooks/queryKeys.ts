@@ -6,4 +6,7 @@ export const adminQueryKeys = {
   categories: ["admin", "categories"] as const,
   servicesByCategory: (categoryId: string) =>
     ["admin", "services", categoryId] as const,
+  all: ["admin", "schedule-blocks", "global"] as const,
+  byDate: (date: string) =>
+    ["admin", "schedule-blocks", "global", date] as const,
 };

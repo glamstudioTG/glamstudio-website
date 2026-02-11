@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Plus, UserPlus, Lock } from "lucide-react";
 import { QuickActionItem } from "./QuickActionItem";
 import { AddWorkerModal } from "./modal/AddWorkerModal";
+import { GlobalBlockModal } from "./modal/GlobalBlockModal";
 
 export function QuickActionsPanel() {
   const [openAddWorker, setOpenAddWorker] = useState(false);
+  const [openGlobalBlock, setOpenGlobalBlock] = useState(false);
 
   return (
     <>
@@ -34,11 +36,16 @@ export function QuickActionsPanel() {
             description="Cerrar agenda general"
             icon={Lock}
             variant="red"
+            onClick={() => setOpenGlobalBlock(true)}
           />
         </div>
       </div>
 
       <AddWorkerModal open={openAddWorker} onOpenChange={setOpenAddWorker} />
+      <GlobalBlockModal
+        open={openGlobalBlock}
+        onOpenChange={setOpenGlobalBlock}
+      />
     </>
   );
 }

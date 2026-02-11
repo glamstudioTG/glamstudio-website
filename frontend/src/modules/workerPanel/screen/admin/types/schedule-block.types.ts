@@ -6,3 +6,13 @@ export interface ScheduleBlock {
   reason?: string;
   workerId?: string;
 }
+
+export interface CreateScheduleBlockDto {
+  date: string;
+
+  startTime?: string;
+
+  endTime?: string;
+
+  reason?: string;
+}

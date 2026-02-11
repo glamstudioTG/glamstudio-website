@@ -30,7 +30,6 @@ export function AddWorkerModal({ open, onOpenChange }: AddWorkerModalProps) {
   const [email, setEmail] = useState("");
   const [foundUser, setFoundUser] = useState<FoundUser | null>(null);
   const [isWorker, setIsWorker] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const searchUserMutation = useSearchUserByEmail();
   const changeRoleMutation = useChangeUserRole();
@@ -70,7 +69,7 @@ export function AddWorkerModal({ open, onOpenChange }: AddWorkerModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-neutral-200 bg-[#F6A2B1]/80">
+      <DialogContent className="border-neutral-200 bg-[#fcd9df]/95">
         <DialogHeader>
           <DialogTitle className="text-[#850E35]">
             Añadir nuevo trabajador
