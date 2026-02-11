@@ -1,16 +1,20 @@
 import { httpClient } from "@/src/lib/http/http-client";
-
-export interface AdminDashboardStats {
-  todayBookings: number;
-  pendingReviews: number;
-  monthlyIncome: number;
-  activeWorkers: number;
-}
+import {
+  AdminDashboardStats,
+  AdminServiceStats,
+} from "../types/admin-stats.types";
 
 export const AdminStatsService = {
   getStats() {
     return httpClient.request<AdminDashboardStats>(
       "/admin/dashboard/stats",
+      "GET",
+    );
+  },
+
+  getServiceStats() {
+    return httpClient.request<AdminServiceStats>(
+      "/admin/dashboard/service/stats",
       "GET",
     );
   },

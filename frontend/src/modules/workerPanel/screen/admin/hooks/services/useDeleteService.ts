@@ -1,19 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminServicesService } from "../../services/admin-services.service";
-import { adminQueryKeys } from "../queryKeys";
-import { Service } from "../../types/service.types";
 
-export function useDeleteService(categoryId: string) {
+export function useDeleteService() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: AdminServicesService.delete,
+    mutationFn: (serviceId: string) => AdminServicesService.delete(serviceId),
 
-    onSuccess: (_, serviceId) => {
-      queryClient.setQueryData<Service[]>(
-        adminQueryKeys.servicesByCategory(categoryId),
-        (old) => old?.filter((s) => s.id !== serviceId),
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-services"] });
+
+      queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
     },
   });
 }

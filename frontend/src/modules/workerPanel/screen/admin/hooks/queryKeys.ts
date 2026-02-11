@@ -9,4 +9,6 @@ export const adminQueryKeys = {
   all: ["admin", "schedule-blocks", "global"] as const,
   byDate: (date: string) =>
     ["admin", "schedule-blocks", "global", date] as const,
+  dashboard: ["admin", "dashboard", "stats"] as const,
+  serviceStats: ["admin", "service-management", "stats"] as const,
 };

@@ -3,6 +3,7 @@ import { Plus, UserPlus, Lock } from "lucide-react";
 import { QuickActionItem } from "./QuickActionItem";
 import { AddWorkerModal } from "./modal/AddWorkerModal";
 import { GlobalBlockModal } from "./modal/GlobalBlockModal";
+import Link from "next/link";
 
 export function QuickActionsPanel() {
   const [openAddWorker, setOpenAddWorker] = useState(false);
@@ -16,12 +17,14 @@ export function QuickActionsPanel() {
         </h3>
 
         <div className="flex flex-col gap-3">
-          <QuickActionItem
-            title="Nuevo Servicio"
-            description="Crear servicio nuevo"
-            icon={Plus}
-            variant="green"
-          />
+          <Link href={"/admin/adminPanel/managment-section"}>
+            <QuickActionItem
+              title="Nuevo Servicio"
+              description="Crear servicio nuevo"
+              icon={Plus}
+              variant="green"
+            />
+          </Link>
 
           <QuickActionItem
             title="Nuevo Worker"

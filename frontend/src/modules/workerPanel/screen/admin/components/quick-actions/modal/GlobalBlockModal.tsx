@@ -288,32 +288,3 @@ export function GlobalBlockModal({
     </Dialog>
   );
 }
-
-// {
-//   blocks.map((block) => (
-//     <div
-//       key={block.id}
-//       onMouseEnter={() => setActiveCard(block.id)}
-//       onMouseLeave={() => setActiveCard(null)}
-//       onClick={() => setActiveCard(activeCard === block.id ? null : block.id)}
-//       className="
-//                     min-w-60
-//                     max-w-60
-//                     sm:min-w-0
-//                     sm:max-w-none
-//                     shrink-0
-//                     rounded-lg border border-neutral-200
-//                     bg-white p-3
-//                   "
-//     >
-//       <div className="flex items-center justify-between">
-//         <p className="text-sm font-medium text-black">{item.date}</p>
-//         <span className="rounded bg-red-600 px-2 py-0.5 text-xs text-white">
-//           GLOBAL
-//         </span>
-//       </div>
-//       <p className="mt-1 text-xs text-neutral-500">Todo el día</p>
-//       <p className="mt-1 text-sm text-gray-400">{item.label}</p>
-//     </div>
-//   ));
-// }
