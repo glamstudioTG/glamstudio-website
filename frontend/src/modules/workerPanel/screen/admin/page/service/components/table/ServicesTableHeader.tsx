@@ -42,16 +42,23 @@ export function ServicesTableHeader() {
         isSubmitting={isPending}
         onClose={() => setOpenCreate(false)}
         onSubmit={(values) => {
-          createService({
-            categoryId: values.categoryId,
-            dto: {
-              name: values.name,
-              description: values.description,
-              price: Number(values.price),
-              duration: Number(values.duration),
-              image: values.image,
+          createService(
+            {
+              categoryId: values.categoryId,
+              dto: {
+                name: values.name,
+                description: values.description,
+                price: Number(values.price),
+                duration: Number(values.duration),
+                image: values.image,
+              },
             },
-          });
+            {
+              onSuccess: () => {
+                setOpenCreate(false);
+              },
+            },
+          );
         }}
       />
     </>

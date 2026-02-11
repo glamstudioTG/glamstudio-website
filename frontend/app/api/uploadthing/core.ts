@@ -14,6 +14,12 @@ export const uploadRouter = {
       return { url: file.url };
     },
   ),
+
+  categoryImage: f({ image: { maxFileSize: "4MB" } }).onUploadComplete(
+    async ({ file }) => {
+      return { url: file.url };
+    },
+  ),
 } satisfies FileRouter;
 
 export type UploadRouter = typeof uploadRouter;

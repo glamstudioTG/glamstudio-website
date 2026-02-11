@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useUploadThing } from "@/src/lib/client/uploadthing";
 import { Spinner } from "@/src/components/ui/shadcn-io/spinner/spinner";
+import { useCloudinaryUpload } from "../../../../hooks/cloudinary/useCloudinaryUpload";
 
 export interface ServiceFormValues {
   name: string;
@@ -51,7 +52,7 @@ export function ServiceFormModal({
     image: "",
   });
 
-  const { startUpload, isUploading } = useUploadThing("serviceImage");
+  const { upload, isUploading } = useCloudinaryUpload();
 
   useEffect(() => {
     if (initialValues) {
@@ -76,13 +77,7 @@ export function ServiceFormModal({
     if (!files || files.length === 0) return;
 
     try {
-      const uploadResult = await startUpload(Array.from(files));
-
-      if (!uploadResult || uploadResult.length === 0) {
-        throw new Error("UploadThing no devolvió URL");
-      }
-
-      const imageUrl = uploadResult[0].url;
+      const imageUrl = await upload(files[0]);
 
       setForm((prev) => ({
         ...prev,
@@ -167,7 +162,6 @@ export function ServiceFormModal({
             </div>
           </div>
 
-          {/* NAME */}
           <div className="space-y-1">
             <label className="text-sm text-neutral-700">
               Nombre del Servicio
