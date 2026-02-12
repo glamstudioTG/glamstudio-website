@@ -2,7 +2,7 @@ import { AuthUser } from "@/src/hooks/auth/type";
 import { httpClient } from "@/src/lib/http/http-client";
 
 export const AuthApi = {
-  async login(email: string, password: string) {
+  async login(email: string, password: string): Promise<AuthUser> {
     await httpClient.request<AuthUser>(
       "/auth/login",
       "POST",
@@ -10,7 +10,13 @@ export const AuthApi = {
       { auth: false },
     );
 
-    return this.me();
+    const user = await this.me();
+
+    if (!user) {
+      throw new Error("Login failed: no user returned");
+    }
+
+    return user;
   },
 
   register(payload: {
