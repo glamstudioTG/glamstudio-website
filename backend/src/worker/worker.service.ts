@@ -122,6 +122,14 @@ export class WorkerService {
     return this.prisma.worker.update({
       where: { id: workerId },
       data: dto,
+      include: {
+        user: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
+      },
     });
   }
 
