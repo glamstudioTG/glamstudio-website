@@ -9,10 +9,30 @@ export function useDeleteCategory() {
   return useMutation({
     mutationFn: AdminCategoriesService.delete,
 
-    onSuccess: (_, categoryId) => {
-      queryClient.setQueryData<Category[]>(adminQueryKeys.categories, (old) =>
-        old?.filter((cat) => cat.id !== categoryId),
+    onMutate: async (categoryId: string) => {
+      await queryClient.cancelQueries({
+        queryKey: adminQueryKeys.categories,
+      });
+
+      const previousCategories = queryClient.getQueryData<Category[]>(
+        adminQueryKeys.categories,
       );
+
+      queryClient.setQueryData<Category[]>(
+        adminQueryKeys.categories,
+        (old = []) => old.filter((cat) => cat.id !== categoryId),
+      );
+
+      return { previousCategories };
+    },
+
+    onError: (_, __, context) => {
+      if (context?.previousCategories) {
+        queryClient.setQueryData(
+          adminQueryKeys.categories,
+          context.previousCategories,
+        );
+      }
     },
   });
 }

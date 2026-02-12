@@ -9,9 +9,46 @@ export function useCreateCategory() {
   return useMutation({
     mutationFn: AdminCategoriesService.create,
 
-    onSuccess: (newCategory) => {
-      queryClient.setQueryData<Category[]>(adminQueryKeys.categories, (old) =>
-        old ? [...old, newCategory] : [newCategory],
+    onMutate: async (newCategory) => {
+      await queryClient.cancelQueries({
+        queryKey: adminQueryKeys.categories,
+      });
+
+      const previousCategories = queryClient.getQueryData<Category[]>(
+        adminQueryKeys.categories,
+      );
+
+      // Optimistic update
+      queryClient.setQueryData<Category[]>(
+        adminQueryKeys.categories,
+        (old = []) => [
+          ...old,
+          {
+            id: "temp-" + Date.now(),
+            ...newCategory,
+          } as Category,
+        ],
+      );
+
+      return { previousCategories };
+    },
+
+    onError: (_, __, context) => {
+      if (context?.previousCategories) {
+        queryClient.setQueryData(
+          adminQueryKeys.categories,
+          context.previousCategories,
+        );
+      }
+    },
+
+    onSuccess: (createdCategory) => {
+      queryClient.setQueryData<Category[]>(
+        adminQueryKeys.categories,
+        (old = []) =>
+          old.map((cat) =>
+            cat.id.startsWith("temp-") ? createdCategory : cat,
+          ),
       );
     },
   });

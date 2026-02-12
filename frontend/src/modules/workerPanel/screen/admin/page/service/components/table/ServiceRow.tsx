@@ -16,7 +16,7 @@ export function ServiceRow({ service, onEdit }: Props) {
   }).format(service.price);
 
   return (
-    <tr className="border-b border-neutral-200 hover:bg-neutral-50 transition">
+    <tr className="border-b border-neutral-200 hover:bg-neutral-50 transition hidden lg:table-row">
       <td className="px-6 py-4">
         <p className="font-medium text-neutral-800">{service.name}</p>
         {service.description && (
@@ -24,8 +24,9 @@ export function ServiceRow({ service, onEdit }: Props) {
         )}
       </td>
 
-      <td className="px-6 py-4 text-neutral-700">{service.category.name}</td>
-
+      <td className="px-6 py-4 text-neutral-700">
+        {service.category?.name ?? "—"}
+      </td>
       <td className="px-6 py-4 text-neutral-700">{formattedPrice}</td>
 
       <td className="px-6 py-4 text-neutral-700">{service.duration} min</td>

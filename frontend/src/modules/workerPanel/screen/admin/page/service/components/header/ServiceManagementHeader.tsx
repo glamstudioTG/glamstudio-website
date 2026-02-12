@@ -21,22 +21,24 @@ export function ServiceManagementHeader() {
   }
 
   return (
-    <div className="flex items-center justify-between">
-      <h1 className="text-5xl font-semibold font-mono text-neutral-800">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <h1 className="text-2xl sm:text-3xl lg:text-5xl font-semibold font-mono text-neutral-800">
         Gestión de Servicios
       </h1>
 
-      {isLoading ? (
-        <div className="flex gap-6">
-          <div className="h-14 w-40 bg-neutral-200 rounded animate-pulse" />
-          <div className="h-14 w-40 bg-neutral-200 rounded animate-pulse" />
-        </div>
-      ) : (
-        <ServiceMetrics
-          totalServices={data?.totalServices ?? 0}
-          activeCategories={data?.totalCategories ?? 0}
-        />
-      )}
+      <div className="self-start sm:self-auto">
+        {isLoading ? (
+          <div className="flex gap-6">
+            <div className="h-14 w-40 bg-neutral-200 rounded animate-pulse" />
+            <div className="h-14 w-40 bg-neutral-200 rounded animate-pulse" />
+          </div>
+        ) : (
+          <ServiceMetrics
+            totalServices={data?.totalServices ?? 0}
+            activeCategories={data?.totalCategories ?? 0}
+          />
+        )}
+      </div>
     </div>
   );
 }
