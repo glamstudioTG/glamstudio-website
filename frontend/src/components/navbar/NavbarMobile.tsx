@@ -14,8 +14,8 @@ type View = "main" | "services" | "profile";
 export default function NavbarMobile() {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<View>("main");
+  const [authOpen, setAuthOpen] = useState(false);
 
-  // ⬅️ ESTE ref ahora envuelve TODO
   const containerRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
@@ -46,6 +46,8 @@ export default function NavbarMobile() {
       >
         {open ? <X size={24} /> : <Menu size={24} />}
       </button>
+
+      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
 
       {open && (
         <div className="fixed top-full left-0 w-full bg-[#ffc4c4] shadow-lg rounded-b-2xl mt-2 overflow-hidden z-50">
@@ -131,13 +133,15 @@ export default function NavbarMobile() {
 
                 <div className="flex flex-col gap-4">
                   {!isAuthenticated && (
-                    <AuthDialog
-                      trigger={
-                        <button className="text-left text-base text-black">
-                          Iniciar sesión
-                        </button>
-                      }
-                    />
+                    <button
+                      onClick={() => {
+                        closeAll();
+                        setAuthOpen(true);
+                      }}
+                      className="text-left text-base text-black"
+                    >
+                      Iniciar sesión
+                    </button>
                   )}
 
                   {canAccessPanel && (

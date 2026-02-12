@@ -5,7 +5,6 @@ import { motion, useAnimation } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { Magnet } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 interface Particle {
   id: number;

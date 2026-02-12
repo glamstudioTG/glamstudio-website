@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function getWhatsAppCourseLink(courseTitle: string) {
-  const phone = "573122724820";
+  const phone = "573103072274";
 
   const message = `
 Hola, buen día.

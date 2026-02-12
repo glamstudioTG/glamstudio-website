@@ -5,6 +5,7 @@ import { MagneticButton } from "@/src/components/ui/shadcn-io/magnetic-button";
 import HeroImageMosaic from "./HeroImageMosaic";
 import { motion, easeOut } from "framer-motion";
 import Link from "next/link";
+import { Sparkles, Calendar } from "lucide-react";
 
 export default function HeroSection() {
   const textContainer = {
@@ -31,9 +32,9 @@ export default function HeroSection() {
     <section
       className="
         relative isolate w-full
-      h-screen
-      bg-soft-wave
-      overflow-hidden
+        h-screen
+        bg-soft-wave
+        overflow-hidden
       "
     >
       <div className="md:hidden h-full flex flex-col">
@@ -73,13 +74,52 @@ export default function HeroSection() {
           </motion.p>
 
           <motion.div variants={textItem} className="flex flex-col gap-3 pt-2">
-            <CornerAccentButton className="w-full">
-              Reserva tu cita
-            </CornerAccentButton>
+            <Link href="/booking">
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2, ease: easeOut }}
+                className="
+                flex
+                justify-center
+                gap-6
+                text-[18px]
+                  w-full
+                  rounded-xl
+                  bg-[#850e35]
+                  text-white
+                  py-4
+                  font-medium
+                  shadow-md
+                "
+              >
+                <Calendar />
+                Reserva tu cita
+              </motion.button>
+            </Link>
 
-            <MagneticButton className="w-full">
-              Ver nuestros servicios
-            </MagneticButton>
+            <Link href="/services">
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2, ease: easeOut }}
+                className="
+                flex
+                justify-center
+                gap-6
+                text-[18px]
+                  w-full
+                  rounded-xl
+                  bg-[#850e35]
+                  text-white
+                  py-4
+                  font-medium
+                "
+              >
+                <Sparkles />
+                Ver nuestros servicios
+              </motion.button>
+            </Link>
           </motion.div>
         </motion.div>
       </div>
@@ -115,12 +155,13 @@ export default function HeroSection() {
             variants={textItem}
             className="flex items-center gap-4 pt-2"
           >
-            <Link href={"/booking"}>
-              <CornerAccentButton className=" text-center cursor-pointer">
+            <Link href="/booking">
+              <CornerAccentButton className="cursor-pointer">
                 Reserva tu cita
               </CornerAccentButton>
             </Link>
-            <Link href={"/services"}>
+
+            <Link href="/services">
               <MagneticButton className="cursor-pointer">
                 Ver nuestros servicios
               </MagneticButton>

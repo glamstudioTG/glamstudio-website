@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion, easeOut, easeInOut } from "framer-motion";
-import meImage from "@/public/images/landing/4763f4ea1c606ab46ca79652a645a336 2.png";
+import meImage from "@/public/images/landing/abouUsImage.jpeg";
 
 const titleVariants = {
   initial: { opacity: 0, y: 28, filter: "blur(6px)" },

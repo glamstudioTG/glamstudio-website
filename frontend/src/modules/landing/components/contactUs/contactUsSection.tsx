@@ -139,7 +139,7 @@ export default function ContactUsSection() {
           className="mb-10"
         >
           <a
-            href={`https://wa.me/573144455235?text=${message}`}
+            href={`https://wa.me/573103072274?text=${message}`}
             target="_blank"
             rel="noopener noreferrer"
           >

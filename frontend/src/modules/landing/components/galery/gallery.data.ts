@@ -1,40 +1,70 @@
 import { GalleryItem } from "./gallery.types";
 
 const galleryItems: GalleryItem[] = [
-  { id: 1, category: "cejas", src: "/images/galery/cejasHenna.jpg" },
-  { id: 2, category: "cejas", src: "/images/galery/cejasLaminacion.jpg" },
-  { id: 3, category: "labios", src: "/images/galery/labiosHidralips.jpg" },
+  { id: 1, category: "cejas", src: "/images/galery/cejas-henna.jpg" },
+  { id: 2, category: "cejas", src: "/images/galery/cejasHenna.jpg" },
+  { id: 3, category: "cejas", src: "/images/galery/cejasLaminacion.jpg" },
+  { id: 4, category: "cejas", src: "/images/galery/diseño-cejas.jpeg" },
+  { id: 5, category: "cejas", src: "/images/galery/laminado_cejas.jpeg" },
   {
-    id: 4,
+    id: 6,
+    category: "cejas",
+    src: "/images/galery/micropigmentacion-cejas.jpeg",
+  },
+  { id: 8, category: "pestañas", src: "/images/galery/griego-5d.jpg" },
+  { id: 16, category: "pestañas", src: "/images/galery/pestanasAnime.jpg" },
+  {
+    id: 17,
+    category: "pestañas",
+    src: "/images/galery/pestanasEfectoPestanina.jpg",
+  },
+  { id: 18, category: "pestañas", src: "/images/galery/pestanasFoxy.png" },
+  { id: 19, category: "pestañas", src: "/images/galery/pestanasLifting.jpg" },
+  {
+    id: 20,
+    category: "pestañas",
+    src: "/images/galery/pestanasVolumenIndiano.png",
+  },
+
+  { id: 14, category: "labios", src: "/images/galery/hidralips_labios.jpeg" },
+  {
+    id: 15,
+    category: "labios",
+    src: "/images/galery/hidralips_labios_two.jpeg",
+  },
+  { id: 9, category: "labios", src: "/images/galery/hidralips.jpeg" },
+  { id: 10, category: "labios", src: "/images/galery/labiosHidralips.jpg" },
+  {
+    id: 11,
     category: "labios",
     src: "/images/galery/labiosMicropigmentacion.jpg",
   },
-  { id: 5, category: "pestañas", src: "/images/galery/pesta%C3%B1asAnime.jpg" },
   {
-    id: 6,
-    category: "pestañas",
-    src: "/images/galery/pesta%C3%B1asEfectoPesta%C3%B1ina.jpg",
-  },
-  { id: 7, category: "pestañas", src: "/images/galery/pesta%C3%B1asFoxy.jpg" },
-  {
-    id: 8,
-    category: "pestañas",
-    src: "/images/galery/pesta%C3%B1asLifting.jpg",
+    id: 12,
+    category: "labios",
+    src: "/images/galery/micropigmentacion_labios.jpeg",
   },
   {
-    id: 9,
-    category: "pestañas",
-    src: "/images/galery/pesta%C3%B1asVolumenIndiano.png",
+    id: 13,
+    category: "labios",
+    src: "/images/galery/micropigmentacion-labios.jpg",
   },
+
   {
-    id: 10,
+    id: 7,
     category: "pestañas",
-    src: "/images/galery/pesta%C3%B1asWispy.png",
+    src: "/images/galery/clasicas-pelo-a-pelo.jpg",
   },
-  { id: 11, category: "pestañas", src: "/images/galery/volumenArabe4D.jpg" },
-  { id: 12, category: "pestañas", src: "/images/galery/volumenGriego5D.jpg" },
-  { id: 13, category: "pestañas", src: "/images/galery/volumenTech4U.jpg" },
-  { id: 14, category: "pestañas", src: "/images/galery/volumenTech5U.png" },
+
+  { id: 21, category: "pestañas", src: "/images/galery/pestanasWispy.png" },
+  { id: 22, category: "pestañas", src: "/images/galery/volumen-arabe2.jpg" },
+  { id: 23, category: "pestañas", src: "/images/galery/volumen-egipcio.jpg" },
+  { id: 24, category: "pestañas", src: "/images/galery/volumenArabe4D.jpg" },
+  { id: 25, category: "pestañas", src: "/images/galery/volumenGriego5D.jpg" },
+  { id: 26, category: "pestañas", src: "/images/galery/volumenTech4U.jpg" },
+  { id: 27, category: "pestañas", src: "/images/galery/volumenTech5U.png" },
+
+  { id: 28, category: "pestañas", src: "/images/galery/yy.jpg" },
 ];
 
 export default galleryItems;
