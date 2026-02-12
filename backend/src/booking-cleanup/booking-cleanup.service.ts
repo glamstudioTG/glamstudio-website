@@ -6,41 +6,49 @@ import { BookingStatus } from '@prisma/client';
 @Injectable()
 export class BookingCleanupService {
   private readonly logger = new Logger(BookingCleanupService.name);
+
   constructor(private prisma: PrismaService) {}
 
-  @Cron('0 3 * * *')
+  @Cron('40 3 * * *')
   async cleanupOldBookings() {
-    const DAYS_TO_KEEP = 30;
-    const limitDate = new Date(Date.now() - DAYS_TO_KEEP * 24 * 60 * 60 * 1000);
+    try {
+      const DAYS_TO_KEEP = 30;
+      const limitDate = new Date(
+        Date.now() - DAYS_TO_KEEP * 24 * 60 * 60 * 1000,
+      );
 
-    const BookingToDelete = await this.prisma.booking.findMany({
-      where: {
-        status: { in: [BookingStatus.COMPLETED, BookingStatus.CANCELLED] },
-        updatedAt: { lt: limitDate },
-      },
-      select: { id: true },
-    });
+      const deletedProofs = await this.prisma.transactionProof.deleteMany({
+        where: {
+          booking: {
+            status: { in: [BookingStatus.COMPLETED, BookingStatus.CANCELLED] },
+            updatedAt: { lt: limitDate },
+          },
+        },
+      });
 
-    if (BookingToDelete.length === 0) {
-      return;
+      const deletedServices = await this.prisma.bookingService.deleteMany({
+        where: {
+          booking: {
+            status: { in: [BookingStatus.COMPLETED, BookingStatus.CANCELLED] },
+            updatedAt: { lt: limitDate },
+          },
+        },
+      });
+
+      const deletedBookings = await this.prisma.booking.deleteMany({
+        where: {
+          status: { in: [BookingStatus.COMPLETED, BookingStatus.CANCELLED] },
+          updatedAt: { lt: limitDate },
+        },
+      });
+
+      if (deletedBookings.count > 0) {
+        this.logger.log(
+          `Cleanup completed. Deleted ${deletedBookings.count} bookings.`,
+        );
+      }
+    } catch (error) {
+      this.logger.error('Error cleaning old bookings', error);
     }
-
-    const bookingsIds = BookingToDelete.map((b) => b.id);
-
-    await this.prisma.$transaction(async (tx) => {
-      await tx.transactionProof.deleteMany({
-        where: { bookingId: { in: bookingsIds } },
-      });
-
-      await tx.bookingService.deleteMany({
-        where: { bookingId: { in: bookingsIds } },
-      });
-
-      await tx.booking.deleteMany({
-        where: { id: { in: bookingsIds } },
-      });
-    });
-
-    this.logger.log(`Eliminadas ${bookingsIds.length} reservas antiguas`);
   }
 }

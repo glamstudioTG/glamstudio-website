@@ -23,8 +23,8 @@ export class AuthService {
     return this.jwtService.sign({ sub: userId, role }, { expiresIn: '15m' });
   }
 
-  private signRefreshToken(userId: string) {
-    return this.jwtService.sign({ sub: userId }, { expiresIn: '7d' });
+  private signRefreshToken(userId: string, role: string) {
+    return this.jwtService.sign({ sub: userId, role }, { expiresIn: '7d' });
   }
 
   async register(dto: registerDto) {
@@ -67,7 +67,7 @@ export class AuthService {
         role: user.role,
       },
       accessToken: this.signAccessToken(user.id, user.role),
-      refreshToken: this.signRefreshToken(user.id),
+      refreshToken: this.signRefreshToken(user.id, user.role),
     };
   }
 

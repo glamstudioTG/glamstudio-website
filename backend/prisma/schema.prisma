@@ -1,16 +1,167 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  password  String?
+  email     String    @unique
+  phone     String
+  role      Role      @default(CLIENT)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+  worker    Worker?
+}
+
+model Worker {
+  id            String           @id @default(uuid())
+  userId        String           @unique
+  isActive      Boolean          @default(true)
+  deactivatedAt DateTime?
+  bio           String?
+  avatar        String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  bookings      Booking[]
+  businessHours BusinessHours[]
+  overrideHours OverrideHours[]
+  blocks        ScheduleBlock[]
+  user          User             @relation(fields: [userId], references: [id])
+  categories    WorkerCategory[]
+}
+
+model WorkerCategory {
+  id         String   @id @default(uuid())
+  workerId   String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  worker     Worker   @relation(fields: [workerId], references: [id])
+
+  @@unique([workerId, categoryId])
+}
+
+model Service {
+  id             String           @id @default(uuid())
+  name           String
+  description    String?
+  duration       Int
+  price          Float
+  image          String?
+  categoryId     String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  isFeature      Boolean?
+  BookingService BookingService[]
+  category       Category         @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id               String           @id @default(uuid())
+  name             String           @unique
+  image            String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  description      String?
+  services         Service[]
+  workerCategories WorkerCategory[]
+}
+
+model Booking {
+  id                String             @id @default(uuid())
+  userId            String?
+  guestName         String?
+  guestEmail        String?
+  guestPhone        String?
+  totalDuration     Int
+  workerId          String
+  date              DateTime
+  startTime         Int
+  endTime           Int
+  endsAt DateTime?
+  status            BookingStatus      @default(PENDING_PAYMENT)
+  comment           String?
+  calendarEventId   String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  user              User?              @relation(fields: [userId], references: [id])
+  worker            Worker             @relation(fields: [workerId], references: [id])
+  service           BookingService[]
+  transactionProofs TransactionProof[]
+
+  @@index([date, startTime])
+  @@index([date, endTime])
+  @@index([workerId, date, startTime])
+}
+
+model BookingService {
+  id        String  @id @default(uuid())
+  bookingId String
+  serviceId String
+  duration  Int
+  price     Float?
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  @@unique([bookingId, serviceId])
+}
+
+model TransactionProof {
+  id         String            @id @default(uuid())
+  imageUrl   String
+  bookingId  String
+  status     TransactionStatus @default(PENDING)
+  reviewedAt DateTime?
+  reviewedBy String?
+  uploadedAt DateTime          @default(now())
+  booking    Booking           @relation(fields: [bookingId], references: [id])
+}
+
+model ScheduleBlock {
+  id        String   @id @default(uuid())
+  date      DateTime
+  startTime Int?
+  endTime   Int?
+  reason    String?
+  workerId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  worker    Worker?  @relation(fields: [workerId], references: [id])
+
+  @@index([date, startTime])
+  @@index([workerId, date])
+}
+
+model BusinessHours {
+  id        String    @id @default(uuid())
+  day       DayOfWeek
+  startTime Int
+  endTime   Int
+  workerId  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  worker    Worker    @relation(fields: [workerId], references: [id])
+
+  @@index([workerId, day])
+  @@index([day, startTime])
+  @@index([day, endTime])
+}
+
+model OverrideHours {
+  id        String   @id @default(uuid())
+  date      DateTime
+  startTime Int
+  endTime   Int
+  workerId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  worker    Worker?  @relation(fields: [workerId], references: [id])
 }
 
 enum Role {
@@ -41,194 +192,4 @@ enum DayOfWeek {
   THURSDAY
   FRIDAY
   SATURDAY
-}
-
-model User {
-  id       String  @id @default(uuid())
-  name     String
-  password String?
-  email    String  @unique
-  phone    String
-  role     Role    @default(CLIENT)
-
-  bookings Booking[]
-  worker   Worker?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Worker {
-  id String @id @default(uuid())
-
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
-
-  isActive      Boolean   @default(true)
-  deactivatedAt DateTime?
-  bio           String?
-  avatar        String?
-
-  categories    WorkerCategory[]
-  businessHours BusinessHours[]
-  blocks        ScheduleBlock[]
-  bookings      Booking[]
-  overrideHours OverrideHours[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model WorkerCategory {
-  id         String @id @default(uuid())
-  workerId   String
-  categoryId String
-
-  worker   Worker   @relation(fields: [workerId], references: [id])
-  category Category @relation(fields: [categoryId], references: [id])
-
-  @@unique([workerId, categoryId])
-}
-
-model Service {
-  id          String  @id @default(uuid())
-  name        String
-  description String?
-  duration    Int
-  price       Float
-  image       String?
-  isFeature   Boolean?
-
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-
-
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  BookingService BookingService[]
-}
-
-model Category {
-  id    String  @id @default(uuid())
-  name  String  @unique
-  description String?
-  image String?
-
-  services         Service[]
-  workerCategories WorkerCategory[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Booking {
-  id String @id @default(uuid())
-
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id])
-
-  guestName  String?
-  guestEmail String?
-  guestPhone String?
-
-  totalDuration Int
-
-  workerId String
-  worker   Worker @relation(fields: [workerId], references: [id])
-
-  service           BookingService[]
-  transactionProofs TransactionProof[]
-
-  date      DateTime
-  startTime Int
-  endTime   Int
-
-  status  BookingStatus @default(PENDING_PAYMENT)
-  comment String?
-
-  calendarEventId String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([date, startTime])
-  @@index([date, endTime])
-  @@index([workerId, date, startTime])
-}
-
-model BookingService {
-  id String @id @default(uuid())
-
-  bookingId String
-  booking   Booking @relation(fields: [bookingId], references: [id])
-
-  serviceId String
-  service   Service @relation(fields: [serviceId], references: [id])
-
-  duration Int
-  price   Float?
-
-  @@unique([bookingId, serviceId])
-}
-
-model TransactionProof {
-  id       String @id @default(uuid())
-  imageUrl String
-
-  bookingId String
-  booking   Booking @relation(fields: [bookingId], references: [id])
-
-  status TransactionStatus @default(PENDING)
-  reviewedAt DateTime?
-  reviewedBy String?
-
-  uploadedAt DateTime @default(now())
-}
-
-model ScheduleBlock {
-  id String @id @default(uuid())
-
-  date      DateTime
-  startTime Int?
-  endTime   Int?
-  reason    String?
-
-  workerId String?
-  worker   Worker? @relation(fields: [workerId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([date, startTime])
-  @@index([workerId, date])
-}
-
-model BusinessHours {
-  id        String    @id @default(uuid())
-  day       DayOfWeek
-  startTime Int
-  endTime   Int
-
-  workerId String
-  worker   Worker @relation(fields: [workerId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([workerId, day])
-  @@index([day, startTime])
-  @@index([day, endTime])
-}
-
-model OverrideHours {
-  id        String   @id @default(uuid())
-  date      DateTime
-  startTime Int
-  endTime   Int
-
-  workerId String?
-  worker   Worker? @relation(fields: [workerId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

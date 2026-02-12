@@ -15,20 +15,25 @@ import { AdminGuard } from 'src/auth/guards/admin.guard';
 @Controller('admin/schedule-blocks')
 @UseGuards(JwtGuard, AdminGuard)
 export class GlobalScheduleBlockController {
-  constructor(private service: ScheduleBlockService) {}
+  constructor(private readonly service: ScheduleBlockService) {}
 
   @Post()
   create(@Body() dto: CreateScheduleBlockDto) {
     return this.service.create(dto);
   }
 
-  @Get(':date')
-  getByDate(@Param('date') date: string) {
-    return this.service.getByDate(date);
+  @Get('global')
+  getAllGlobal() {
+    return this.service.getAllGlobal();
   }
 
-  @Delete(':id')
+  @Get('global/:date')
+  getGlobalByDate(@Param('date') date: string) {
+    return this.service.getGlobalByDate(date);
+  }
+
+  @Delete('global/:id')
   delete(@Param('id') id: string) {
-    return this.service.delete(id);
+    return this.service.deleteGlobalBlock(id);
   }
 }

@@ -20,6 +20,7 @@ import { BookingCompletionModule } from './booking-completion/booking-completion
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotificationModule } from './notification/notification.module';
+import { AdminStatsModule } from './admin-stats/admin-stats.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -42,6 +43,7 @@ import { NotificationModule } from './notification/notification.module';
     BookingModule,
     ServicesModule,
     UsersModule,
+    AdminStatsModule,
     AuthModule,
     CategoryModule,
     BusinessHoursModule,

@@ -17,6 +17,7 @@ import { Events } from 'src/events/events';
 import { BookingWithRelations } from './types/booking-relations.types';
 import { BookingResponseDto } from './dto/response-booking.dto';
 import { GetWorkerBookingsDto } from './dto/get-worker-bookings.dto';
+import { GetBookingsDto } from './dto/get-bookings.dto';
 
 @Injectable()
 export class BookingService {
@@ -127,6 +128,9 @@ export class BookingService {
 
     const end = start + totalDuration;
 
+    const endsAt = new Date(dateUtc);
+    endsAt.setMinutes(endsAt.getMinutes() + end);
+
     if (start >= end)
       throw new BadRequestException('Rango de reserva invalido.');
 
@@ -173,6 +177,7 @@ export class BookingService {
           date: dateUtc,
           startTime: start,
           endTime: end,
+          endsAt,
           totalDuration,
           status: BookingStatus.PENDING_PAYMENT,
           comment: dto.comment,
@@ -334,8 +339,93 @@ export class BookingService {
     return bookings.map((b) => this.mapBookingToResponse(b));
   }
 
-  async getAll(): Promise<BookingResponseDto[]> {
+  async getAll(filters: GetBookingsDto): Promise<BookingResponseDto[]> {
+    const { view = 'day', date } = filters;
+
+    const baseDate = date ? new Date(date) : new Date();
+
+    let start: Date;
+    let end: Date;
+
+    switch (view) {
+      case 'day': {
+        start = new Date(
+          baseDate.getFullYear(),
+          baseDate.getMonth(),
+          baseDate.getDate(),
+          0,
+          0,
+          0,
+        );
+
+        end = new Date(
+          baseDate.getFullYear(),
+          baseDate.getMonth(),
+          baseDate.getDate(),
+          23,
+          59,
+          59,
+        );
+        break;
+      }
+
+      case 'week': {
+        const temp = new Date(baseDate);
+        const day = temp.getDay();
+        const diff = temp.getDate() - day;
+
+        start = new Date(temp.setDate(diff));
+        start.setHours(0, 0, 0, 0);
+
+        end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23, 59, 59, 999);
+        break;
+      }
+
+      case 'month': {
+        start = new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
+
+        end = new Date(
+          baseDate.getFullYear(),
+          baseDate.getMonth() + 1,
+          0,
+          23,
+          59,
+          59,
+        );
+        break;
+      }
+
+      default: {
+        // fallback seguro
+        start = new Date(
+          baseDate.getFullYear(),
+          baseDate.getMonth(),
+          baseDate.getDate(),
+          0,
+          0,
+          0,
+        );
+
+        end = new Date(
+          baseDate.getFullYear(),
+          baseDate.getMonth(),
+          baseDate.getDate(),
+          23,
+          59,
+          59,
+        );
+      }
+    }
+
     const bookings = await this.prisma.booking.findMany({
+      where: {
+        date: {
+          gte: start,
+          lte: end,
+        },
+      },
       orderBy: [{ date: 'asc' }, { startTime: 'asc' }],
       include: {
         worker: { include: { user: true } },

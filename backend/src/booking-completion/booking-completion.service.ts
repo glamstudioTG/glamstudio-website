@@ -8,35 +8,26 @@ export class BookingCompletionService {
   private readonly logger = new Logger(BookingCompletionService.name);
   constructor(private prisma: PrismaService) {}
 
-  @Cron('0 3 * * *')
+  @Cron('15 3 * * *')
   async completePastBookings() {
-    const now = new Date();
+    try {
+      const now = new Date();
 
-    const confirmedBookings = await this.prisma.booking.findMany({
-      where: {
-        status: BookingStatus.CONFIRMED,
-      },
-      select: { id: true, endTime: true, date: true },
-    });
-    const bookingsToComplete = confirmedBookings.filter((b) => {
-      const bookingEnd = new Date(b.date);
-      bookingEnd.setMinutes(bookingEnd.getMinutes() + b.endTime);
-      return bookingEnd < now;
-    });
+      const result = await this.prisma.booking.updateMany({
+        where: {
+          status: BookingStatus.CONFIRMED,
+          endsAt: { lt: now },
+        },
+        data: {
+          status: BookingStatus.COMPLETED,
+        },
+      });
 
-    if (bookingsToComplete.length === 0) {
-      return;
+      if (result.count > 0) {
+        this.logger.log(`Marked ${result.count} bookings as COMPLETED.`);
+      }
+    } catch (error) {
+      this.logger.error('Error completing past bookings', error);
     }
-
-    await this.prisma.booking.updateMany({
-      where: {
-        id: { in: bookingsToComplete.map((b) => b.id) },
-      },
-      data: { status: BookingStatus.COMPLETED },
-    });
-
-    this.logger.log(
-      `Marcadas como COMPLETED ${bookingsToComplete.length} reservas`,
-    );
   }
 }

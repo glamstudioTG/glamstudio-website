@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { UserService } from './users.service';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
@@ -32,15 +23,21 @@ export class UsersController {
     return this.userService.getAllUsers();
   }
 
-  @UseGuards(JwtGuard)
-  @Patch('me/update')
-  updateMyProfile(@CurrentUser() user: AuthUser, @Body() dto: UpdateUserDto) {
-    return this.userService.updateProfile(user.sub, dto);
+  @UseGuards(JwtGuard, AdminGuard)
+  @Get('admin/search-by-email/:email')
+  searchUserByEmail(@Param('email') email: string) {
+    return this.userService.searchByEmail(email);
   }
 
   @UseGuards(JwtGuard, AdminGuard)
   @Patch('admin/users/:id/role')
   changeUserRole(@Param('id') userId: string, @Body() dto: ChangeUserRoleDto) {
     return this.userService.changeUserRole(userId, dto);
+  }
+
+  @UseGuards(JwtGuard)
+  @Patch('me/update')
+  updateMyProfile(@CurrentUser() user: AuthUser, @Body() dto: UpdateUserDto) {
+    return this.userService.updateProfile(user.sub, dto);
   }
 }

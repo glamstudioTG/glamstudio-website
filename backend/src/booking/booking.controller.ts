@@ -17,6 +17,7 @@ import { OptionalJwtGuard } from 'src/auth/guards/optional-jwt.guard';
 import { AdminOrWorkerGuard } from 'src/auth/guards/admin-or-worker.guard';
 import { BookingResponseDto } from './dto/response-booking.dto';
 import { GetWorkerBookingsDto } from './dto/get-worker-bookings.dto';
+import { GetBookingsDto } from './dto/get-bookings.dto';
 
 @Controller('/booking')
 export class BookingController {
@@ -58,7 +59,7 @@ export class BookingController {
   }
   @UseGuards(JwtGuard, AdminOrWorkerGuard)
   @Get()
-  getAll() {
-    return this.bookingService.getAll();
+  getAll(@Query() filters: GetBookingsDto) {
+    return this.bookingService.getAll(filters);
   }
 }

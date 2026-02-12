@@ -20,7 +20,6 @@ export class ScheduleBlockService {
     let startTime: number | null = null;
     let endTime: number | null = null;
 
-    // 1️⃣ Validación de rango
     if (dto.startTime && dto.endTime) {
       startTime = hhmmToMinutes(dto.startTime);
       endTime = hhmmToMinutes(dto.endTime);
@@ -38,7 +37,6 @@ export class ScheduleBlockService {
     });
 
     if (startTime === null && endTime === null) {
-      // Bloqueo de día completo
       if (existing.length > 0) {
         throw new ConflictException('Day already has blocks');
       }
@@ -84,7 +82,7 @@ export class ScheduleBlockService {
     });
   }
 
-  async delete(id: string, workerId?: string) {
+  async delete(id: string, workerId: string) {
     const block = await this.prisma.scheduleBlock.findUnique({
       where: { id },
     });
@@ -94,5 +92,38 @@ export class ScheduleBlockService {
     }
 
     return this.prisma.scheduleBlock.delete({ where: { id } });
+  }
+
+  async deleteGlobalBlock(id: string) {
+    const block = await this.prisma.scheduleBlock.findUnique({
+      where: { id },
+    });
+
+    if (!block || block.workerId !== null) {
+      throw new NotFoundException('Global block not found');
+    }
+
+    return this.prisma.scheduleBlock.delete({ where: { id } });
+  }
+
+  async getGlobalByDate(date: string) {
+    const d = localDateToUtc(date);
+
+    return this.prisma.scheduleBlock.findMany({
+      where: {
+        workerId: null,
+        date: d,
+      },
+      orderBy: { startTime: 'asc' },
+    });
+  }
+
+  async getAllGlobal() {
+    return this.prisma.scheduleBlock.findMany({
+      where: {
+        workerId: null,
+      },
+      orderBy: [{ date: 'asc' }, { startTime: 'asc' }],
+    });
   }
 }

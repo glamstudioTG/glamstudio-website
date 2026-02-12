@@ -47,7 +47,14 @@ export class CategoryService {
   }
 
   async getAllCategories() {
-    return await this.prisma.category.findMany();
+    return this.prisma.category.findMany({
+      orderBy: { createdAt: 'asc' },
+      include: {
+        _count: {
+          select: { services: true },
+        },
+      },
+    });
   }
 
   async getCategoryById(id: string) {

@@ -40,12 +40,23 @@ export class ServicesService {
     });
   }
 
-  async getServices() {
-    return await this.prisma.service.findMany({
+  async getServices(categoryId?: string, search?: string) {
+    return this.prisma.service.findMany({
+      where: {
+        ...(categoryId && { categoryId }),
+
+        ...(search &&
+          search.trim().length >= 2 && {
+            name: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          }),
+      },
       include: { category: true },
+      orderBy: { createdAt: 'asc' },
     });
   }
-
   async getServicesById(id: string) {
     const service = await this.prisma.service.findUnique({
       where: { id },

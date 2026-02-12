@@ -3,10 +3,11 @@ import { TransactionProofController } from './transaction-proof.controller';
 import { TransactionProofService } from './transaction-proof.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { AvailabilityService } from 'src/availability/availability.service';
+import { TransactionProofAdminController } from './transaction-proof.admin.controller';
 
 @Module({
   imports: [PrismaModule],
-  controllers: [TransactionProofController],
+  controllers: [TransactionProofController, TransactionProofAdminController],
   providers: [TransactionProofService, AvailabilityService],
   exports: [TransactionProofService, AvailabilityService],
 })

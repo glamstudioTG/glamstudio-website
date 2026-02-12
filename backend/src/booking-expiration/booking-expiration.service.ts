@@ -9,32 +9,27 @@ export class BookingExpirationService {
 
   constructor(private prisma: PrismaService) {}
 
-  @Cron('*/5 * * * *')
+  @Cron('*/10 * * * *')
   async expirePendingPayments() {
-    const TTL_MINUTES = 30;
-    const expirationTime = new Date(Date.now() - TTL_MINUTES * 60 * 1000);
+    try {
+      const TTL_MINUTES = 30;
+      const expirationTime = new Date(Date.now() - TTL_MINUTES * 60 * 1000);
 
-    const expiredBookings = await this.prisma.booking.findMany({
-      where: {
-        status: BookingStatus.PENDING_PAYMENT,
-        createdAt: { lt: expirationTime },
-      },
-      select: { id: true },
-    });
+      const result = await this.prisma.booking.updateMany({
+        where: {
+          status: BookingStatus.PENDING_PAYMENT,
+          createdAt: { lt: expirationTime },
+        },
+        data: {
+          status: BookingStatus.CANCELLED,
+        },
+      });
 
-    if (expiredBookings.length === 0) {
-      return;
+      if (result.count > 0) {
+        this.logger.log(`Expired ${result.count} bookings due to non-payment.`);
+      }
+    } catch (error) {
+      this.logger.error('Error expiring pending bookings', error);
     }
-
-    await this.prisma.booking.updateMany({
-      where: {
-        id: { in: expiredBookings.map((b) => b.id) },
-      },
-      data: { status: BookingStatus.CANCELLED },
-    });
-
-    this.logger.log(
-      `Expired ${expiredBookings.length} bookings due to non-payment.`,
-    );
   }
 }

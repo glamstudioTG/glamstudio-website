@@ -9,10 +9,9 @@ import { Events } from 'src/events/events';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AvailabilityService } from 'src/availability/availability.service';
 import { BookingStatus, TransactionStatus } from '@prisma/client';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { TransactionProofFiltersDto } from './dto/transaction-proof-filters.dto';
 import { Prisma } from '@prisma/client';
 import { TransactionProofQueryDto } from './dto/transaction-proof-query.dto';
+import { AdminTransactionProofQueryDto } from './dto/admin-transaction-proof-query.dto';
 
 type TransactionProofWithRelations = Prisma.TransactionProofGetPayload<{
   include: {
@@ -82,6 +81,54 @@ export class TransactionProofService {
         name: bs.service.name,
         price: bs.service.price,
       })),
+    };
+  }
+
+  private mapToAdminCard(proof: TransactionProofWithRelations) {
+    const booking = proof.booking;
+
+    const services = booking.service.map((bs) => ({
+      id: bs.service.id,
+      name: bs.service.name,
+      price: bs.service.price,
+    }));
+
+    return {
+      proof: {
+        id: proof.id,
+        imageUrl: proof.imageUrl,
+        status: proof.status,
+        reviewedAt: proof.reviewedAt,
+        reviewedBy: proof.reviewedBy,
+        uploadedAt: proof.uploadedAt,
+      },
+      booking: {
+        id: booking.id,
+        date: booking.date.toISOString().slice(0, 10),
+        startTime: booking.startTime,
+        endTime: booking.endTime,
+        status: booking.status,
+      },
+      client: booking.user
+        ? {
+            type: 'USER',
+            name: booking.user.name,
+            email: booking.user.email,
+            phone: booking.user.phone,
+          }
+        : {
+            type: 'GUEST',
+            name: booking.guestName,
+            email: booking.guestEmail,
+            phone: booking.guestPhone,
+          },
+      worker: {
+        id: booking.worker.id,
+        name: booking.worker.user.name,
+        email: booking.worker.user.email,
+      },
+      services,
+      total: services.reduce((sum, s) => sum + s.price, 0),
     };
   }
 
@@ -410,6 +457,91 @@ export class TransactionProofService {
         limit: currentLimit,
         total,
         totalPages: Math.ceil(total / currentLimit),
+      },
+    };
+  }
+
+  async getAdminList(query: AdminTransactionProofQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const skip = (page - 1) * limit;
+
+    const bookingWhere: Prisma.BookingWhereInput = {
+      date: this.buildPeriodFilter(query.period),
+    };
+
+    if (query.workerId) {
+      bookingWhere.workerId = query.workerId;
+    }
+
+    if (query.serviceId) {
+      bookingWhere.service = {
+        some: {
+          serviceId: query.serviceId,
+        },
+      };
+    }
+
+    if (query.search) {
+      bookingWhere.OR = [
+        {
+          user: {
+            name: { contains: query.search, mode: 'insensitive' },
+          },
+        },
+        {
+          worker: {
+            user: {
+              name: { contains: query.search, mode: 'insensitive' },
+            },
+          },
+        },
+        {
+          service: {
+            some: {
+              service: {
+                name: { contains: query.search, mode: 'insensitive' },
+              },
+            },
+          },
+        },
+      ];
+    }
+
+    const where: Prisma.TransactionProofWhereInput = {
+      booking: bookingWhere,
+    };
+
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    const [items, total] = await this.prisma.$transaction([
+      this.prisma.transactionProof.findMany({
+        where,
+        include: {
+          booking: {
+            include: {
+              user: true,
+              worker: { include: { user: true } },
+              service: { include: { service: true } },
+            },
+          },
+        },
+        orderBy: { uploadedAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.transactionProof.count({ where }),
+    ]);
+
+    return {
+      data: items.map((item) => this.mapToAdminCard(item)),
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
       },
     };
   }

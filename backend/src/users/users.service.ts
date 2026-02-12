@@ -18,6 +18,34 @@ export class UserService {
     });
   }
 
+  async searchByEmail(email: string) {
+    if (!email) {
+      throw new BadRequestException('Email requerido');
+    }
+
+    const users = await this.prisma.user.findMany({
+      where: {
+        email: {
+          startsWith: email.trim().toLowerCase(),
+          mode: 'insensitive',
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
+      take: 5,
+    });
+
+    if (!users.length) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    return users;
+  }
+
   findByID(id: string) {
     return this.prisma.user.findUnique({
       where: { id },
@@ -63,15 +91,9 @@ export class UserService {
   }
 
   async changeUserRole(userId: string, dto: ChangeUserRoleDto) {
-    if (!userId) {
-      throw new BadRequestException('Usuario no encontrado');
-    }
-
     const user = await this.prisma.user.update({
       where: { id: userId },
-      data: {
-        role: dto.role,
-      },
+      data: { role: dto.role },
     });
 
     if (dto.role === Role.WORKER) {
@@ -80,12 +102,14 @@ export class UserService {
       });
 
       if (!existingWorker) {
-        await this.prisma.worker.create({
-          data: {
-            userId,
-          },
-        });
+        await this.prisma.worker.create({ data: { userId } });
       }
+    }
+
+    if (dto.role === Role.CLIENT) {
+      await this.prisma.worker.deleteMany({
+        where: { userId },
+      });
     }
 
     return user;

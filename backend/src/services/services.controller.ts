@@ -25,8 +25,11 @@ export class ServicesController {
   }
 
   @Get()
-  getServices() {
-    return this.serviceService.getServices();
+  getServices(
+    @Query('categoryId') categoryId?: string,
+    @Query('search') search?: string,
+  ) {
+    return this.serviceService.getServices(categoryId, search);
   }
 
   @Get('featured')
