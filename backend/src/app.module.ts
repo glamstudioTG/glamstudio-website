@@ -25,7 +25,6 @@ import { AdminStatsModule } from './admin-stats/admin-stats.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
     }),
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
