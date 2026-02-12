@@ -56,7 +56,7 @@ export default function BusinessHoursSection() {
 
   return (
     <section className="flex flex-col justify-center  ">
-      <BussinesHoursHeader />
+      <BussinesHoursHeader workerId={workerId} />
       <BusinessHoursList workerId={workerId} items={data} />
     </section>
   );

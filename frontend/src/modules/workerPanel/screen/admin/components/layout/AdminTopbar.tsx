@@ -1,11 +1,11 @@
 "use client";
 
-import { ReactNode } from "react";
-
-export function AdminTopbar({ children }: { children: ReactNode }) {
+export function AdminTopbar() {
   return (
-    <div className=" p-6">
-      <div className="mx-auto max-w-7xl space-y-6">{children}</div>
+    <div className="h-20 bg-white border-b border-neutral-200 flex items-center px-8">
+      <h1 className="text-xl font-semibold text-neutral-800">
+        Dashboard General
+      </h1>
     </div>
   );
 }

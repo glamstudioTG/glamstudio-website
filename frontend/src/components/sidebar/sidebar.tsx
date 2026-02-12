@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -16,61 +16,72 @@ import {
 import clsx from "clsx";
 import Image from "next/image";
 import glamLogo from "@/public/logos/glamLogo.png";
-
-const navItems = [
-  {
-    label: "Reservas pendientes",
-    href: "/admin/workerPanel",
-    icon: CheckCheck,
-  },
-  {
-    label: "Historial de reservas",
-    href: "/admin/workerPanel/history",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Gestion de bloqueos",
-    href: "/admin/workerPanel/schedule-managment",
-    icon: Calendar,
-  },
-  {
-    label: "Gestion de horario",
-    href: "/admin/workerPanel/bussines-hours",
-    icon: Users,
-  },
-  {
-    label: "Admin",
-    href: "/admin/adminPanel",
-    icon: ShieldCheck,
-  },
-];
+import { useAuth } from "@/src/hooks/auth/AuthContext";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [open]);
 
+  const navItems = useMemo(() => {
+    if (!user) return [];
+
+    const workerItems = [
+      {
+        label: "Reservas pendientes",
+        href: "/admin/workerPanel",
+        icon: CheckCheck,
+      },
+      {
+        label: "Historial de reservas",
+        href: "/admin/workerPanel/history",
+        icon: LayoutDashboard,
+      },
+      {
+        label: "Gestion de bloqueos",
+        href: "/admin/workerPanel/schedule-managment",
+        icon: Calendar,
+      },
+      {
+        label: "Gestion de horario",
+        href: "/admin/workerPanel/bussines-hours",
+        icon: Users,
+      },
+    ];
+
+    const adminItems = [
+      {
+        label: "Admin",
+        href: "/admin/adminPanel",
+        icon: ShieldCheck,
+      },
+    ];
+
+    if (user.role === "ADMIN") {
+      return [...workerItems, ...adminItems];
+    }
+
+    if (user.role === "WORKER") {
+      return workerItems;
+    }
+
+    return [];
+  }, [user]);
+
+  if (loading) return null;
+
   return (
     <>
       <button
         onClick={() => setOpen(true)}
-        aria-label="Abrir menú"
-        className="
-          fixed top-4 left-4 
-          rounded-xl bg-[#B0154E] text-white
-          p-2 shadow-xl
-          md:hidden
-        "
+        className="fixed top-4 left-4 rounded-xl bg-[#B0154E] text-white p-2 shadow-xl md:hidden"
       >
         <Menu size={22} />
       </button>
@@ -93,7 +104,6 @@ export default function Sidebar() {
       >
         <button
           onClick={() => setOpen(false)}
-          aria-label="Cerrar menú"
           className="absolute right-4 top-4 md:hidden text-black"
         >
           <X size={22} />
@@ -135,12 +145,15 @@ export default function Sidebar() {
           })}
         </nav>
 
-        <Link href="/" onClick={() => setOpen(false)}>
-          <button className="mt-4 flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-100">
-            <LogOut size={18} />
-            Logout
-          </button>
-        </Link>
+        <button
+          onClick={() => {
+            setOpen(false);
+          }}
+          className="mt-4 flex w-full items-center gap-3 rounded-lg px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-100"
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
       </aside>
     </>
   );

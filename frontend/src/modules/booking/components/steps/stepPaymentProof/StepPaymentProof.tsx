@@ -125,7 +125,7 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
                       className="h-10 w-10 rounded-lg"
                     />
                     <p className="text-lg font-bold text-black tracking-wide justify-center items-center pt-2">
-                      312&nbsp;272&nbsp;4820
+                      320&nbsp;334&nbsp;5693
                     </p>
                   </div>
 
@@ -139,7 +139,7 @@ export default function StepPaymentProof({ booking, navigation }: StepProps) {
 
               <div className="shrink-0">
                 <CopyButton
-                  content="3122724820"
+                  content="3203345693"
                   variant="outline"
                   size="sm"
                   className="

@@ -18,7 +18,7 @@ const VARIANT_STYLES: Record<QuickActionVariant, { bg: string; icon: string }> =
     },
     red: {
       bg: "bg-red-100",
-      icon: "text-[#850E35]", // vinotinto
+      icon: "text-[#850E35]",
     },
     green: {
       bg: "bg-emerald-100",

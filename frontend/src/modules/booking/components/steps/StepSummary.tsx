@@ -40,8 +40,7 @@ export default function StepSummary({ booking, navigation }: StepProps) {
   const { date, time, userInfo, services } = booking.state;
   const totalPrice = services.reduce((acc, s) => acc + s.price, 0);
 
-  const startMinutes = time ? Number(time) : null;
-  const timeLabel = startMinutes !== null ? minutesToTime(startMinutes) : "-";
+  const timeLabel = time || "-";
 
   const handleConfirm = async () => {
     if (isLoading) return;

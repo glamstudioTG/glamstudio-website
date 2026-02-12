@@ -1,18 +1,18 @@
 "use client";
 
-import { AdminTopbar } from "./components/layout/AdminTopbar";
 import { StatsRow } from "./components/stats/StatsGrid";
 import { useAdminDashboardStats } from "./hooks/statsAdmin/useAdminDashboardStats";
 import { useAuth } from "@/src/hooks/auth/AuthContext";
 import { AdminLoadingState } from "./util/AdminLoadingState";
 import { AdminForbiddenState } from "./util/AdminForbiddenState";
 import { AdminSidebar } from "./components/layout/AdminSidebar";
+import { AdminShell } from "./components/layout/AdminShell";
 
 export default function AdminSection() {
   const { user, loading } = useAuth();
   const { data, isLoading } = useAdminDashboardStats();
 
-  if (loading) {
+  if (loading || isLoading || !data) {
     return <AdminLoadingState />;
   }
 
@@ -20,22 +20,27 @@ export default function AdminSection() {
     return <AdminForbiddenState />;
   }
 
-  if (isLoading || !data) {
-    return <AdminLoadingState />;
-  }
-
   return (
     <section className="min-h-screen bg-[#fdf0f0]">
-      <AdminTopbar>
+      {/* MOBILE → full width */}
+      <div className="px-4 py-6 space-y-6 lg:max-w-7xl lg:mx-auto lg:px-8 lg:py-8 lg:space-y-8">
         <StatsRow
           today={data.todayBookings}
           pending={data.pendingReviews}
           income={data.monthlyIncome}
           workers={data.activeWorkers}
         />
-      </AdminTopbar>
 
-      <AdminSidebar />
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 mt-4 lg:mt-6">
+          <div className="flex-1">
+            <AdminShell />
+          </div>
+
+          <div className="w-full lg:w-80 shrink-0 border-t lg:border-t-0 lg:border-l border-neutral-200 pt-6 lg:pt-0 lg:pl-6">
+            <AdminSidebar />
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
