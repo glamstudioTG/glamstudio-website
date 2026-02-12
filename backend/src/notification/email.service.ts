@@ -19,7 +19,8 @@ export class EmailService {
     this.resend = new Resend(apiKey);
 
     this.fromEmail =
-      this.configService.get<string>('MAIL_USER') || 'onboarding@resend.dev';
+      this.configService.get<string>('RESEND_FROM_EMAIL') ||
+      'onboarding@resend.dev';
   }
 
   async send(to: string, subject: string, html: string): Promise<void> {
