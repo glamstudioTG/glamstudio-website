@@ -1,8 +1,9 @@
 {
   "name": "backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "packageManager": "pnpm@10.24.0",
+  "description": "Shedule and booking system",
+  "author": "Esteban Castañeda",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
