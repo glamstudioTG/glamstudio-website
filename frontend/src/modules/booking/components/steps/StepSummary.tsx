@@ -2,9 +2,8 @@
 
 import { motion, AnimatePresence, easeOut } from "framer-motion";
 import StepHeader from "../../service/StepUtils/StepHeader";
-import { StepProps } from "../../types/booking.types";
+import { StepProps, BookingDraft } from "../../types/booking.types";
 import { TicketCheck } from "lucide-react";
-import { minutesToTime } from "../../utils/time";
 import { Spinner } from "@/src/components/ui/shadcn-io/spinner/spinner";
 
 const container = {
@@ -36,7 +35,10 @@ const row = {
   visible: { opacity: 1, x: 0 },
 };
 
-export default function StepSummary({ booking, navigation }: StepProps) {
+export default function StepSummary({
+  booking,
+  navigation,
+}: StepProps<BookingDraft>) {
   const { date, time, userInfo, services } = booking.state;
   const totalPrice = services.reduce((acc, s) => acc + s.price, 0);
 

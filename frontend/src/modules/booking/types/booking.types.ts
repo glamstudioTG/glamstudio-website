@@ -82,27 +82,32 @@ export type BookingResponse = {
   }[];
 };
 
-export type StepValidator = (ctx: BookingDraft) => boolean;
+export type StepValidator<T> = (ctx: T) => boolean;
 
-export type UseStepNavigationProps = {
+export type UseStepNavigationProps<T> = {
   totalSteps: number;
-  validators?: Record<number, (ctx: unknown) => boolean>;
+  validators?: Partial<Record<number, StepValidator<T>>>;
 };
+
+export interface DayAvailability {
+  date: string;
+  totalSlots: number;
+  bookedSlots: number;
+}
 
 type Step = {
   id: number;
   label: string;
 };
 
-export type BookingStepperProps = {
+export type BookingStepperProps<T> = {
   currentStep: number;
-  navigation: ReturnType<typeof useStepNavigation>;
+  navigation: ReturnType<typeof useStepNavigation<T>>;
   steps: Step[];
 };
-
-export type StepProps = {
+export type StepProps<T> = {
   booking: ReturnType<typeof useBookingForm>;
-  navigation: ReturnType<typeof useStepNavigation>;
+  navigation: ReturnType<typeof useStepNavigation<T>>;
 };
 
 export interface BookingForm {

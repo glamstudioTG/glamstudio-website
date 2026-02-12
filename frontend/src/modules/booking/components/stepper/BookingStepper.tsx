@@ -1,12 +1,12 @@
 import { Fragment } from "react";
 import { motion } from "framer-motion";
-import { BookingStepperProps } from "../../types/booking.types";
+import { BookingStepperProps, BookingDraft } from "../../types/booking.types";
 
 export default function BookingStepper({
   currentStep,
   steps,
   navigation,
-}: BookingStepperProps) {
+}: BookingStepperProps<BookingDraft>) {
   return (
     <div
       className="

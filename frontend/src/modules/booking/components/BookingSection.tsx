@@ -43,7 +43,7 @@ const stepVariants = {
 export default function BookingSection() {
   const booking = useBookingForm();
 
-  const navigation = useStepNavigation({
+  const navigation = useStepNavigation<BookingDraft>({
     totalSteps: STEPS.length,
     validators: {
       1: (ctx) => {

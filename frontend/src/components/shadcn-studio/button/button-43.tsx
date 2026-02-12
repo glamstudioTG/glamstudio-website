@@ -1,7 +1,7 @@
-import { ShimmerButton } from '@/components/ui/shimmer-button'
+import { ShimmerButton } from "../../ui/shimmer-button";
 
 const ButtonShimmerEffectDemo = () => {
-  return <ShimmerButton>Shimmer Button</ShimmerButton>
-}
+  return <ShimmerButton>Shimmer Button</ShimmerButton>;
+};
 
-export default ButtonShimmerEffectDemo
+export default ButtonShimmerEffectDemo;

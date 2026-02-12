@@ -17,7 +17,9 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
       { email, password },
       {
         onSuccess: (user) => {
-          setSession(user);
+          if (user) {
+            setSession(user);
+          }
         },
       },
     );

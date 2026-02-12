@@ -8,7 +8,7 @@ type LoginVars = {
 };
 
 export function useLoginMutation() {
-  return useMutation<AuthUser, Error, LoginVars>({
+  return useMutation<AuthUser | null, Error, LoginVars>({
     mutationFn: ({ email, password }) => AuthApi.login(email, password),
   });
 }

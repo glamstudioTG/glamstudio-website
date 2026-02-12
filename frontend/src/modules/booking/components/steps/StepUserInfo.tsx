@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { motion, easeOut, easeInOut } from "framer-motion";
-import { StepProps } from "../../types/booking.types";
+import { StepProps, BookingDraft } from "../../types/booking.types";
 import StepHeader from "../../service/StepUtils/StepHeader";
 import {
   InputGroup,
@@ -44,7 +44,10 @@ const fieldVariants = {
   },
 };
 
-export default function StepUserInfo({ booking, navigation }: StepProps) {
+export default function StepUserInfo({
+  booking,
+  navigation,
+}: StepProps<BookingDraft>) {
   const draftUser = booking.state.userInfo ?? {
     name: "",
     email: "",

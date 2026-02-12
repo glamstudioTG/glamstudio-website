@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { StepProps } from "../../../types/booking.types";
+import { BookingDraft, StepProps } from "../../../types/booking.types";
 import StepHeader from "../../../service/StepUtils/StepHeader";
 import ServiceBrowser from "./ServiceBrowser";
 import SelectedServicesSummary from "./SelectedServicesSummary";
@@ -11,7 +11,10 @@ import { motion, easeOut } from "framer-motion";
 import ServiceWorkerGrid from "./ServiceWorkerGrid";
 import { useWorkersByServicesMutation } from "../../../hooks/query/step1.queries";
 
-export default function StepServices({ booking, navigation }: StepProps) {
+export default function StepServices({
+  booking,
+  navigation,
+}: StepProps<BookingDraft>) {
   const workersMutation = useWorkersByServicesMutation();
 
   useEffect(() => {

@@ -1,17 +1,20 @@
 import { useCallback, useMemo, useState } from "react";
 import { UseStepNavigationProps } from "../types/booking.types";
 
-export default function useStepNavigation({
+export default function useStepNavigation<T>({
   totalSteps,
   validators,
-}: UseStepNavigationProps) {
+}: UseStepNavigationProps<T>) {
   const [currentStep, setCurrentStep] = useState(1);
   const [direction, setDirection] = useState<1 | -1>(1);
-  const [context, setContext] = useState<unknown>(null);
+  const [context, setContext] = useState<T | null>(null);
 
   const canGoNext = useMemo(() => {
     const validator = validators?.[currentStep];
-    return validator ? validator(context) : true;
+    if (!validator) return true;
+    if (context === null) return false;
+
+    return validator(context);
   }, [currentStep, validators, context]);
 
   const nextStep = useCallback(() => {
@@ -31,18 +34,21 @@ export default function useStepNavigation({
 
       setDirection(step > currentStep ? 1 : -1);
 
-      if (step <= currentStep) return setCurrentStep(step);
+      if (step <= currentStep) {
+        setCurrentStep(step);
+        return;
+      }
 
       for (let i = 1; i < step; i++) {
         const validator = validators?.[i];
-        if (validator && !validator(i)) {
+        if (validator && context !== null && !validator(context)) {
           return;
         }
       }
 
       setCurrentStep(step);
     },
-    [totalSteps, currentStep, validators],
+    [totalSteps, currentStep, validators, context],
   );
 
   return {

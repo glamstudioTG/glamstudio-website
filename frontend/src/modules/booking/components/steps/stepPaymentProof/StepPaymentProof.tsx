@@ -3,7 +3,7 @@
 import { useRef, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { UploadCloud, AlertCircle } from "lucide-react";
-import { StepProps } from "../../../types/booking.types";
+import { StepProps, BookingDraft } from "../../../types/booking.types";
 import StepHeader from "../../../service/StepUtils/StepHeader";
 import nequi from "@/public/images/landing/nequi.svg";
 import { CopyButton } from "@/src/components/animate-ui/components/buttons/copy";
@@ -13,7 +13,10 @@ import { isBookingWithProof } from "../../../utils/isBookingWithProof";
 import BookingConfirmationModal from "./BookingConfirmationModal";
 import { Spinner } from "@/src/components/ui/shadcn-io/spinner/spinner";
 
-export default function StepPaymentProof({ booking, navigation }: StepProps) {
+export default function StepPaymentProof({
+  booking,
+  navigation,
+}: StepProps<BookingDraft>) {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);

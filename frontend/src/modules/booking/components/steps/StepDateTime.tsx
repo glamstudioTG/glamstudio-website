@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { Calendar } from "@/src/components/ui/shadcn-io/calendar/calendar";
 import { Calendar1 } from "lucide-react";
 import StepHeader from "../../service/StepUtils/StepHeader";
-import { StepProps } from "../../types/booking.types";
+import { BookingDraft, StepProps } from "../../types/booking.types";
 import { useAvailabilityQuery } from "../../hooks/query/useAvailability";
 
 function SlotsSkeleton() {
@@ -18,7 +18,10 @@ function SlotsSkeleton() {
   );
 }
 
-export default function StepDateTime({ booking, navigation }: StepProps) {
+export default function StepDateTime({
+  booking,
+  navigation,
+}: StepProps<BookingDraft>) {
   const selectedDate = booking.state.date;
   const selectedTime = booking.state.time;
   const selectedWorker = booking.state.selectedWorker;
