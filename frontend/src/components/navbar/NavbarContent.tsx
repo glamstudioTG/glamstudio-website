@@ -18,6 +18,7 @@ import AuthDialog from "../auth/AuthDialog";
 export default function NavbarContent() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
   const router = useRouter();
 
@@ -120,19 +121,19 @@ export default function NavbarContent() {
           className="w-44 bg-[#ffc4c4] border-[#850e35]/40 p-3 rounded-xl"
         >
           {!isAuthenticated && (
-            <AuthDialog
-              trigger={
-                <button
-                  className="
-            w-full text-left rounded-md px-3 py-2 text-sm
-            text-black/80 hover:bg-[#fff5e4]/15 hover:text-black
-            transition cursor-pointer
-          "
-                >
-                  Iniciar sesión
-                </button>
-              }
-            />
+            <button
+              onClick={() => {
+                setProfileOpen(false);
+                setAuthOpen(true);
+              }}
+              className="
+      w-full text-left rounded-md px-3 py-2 text-sm
+      text-black/80 hover:bg-[#fff5e4]/15 hover:text-black
+      transition cursor-pointer
+    "
+            >
+              Iniciar sesión
+            </button>
           )}
 
           {canAccessPanel && (
@@ -169,6 +170,7 @@ export default function NavbarContent() {
           )}
         </PopoverContent>
       </Popover>
+      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
     </nav>
   );
 }
