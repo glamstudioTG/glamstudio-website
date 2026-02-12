@@ -8,7 +8,7 @@ export function useUpdateWorkerProfile(workerId: string) {
   const queryKey = adminQueryKeys.worker(workerId);
 
   return useMutation({
-    mutationFn: (dto: { bio?: string; profile?: string }) =>
+    mutationFn: (dto: { bio?: string; avatar?: string }) =>
       AdminWorkerService.updateProfile(workerId, dto),
 
     onMutate: async (dto) => {

@@ -1,4 +1,3 @@
-// hooks/useBookings.ts
 import { useQuery } from "@tanstack/react-query";
 import { AdminBookingService } from "../../services/admin-booking.service";
 import { BookingResponse } from "@/src/modules/booking/types/booking.types";

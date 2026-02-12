@@ -44,15 +44,12 @@ export default function AdminServiceManagmentSection() {
 
   return (
     <section className="bg-[#fdf0f0] flex flex-col min-h-screen lg:h-screen">
-      {/* HEADER */}
       <div className="px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-4 sm:pb-6">
         <ServiceManagementHeader />
       </div>
 
-      {/* BODY */}
       <div className="flex-1 px-4 sm:px-6 lg:px-10 pb-6 sm:pb-8 min-h-0">
         <div className="flex flex-col lg:grid lg:grid-cols-[280px_1fr] gap-6 lg:gap-8 h-full min-h-0">
-          {/* SIDEBAR */}
           <div className="lg:h-full">
             <CategorySidebar
               categories={categories ?? []}
@@ -62,7 +59,6 @@ export default function AdminServiceManagmentSection() {
             />
           </div>
 
-          {/* TABLE CONTAINER */}
           <div className="bg-white rounded-xl border border-neutral-200 shadow-sm flex flex-col h-full min-h-0">
             <ServicesTable
               services={services ?? []}

@@ -2,7 +2,6 @@
 
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useUploadThing } from "@/src/lib/client/uploadthing";
 import { Spinner } from "@/src/components/ui/shadcn-io/spinner/spinner";
 import { useCloudinaryUpload } from "../../../../hooks/cloudinary/useCloudinaryUpload";
 
