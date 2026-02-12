@@ -1,5 +1,5 @@
 import { Service } from "../../types/category.types";
-import { ShimmerButton } from "@/src/components/ui/shimmer-button";
+import { Button } from "@/src/components/ui/shadcn-io/shimmerButton/button";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,6 @@ import {
   DialogTrigger,
 } from "@/src/components/ui/shadcn-io/dialog/dialog";
 import Image from "next/image";
-import { Button } from "@/src/components/ui/button";
 import { CircleAlert } from "lucide-react";
 import Link from "next/link";
 
@@ -48,9 +47,9 @@ export default function ServiceItem({ service }: Props) {
         </p>
         <div className="mt-6 flex flex-col md:flex-row gap-4 justify-center  items-center">
           <Link href={""}>
-            <ShimmerButton className="w-full md:w-auto bg-[#850E35] text-white cursor-pointer">
+            <Button className="w-full md:w-auto bg-[#850E35] text-white cursor-pointer">
               Solicitar esta técnica
-            </ShimmerButton>
+            </Button>
           </Link>
 
           <Dialog>
