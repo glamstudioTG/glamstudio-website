@@ -29,19 +29,24 @@ const images = [
 export default function HeroImageMosaic({
   scale = "desktop",
 }: {
-  scale?: "desktop" | "mobile";
+  scale?: "desktop" | "mobile" | "tablet";
 }) {
   const maxLeft = Math.max(...images.map((img) => img.left + img.w));
 
-  const scaleFactor = scale === "mobile" ? 0.65 : 1;
-
+  const scaleFactor = scale === "mobile" ? 0.65 : scale === "tablet" ? 0.85 : 1;
   const totalWidth = Math.max(...images.map((i) => i.left + i.w));
   const centerOffset =
     scale === "mobile" ? (280 - totalWidth * scaleFactor) / 2 : 0;
 
-  const containerWidth = scale === "mobile" ? 280 : totalWidth;
+  const containerWidth =
+    scale === "mobile"
+      ? 280
+      : scale === "tablet"
+        ? totalWidth * 0.9
+        : totalWidth;
+
   const offsetX =
-    scale === "mobile" ? (containerWidth - totalWidth * scaleFactor) / 2 : 0;
+    scale !== "desktop" ? (containerWidth - totalWidth * scaleFactor) / 2 : 0;
 
   const containerVariants = {
     hidden: {},
@@ -79,8 +84,14 @@ export default function HeroImageMosaic({
       viewport={{ once: false, amount: 0.3 }}
       className={`
         relative
-        ${scale === "mobile" ? "w-70 h-90" : "w-130 h-160"}
-      `}
+        ${
+          scale === "mobile"
+            ? "w-70 h-90"
+            : scale === "tablet"
+              ? "w-110 h-140"
+              : "w-130 h-160"
+        }
+`}
     >
       {images.map((img, i) => {
         const delay = (maxLeft - img.left + img.w) * 0.003;

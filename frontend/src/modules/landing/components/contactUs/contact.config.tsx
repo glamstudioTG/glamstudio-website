@@ -11,7 +11,7 @@ export const contactInfo: ContactInfoItem[] = [
   {
     icon: <Phone size={18} />,
     title: "Teléfono",
-    description: "+57 312 2724820",
+    description: "+57 310 3072274",
   },
   {
     icon: <Mail size={18} />,

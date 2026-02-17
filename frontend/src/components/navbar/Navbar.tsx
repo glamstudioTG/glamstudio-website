@@ -22,7 +22,7 @@ export default function Navbar() {
       }}
       transition={{ duration: 0.35, ease: "easeInOut" }}
     >
-      <div className="mx-auto max-w-7xl px-6 py-2">
+      <div className="mx-auto max-w-7xl px-6 py-1">
         <motion.div
           animate={{
             scale: isHidden ? 0.92 : 1,

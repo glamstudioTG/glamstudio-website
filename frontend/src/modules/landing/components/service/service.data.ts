@@ -1,4 +1,4 @@
-import eyelashes from "@/public/images/landing/eyelashes.png";
+import eyelashes from "@/public/images/landing/eyesLanding.jpeg";
 import eyebrows from "@/public/images/landing/eyebrows.png";
 import lips from "@/public/images/landing/lips.png";
 import retouching from "@/public/images/landing/retouching.png";

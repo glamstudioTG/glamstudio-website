@@ -33,7 +33,7 @@ export default function NavbarContent() {
   });
 
   return (
-    <nav className="flex items-center gap-10">
+    <nav className="flex items-center gap-8">
       <Popover open={servicesOpen} onOpenChange={setServicesOpen}>
         <PopoverTrigger asChild>
           <button className="text-sm font-medium text-black/80 hover:text-black transition cursor-pointer">

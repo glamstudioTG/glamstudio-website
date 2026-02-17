@@ -49,8 +49,16 @@ export default function AdminServiceManagmentSection() {
       </div>
 
       <div className="flex-1 px-4 sm:px-6 lg:px-10 pb-6 sm:pb-8 min-h-0">
-        <div className="flex flex-col lg:grid lg:grid-cols-[280px_1fr] gap-6 lg:gap-8 h-full min-h-0">
-          <div className="lg:h-full">
+        <div
+          className="flex flex-col
+          tablet:grid
+          tablet:grid-cols-[280px_1fr]
+          gap-6
+          tablet:gap-8
+          h-full
+          min-h-0"
+        >
+          <div className="tablet:h-full">
             <CategorySidebar
               categories={categories ?? []}
               services={allServices ?? []}

@@ -29,15 +29,8 @@ export default function HeroSection() {
   };
 
   return (
-    <section
-      className="
-        relative isolate w-full
-        h-screen
-        bg-soft-wave
-        overflow-hidden
-      "
-    >
-      <div className="md:hidden h-full flex flex-col">
+    <section className="relative isolate w-full h-screen bg-soft-wave overflow-hidden">
+      <div className="tablet:hidden h-full flex flex-col">
         <div className="flex-[0.55] flex items-end justify-center">
           <HeroImageMosaic scale="mobile" />
         </div>
@@ -47,12 +40,7 @@ export default function HeroSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
-          className="
-            flex-[0.45]
-            flex flex-col gap-4
-            text-center
-            px-6
-          "
+          className="flex-[0.45] flex flex-col gap-4 text-center px-6"
         >
           <motion.span variants={textItem} className="text-xs text-gray-800">
             Estudio de belleza premium
@@ -79,19 +67,7 @@ export default function HeroSection() {
                 whileTap={{ scale: 0.96 }}
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2, ease: easeOut }}
-                className="
-                flex
-                justify-center
-                gap-6
-                text-[18px]
-                  w-full
-                  rounded-xl
-                  bg-[#850e35]
-                  text-white
-                  py-4
-                  font-medium
-                  shadow-md
-                "
+                className="flex justify-center gap-6 text-[18px] w-full rounded-xl bg-[#850e35] text-white py-4 font-medium shadow-md"
               >
                 <Calendar />
                 Reserva tu cita
@@ -103,18 +79,7 @@ export default function HeroSection() {
                 whileTap={{ scale: 0.96 }}
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2, ease: easeOut }}
-                className="
-                flex
-                justify-center
-                gap-6
-                text-[18px]
-                  w-full
-                  rounded-xl
-                  bg-[#850e35]
-                  text-white
-                  py-4
-                  font-medium
-                "
+                className="flex justify-center gap-6 text-[18px] w-full rounded-xl bg-[#850e35] text-white py-4 font-medium"
               >
                 <Sparkles />
                 Ver nuestros servicios
@@ -124,21 +89,21 @@ export default function HeroSection() {
         </motion.div>
       </div>
 
-      <div className="hidden md:grid relative z-10 max-w-8xl mx-auto w-full grid-cols-2 items-center px-0">
+      <div className="hidden tablet:grid relative z-10 w-full items-center px-6 tablet:grid-cols-2">
         <motion.div
           variants={textContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
-          className="md:col-start-2 md:pr-10 md:mt-40 flex flex-col gap-6"
+          className="tablet:col-start-2 tablet:mt-40 flex flex-col gap-6"
         >
-          <motion.span variants={textItem} className="text-sm text-gray-800">
+          <motion.span variants={textItem} className="text-base text-gray-800">
             Estudio de belleza premium
           </motion.span>
 
           <motion.h1
             variants={textItem}
-            className="text-8xl font-mono text-black leading-tight"
+            className="font-mono text-black leading-tight text-8xl"
           >
             Redefinimos tu brillo con el arte de la belleza.
           </motion.h1>

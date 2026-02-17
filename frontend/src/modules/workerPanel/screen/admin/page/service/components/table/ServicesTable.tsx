@@ -25,14 +25,10 @@ export function ServicesTable({ services, onSearchChange }: Props) {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      {/* HEADER */}
       <ServicesTableHeader onSearchChange={onSearchChange} />
 
-      {/* CONTENT */}
       <div className="flex-1 min-h-0">
-        {/* DESKTOP TABLE */}
-        <div className="hidden lg:flex flex-col h-full min-h-0">
-          {/* Scroll interno aquí */}
+        <div className="hidden tablet:flex flex-col h-full min-h-0">
           <div className="flex-1 overflow-y-auto">
             <table className="w-full text-sm">
               <thead className="bg-[#f7e3e6] text-neutral-700 text-xs uppercase sticky top-0 z-10">
@@ -58,8 +54,7 @@ export function ServicesTable({ services, onSearchChange }: Props) {
           </div>
         </div>
 
-        {/* MOBILE CARDS */}
-        <div className="lg:hidden space-y-4 p-4">
+        <div className="tablet:hidden space-y-4 p-4">
           {services.map((service) => {
             const formattedPrice = new Intl.NumberFormat("es-CO", {
               style: "currency",
