@@ -2,7 +2,16 @@
 
 import { useRef, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { UploadCloud, AlertCircle } from "lucide-react";
+import {
+  UploadCloud,
+  AlertCircle,
+  KeyRound,
+  Clock,
+  Sparkles,
+  Droplet,
+  ShieldAlert,
+  WineOff,
+} from "lucide-react";
 import { StepProps, BookingDraft } from "../../../types/booking.types";
 import StepHeader from "../../../service/StepUtils/StepHeader";
 import nequi from "@/public/images/landing/nequi.svg";
@@ -121,21 +130,31 @@ export default function StepPaymentProof({
                     Enviar anticipo únicamente a:
                   </p>
 
-                  <div className="shrink-0 flex flex-row gap-2">
+                  <div className="shrink-0 flex flex-row gap-2 items-center">
                     <img
                       src={nequi.src}
                       alt="Nequi"
                       className="h-10 w-10 rounded-lg"
                     />
-                    <p className="text-lg font-bold text-black tracking-wide justify-center items-center pt-2">
+
+                    <KeyRound className="h-6 w-6 text-black/70" />
+
+                    <p className="text-lg font-bold text-black tracking-wide pt-2">
                       320&nbsp;334&nbsp;5693
                     </p>
                   </div>
 
+                  <p className="mt-1 text-xs text-black/60">
+                    Disponible para pagos por{" "}
+                    <span className="font-semibold">Nequi</span> o
+                    <span className="font-semibold"> Llave</span> (mismo
+                    número).
+                  </p>
+
                   <p className="mt-1 flex items-center gap-1 text-xs text-black/50">
                     <AlertCircle className="h-3.5 w-3.5" />
-                    Este número es único para pagos. No se aceptan otros
-                    métodos.
+                    Este número es único para pagos por Nequi o Llave. No se
+                    aceptan otros métodos.
                   </p>
                 </div>
               </div>
@@ -251,11 +270,59 @@ export default function StepPaymentProof({
             </div>
           </div>
 
-          <div className="rounded-xl bg-[#FDEAF2] p-5 space-y-2 text-xs text-black/70">
-            <p>• Llegar 10 minutos antes de tu hora programada.</p>
-            <p>• Asistir sin maquillaje en la zona a tratar.</p>
-            <p>• Evitar cremas o aceites faciales el día de la cita.</p>
-            <p>• Informar alergias o condiciones especiales previamente.</p>
+          <div className="rounded-xl bg-[#FDEAF2] p-5 space-y-4 text-xs text-black/80">
+            <h4 className="font-semibold text-sm text-black">
+              Recomendaciones para tu cita
+            </h4>
+
+            <div className="space-y-3">
+              <div className="flex items-start gap-2">
+                <Clock className="h-4 w-4 mt-0.5 text-black/70" />
+                <p>
+                  Llegar <span className="font-medium">10 minutos antes</span>{" "}
+                  de la hora programada.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <Sparkles className="h-4 w-4 mt-0.5 text-black/70" />
+                <p>
+                  Asistir <span className="font-medium">sin maquillaje</span> en
+                  la zona a tratar.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <Droplet className="h-4 w-4 mt-0.5 text-black/70" />
+                <p>
+                  Evitar el uso de{" "}
+                  <span className="font-medium">cremas o aceites faciales</span>{" "}
+                  el día de la cita.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <ShieldAlert className="h-4 w-4 mt-0.5 text-black/70" />
+                <p>
+                  Informar previamente cualquier{" "}
+                  <span className="font-medium">
+                    alergia o condición médica
+                  </span>
+                  .
+                </p>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <WineOff className="h-4 w-4 mt-0.5 text-black/70" />
+                <p>
+                  No consumir{" "}
+                  <span className="font-medium">
+                    bebidas alcohólicas ni energizantes
+                  </span>
+                  durante las 24 horas previas a la cita.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
