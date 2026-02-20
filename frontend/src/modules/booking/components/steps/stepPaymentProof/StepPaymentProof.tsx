@@ -137,8 +137,6 @@ export default function StepPaymentProof({
                       className="h-10 w-10 rounded-lg"
                     />
 
-                    <KeyRound className="h-6 w-6 text-black/70" />
-
                     <p className="text-lg font-bold text-black tracking-wide pt-2">
                       320&nbsp;334&nbsp;5693
                     </p>
@@ -277,7 +275,7 @@ export default function StepPaymentProof({
 
             <div className="space-y-3">
               <div className="flex items-start gap-2">
-                <Clock className="h-4 w-4 mt-0.5 text-black/70" />
+                <Clock className="h-4 w-4 mt-0.5 text-[#850E35]" />
                 <p>
                   Llegar <span className="font-medium">10 minutos antes</span>{" "}
                   de la hora programada.
@@ -285,7 +283,7 @@ export default function StepPaymentProof({
               </div>
 
               <div className="flex items-start gap-2">
-                <Sparkles className="h-4 w-4 mt-0.5 text-black/70" />
+                <Sparkles className="h-4 w-4 mt-0.5 text-[#850E35]" />
                 <p>
                   Asistir <span className="font-medium">sin maquillaje</span> en
                   la zona a tratar.
@@ -293,7 +291,7 @@ export default function StepPaymentProof({
               </div>
 
               <div className="flex items-start gap-2">
-                <Droplet className="h-4 w-4 mt-0.5 text-black/70" />
+                <Droplet className="h-6 w-6 mt-0.5 text-[#850E35]" />
                 <p>
                   Evitar el uso de{" "}
                   <span className="font-medium">cremas o aceites faciales</span>{" "}
@@ -302,7 +300,7 @@ export default function StepPaymentProof({
               </div>
 
               <div className="flex items-start gap-2">
-                <ShieldAlert className="h-4 w-4 mt-0.5 text-black/70" />
+                <ShieldAlert className="h-6 w-6 mt-0.5 text-[#850E35]" />
                 <p>
                   Informar previamente cualquier{" "}
                   <span className="font-medium">
@@ -313,7 +311,7 @@ export default function StepPaymentProof({
               </div>
 
               <div className="flex items-start gap-2">
-                <WineOff className="h-4 w-4 mt-0.5 text-black/70" />
+                <WineOff className="h-6 w-6 mt-0.5 text-[#850E35]" />
                 <p>
                   No consumir{" "}
                   <span className="font-medium">
