@@ -1,7 +1,6 @@
 import { GalleryItem } from "./gallery.types";
 
 const galleryItems: GalleryItem[] = [
-  { id: 2, category: "cejas", src: "/images/galery/cejasHenna.jpg" },
   { id: 3, category: "cejas", src: "/images/galery/cejasLaminacion.jpg" },
   { id: 4, category: "cejas", src: "/images/galery/diseño-cejas.jpeg" },
   { id: 5, category: "cejas", src: "/images/galery/laminado_cejas.jpeg" },
@@ -32,7 +31,6 @@ const galleryItems: GalleryItem[] = [
     category: "labios",
     src: "/images/galery/hidralips_labios_two.jpeg",
   },
-  { id: 9, category: "labios", src: "/images/galery/labios.jpg" },
   { id: 10, category: "labios", src: "/images/galery/labiosHidralips.jpg" },
   {
     id: 11,
@@ -51,6 +49,7 @@ const galleryItems: GalleryItem[] = [
   { id: 26, category: "pestañas", src: "/images/galery/volumenTech4U.jpg" },
   { id: 27, category: "pestañas", src: "/images/galery/volumenTech5U.png" },
   { id: 28, category: "pestañas", src: "/images/galery/yy.jpg" },
+  { id: 2, category: "cejas", src: "/images/galery/cejasHenna.jpg" },
 ];
 
 export default galleryItems;
