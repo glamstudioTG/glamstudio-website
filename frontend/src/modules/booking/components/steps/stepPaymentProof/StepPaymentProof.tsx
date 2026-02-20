@@ -311,7 +311,7 @@ export default function StepPaymentProof({
               </div>
 
               <div className="flex items-start gap-2">
-                <WineOff className="h-6 w-6 mt-0.5 text-[#850E35]" />
+                <WineOff className="h-10 w-10 mt-0.5 text-[#850E35]" />
                 <p>
                   No consumir{" "}
                   <span className="font-medium">
