@@ -1,5 +1,5 @@
 import eyelashes from "@/public/images/landing/eyesLanding.jpeg";
-import eyebrows from "@/public/images/landing/eyebrows.png";
+import eyebrows from "@/public/images/landing/cejas_products_landing.jpeg";
 import lips from "@/public/images/landing/lips.png";
 import retouching from "@/public/images/landing/retouching.png";
 import skin from "@/public/images/landing/lastSavedSkin.png";
