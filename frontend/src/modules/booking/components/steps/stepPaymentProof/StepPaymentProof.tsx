@@ -101,7 +101,8 @@ export default function StepPaymentProof({
               debe enviarse en un máximo de{" "}
               <strong className="text-red-600">30 minutos</strong>. Si no se
               recibe dentro de este tiempo, la reserva será cancelada
-              automáticamente.
+              automáticamente. Ten en cuenta que, una vez enviado el
+              comprobante, el anticipo no es reembolsable.
             </p>
           </div>
 

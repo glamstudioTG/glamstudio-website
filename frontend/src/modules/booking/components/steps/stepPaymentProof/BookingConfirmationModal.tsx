@@ -50,11 +50,19 @@ export default function BookingConfirmationModal({
               Reserva en revisión
             </h3>
 
-            <p className="text-sm text-black/70">
+            <p className="text-sm text-black/70 space-y-2">
               Tu comprobante fue enviado correctamente.
+              <br />
+              Nuestro equipo revisará el pago y confirmará tu cita en breve.
               <br />
               Recibirás un correo cuando{" "}
               <strong>{workerName ?? "el trabajador"}</strong> confirme tu cita.
+            </p>
+
+            <p className="text-xs text-black/50 bg-[#F8F8F8] p-3 rounded-lg">
+              El anticipo enviado corresponde a la reserva de tu espacio en
+              agenda. Una vez registrado el comprobante, este valor no es
+              reembolsable.
             </p>
 
             <button
