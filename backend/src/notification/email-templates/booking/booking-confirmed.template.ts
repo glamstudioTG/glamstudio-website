@@ -43,6 +43,26 @@ export function bookingConfirmedClientTemplate(ctx: BookingEmailContext) {
     </li>
     </ul>
 
+    <h4>Política del anticipo</h4>
+
+    <div style="
+      background-color:#fff7ed;
+      border-left:4px solid #fb923c;
+      padding:12px 14px;
+      border-radius:6px;
+      font-size:14px;
+      line-height:1.5;
+    ">
+      El anticipo realizado permite asegurar tu espacio dentro de la agenda
+      del especialista y organizar la disponibilidad del servicio.
+
+      Por esta razón, una vez enviado y validado el comprobante de pago,
+      el valor del anticipo no es reembolsable.
+
+      Si necesitas modificar la fecha de tu cita, podrás solicitar
+      un cambio con anticipación sujeto a disponibilidad.
+    </div>
+
     <p>
       Atentamente,<br/>
       <b>Equipo GlamStudio TG</b>
