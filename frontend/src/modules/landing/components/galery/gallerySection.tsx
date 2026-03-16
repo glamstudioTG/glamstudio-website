@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import galleryItems from "./gallery.data";
+import { validateImages } from "../../service/gallery/validateImages";
 import { buildGallery } from "../../service/gallery/gallery.utils";
 import { GalleryCategory } from "./gallery.types";
 import { AnimatePresence, motion, easeOut } from "framer-motion";
@@ -17,11 +18,20 @@ import {
 import { GalleryGridItem } from "./galleryGridItem";
 
 export default function GallerySection() {
+  const [validGalleryItems, setValidGalleryItems] = useState(galleryItems);
   const [activeFilter, setActiveFilter] = useState<"todo" | GalleryCategory>(
     "todo",
   );
 
-  const gallery = buildGallery(galleryItems, activeFilter);
+  useEffect(() => {
+    validateImages(galleryItems).then((valid) => {
+      if (valid.length > 0) {
+        setValidGalleryItems(valid);
+      }
+    });
+  }, []);
+
+  const gallery = buildGallery(validGalleryItems, activeFilter);
   const mobileItems = gallery.slice(0, 6);
 
   const filterContainer = {

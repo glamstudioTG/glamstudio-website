@@ -10,13 +10,17 @@ const galleryItems: GalleryItem[] = [
     src: "/images/galery/micropigmentacion-cejas.jpeg",
   },
 
-  { id: 8, category: "pestañas", src: "/images/galery/griego-5d.jpg" },
   { id: 16, category: "pestañas", src: "/images/galery/pestanasAnime.jpg" },
   {
     id: 17,
     category: "pestañas",
     src: "/images/galery/pestanasEfectoPestanina.jpg",
   },
+  { id: 29, category: "pestañas", src: "/images/galery/pestanas-3.jpeg" },
+  { id: 30, category: "pestañas", src: "/images/galery/pestanas-1.jpeg" },
+
+  { id: 31, category: "pestañas", src: "/images/galery/pestanas-2.jpeg" },
+
   { id: 18, category: "pestañas", src: "/images/galery/pestanasFoxy.png" },
   { id: 19, category: "pestañas", src: "/images/galery/pestanasLifting.jpg" },
   {
