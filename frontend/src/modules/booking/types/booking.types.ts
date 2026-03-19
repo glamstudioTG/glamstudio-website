@@ -50,7 +50,7 @@ export type BookingDraft = {
 
 export type CreateBookingPayload = {
   workerId: string;
-  date: string; // 👈 importante: string, no Date
+  date: string;
   startTime: string;
   serviceIds: string[];
   name?: string;

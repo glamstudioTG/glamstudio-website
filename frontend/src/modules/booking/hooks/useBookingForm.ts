@@ -89,7 +89,7 @@ export function useBookingForm() {
 
     const payload: CreateBookingPayload = {
       workerId: state.selectedWorker.id,
-      date: state.date.toISOString().split("T")[0], // 🔥 CLAVE
+      date: state.date.toISOString().split("T")[0],
       startTime: state.time,
       serviceIds: state.services.map((s) => s.id),
       name: state.userInfo.name,

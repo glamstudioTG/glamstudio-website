@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { BookingApi } from "../../service/api/booking.api";
-import { BookingDraft, CreateBookingPayload } from "../../types/booking.types";
+import { CreateBookingPayload } from "../../types/booking.types";
 import { BookingResponse } from "../../types/booking.types";
 
 export function useCreateBooking() {
