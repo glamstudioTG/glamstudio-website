@@ -1,27 +1,17 @@
-import { BookingDraft, BookingResponse } from "../../types/booking.types";
+import {
+  BookingResponse,
+  CreateBookingPayload,
+} from "../../types/booking.types";
 import { httpClient } from "@/src/lib/http/http-client";
 
 export const BookingApi = {
-  create(draft: BookingDraft): Promise<BookingResponse> {
-    if (
-      !draft.date ||
-      !draft.time ||
-      !draft.selectedWorker ||
-      !draft.userInfo
-    ) {
-      throw new Error("Booking incompleto");
+  create(payload: CreateBookingPayload): Promise<BookingResponse> {
+    // validación ligera (opcional pero útil)
+    if (!payload.workerId || !payload.date || !payload.startTime) {
+      throw new Error("Payload incompleto");
     }
 
-    return httpClient.request<BookingResponse>("booking", "POST", {
-      workerId: draft.selectedWorker.id,
-      serviceIds: draft.services.map((s) => s.id),
-      date: draft.date.toISOString().slice(0, 10),
-      startTime: draft.time,
-      name: draft.userInfo.name,
-      email: draft.userInfo.email,
-      phone: draft.userInfo.phone,
-      comment: draft.userInfo.note,
-    });
+    return httpClient.request<BookingResponse>("booking", "POST", payload);
   },
 
   cancel(id: string) {

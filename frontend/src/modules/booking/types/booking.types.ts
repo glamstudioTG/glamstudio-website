@@ -48,6 +48,17 @@ export type BookingDraft = {
   isGuest: boolean;
 };
 
+export type CreateBookingPayload = {
+  workerId: string;
+  date: string; // 👈 importante: string, no Date
+  startTime: string;
+  serviceIds: string[];
+  name?: string;
+  email?: string;
+  phone?: string;
+  comment?: string;
+};
+
 export type Booking = BookingDraft & {
   id: string;
   paymentProof: File | null;

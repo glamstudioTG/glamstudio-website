@@ -86,6 +86,10 @@ export class BookingService {
       throw new BadRequestException('Trabajador no disnponible');
     }
 
+    if (!dto.workerId) {
+      throw new BadRequestException('workerId es requerido');
+    }
+
     const services = await this.prisma.service.findMany({
       where: {
         id: { in: dto.serviceIds },

@@ -6,6 +6,7 @@ import {
   BookingWorker,
   Booking,
   BookingResponse,
+  CreateBookingPayload,
 } from "../types/booking.types";
 import { initialBookingState } from "../utils/initialBookingState";
 import { useCreateBooking } from "./query/useCreateBooking";
@@ -78,7 +79,28 @@ export function useBookingForm() {
   }, []);
 
   const confirmBooking = useCallback(async () => {
-    const bookingResponse = await createBookingMutation.mutateAsync(state);
+    if (!state.selectedWorker) {
+      throw new Error("No worker selected");
+    }
+
+    if (!state.date || !state.time || !state.userInfo) {
+      throw new Error("Booking incompleto");
+    }
+
+    const payload: CreateBookingPayload = {
+      workerId: state.selectedWorker.id,
+      date: state.date.toISOString().split("T")[0], // 🔥 CLAVE
+      startTime: state.time,
+      serviceIds: state.services.map((s) => s.id),
+      name: state.userInfo.name,
+      email: state.userInfo.email,
+      phone: state.userInfo.phone,
+      comment: state.userInfo.note ?? "",
+    };
+
+    console.log("PAYLOAD REAL:", payload);
+
+    const bookingResponse = await createBookingMutation.mutateAsync(payload);
 
     setBooking(bookingResponse);
 
