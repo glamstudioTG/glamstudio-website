@@ -10,6 +10,10 @@ export class AvailabilityController {
     @Query('serviceDuration') duration: number,
     @Query('workerId') workerId: string,
   ) {
-    return this.service.getAvailableSlots(workerId, date, Number(duration));
+    return this.service.getAvailableSlots(
+      workerId,
+      new Date(date),
+      Number(duration),
+    );
   }
 }

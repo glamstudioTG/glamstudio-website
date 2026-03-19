@@ -149,12 +149,18 @@ export class TransactionProofService {
 
     const slots = await this.availability.getAvailableSlots(
       booking.workerId,
-      booking.date.toISOString().split('T')[0],
+      booking.date,
       booking.totalDuration,
     );
 
+    if (!slots?.length) {
+      throw new ConflictException(
+        'El horario ya no está disponible, selecciona otro',
+      );
+    }
+
     const stillAvailable = slots.some(
-      (s) => s.startMin === booking.startTime && s.endMin === booking.endTime,
+      (s) => booking.startTime >= s.startMin && booking.endTime <= s.endMin,
     );
 
     if (!stillAvailable) {
@@ -177,6 +183,21 @@ export class TransactionProofService {
     }
 
     return this.prisma.$transaction(async (tx) => {
+      const latestSlots = await this.availability.getAvailableSlots(
+        booking.workerId,
+        booking.date,
+        booking.totalDuration,
+      );
+
+      const stillValid = latestSlots?.some(
+        (s) => booking.startTime >= s.startMin && booking.endTime <= s.endMin,
+      );
+
+      if (!stillValid) {
+        throw new ConflictException(
+          'El horario ya no está disponible (conflicto reciente)',
+        );
+      }
       await tx.transactionProof.create({
         data: {
           imageUrl,
