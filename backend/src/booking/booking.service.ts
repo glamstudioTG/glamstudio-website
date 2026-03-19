@@ -19,6 +19,7 @@ import { BookingWithRelations } from './types/booking-relations.types';
 import { BookingResponseDto } from './dto/response-booking.dto';
 import { GetWorkerBookingsDto } from './dto/get-worker-bookings.dto';
 import { GetBookingsDto } from './dto/get-bookings.dto';
+import { TimeService } from 'src/time/time.service';
 
 @Injectable()
 export class BookingService {
@@ -28,6 +29,7 @@ export class BookingService {
     private prisma: PrismaService,
     private availability: AvailabilityService,
     private eventEmitter: EventEmitter2,
+    private timeService: TimeService,
   ) {}
 
   private assertTransition(current: BookingStatus, next: BookingStatus) {
@@ -127,7 +129,7 @@ export class BookingService {
       );
     }
 
-    const dateUtc = localDateToUtc(input.date);
+    const dateUtc = this.timeService.toUtc(input.date);
     const start = hhmmToMinutes(input.startTime);
 
     this.logger.debug('Time normalization', {
@@ -140,8 +142,7 @@ export class BookingService {
 
     const end = start + totalDuration;
 
-    const endsAt = new Date(dateUtc.getTime() + end * 60000);
-    endsAt.setMinutes(endsAt.getMinutes() + end);
+    const endsAt = this.timeService.minutesToUtc(dateUtc, end);
 
     if (start >= end)
       throw new BadRequestException('Rango de reserva invalido.');
@@ -304,9 +305,9 @@ export class BookingService {
 
     this.assertTransition(booking.status, BookingStatus.CANCELLED);
 
-    const bookingDateTime = new Date(booking.date);
-    bookingDateTime.setMinutes(
-      bookingDateTime.getMinutes() + booking.startTime,
+    const bookingDateTime = this.timeService.minutesToUtc(
+      booking.date,
+      booking.startTime,
     );
 
     const now = new Date();
@@ -374,10 +375,16 @@ export class BookingService {
   }
 
   async getByDate(date: string): Promise<BookingResponseDto[]> {
-    const d = localDateToUtc(date);
+    const dateUtc = this.timeService.toUtc(date);
+    const { startUtc, endUtc } = this.timeService.getDayBounds(dateUtc);
 
     const bookings = await this.prisma.booking.findMany({
-      where: { date: d },
+      where: {
+        date: {
+          gte: startUtc,
+          lte: endUtc,
+        },
+      },
       orderBy: { startTime: 'asc' },
       include: {
         worker: { include: { user: true } },
@@ -392,88 +399,43 @@ export class BookingService {
   async getAll(filters: GetBookingsDto): Promise<BookingResponseDto[]> {
     const { view = 'day', date } = filters;
 
-    const baseDate = date ? new Date(date) : new Date();
+    const baseUtc = this.timeService.toUtc(date ?? new Date());
 
-    let start: Date;
-    let end: Date;
+    let startUtc: Date;
+    let endUtc: Date;
 
     switch (view) {
       case 'day': {
-        start = new Date(
-          baseDate.getFullYear(),
-          baseDate.getMonth(),
-          baseDate.getDate(),
-          0,
-          0,
-          0,
-        );
-
-        end = new Date(
-          baseDate.getFullYear(),
-          baseDate.getMonth(),
-          baseDate.getDate(),
-          23,
-          59,
-          59,
-        );
+        const bounds = this.timeService.getDayBounds(baseUtc);
+        startUtc = bounds.startUtc;
+        endUtc = bounds.endUtc;
         break;
       }
 
       case 'week': {
-        const temp = new Date(baseDate);
-        const day = temp.getDay();
-        const diff = temp.getDate() - day;
-
-        start = new Date(temp.setDate(diff));
-        start.setHours(0, 0, 0, 0);
-
-        end = new Date(start);
-        end.setDate(start.getDate() + 6);
-        end.setHours(23, 59, 59, 999);
+        endUtc = baseUtc;
+        startUtc = new Date(endUtc.getTime() - 7 * 24 * 60 * 60 * 1000);
         break;
       }
 
       case 'month': {
-        start = new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
-
-        end = new Date(
-          baseDate.getFullYear(),
-          baseDate.getMonth() + 1,
-          0,
-          23,
-          59,
-          59,
-        );
+        endUtc = baseUtc;
+        startUtc = new Date(endUtc.getTime() - 30 * 24 * 60 * 60 * 1000);
         break;
       }
 
       default: {
-        // fallback seguro
-        start = new Date(
-          baseDate.getFullYear(),
-          baseDate.getMonth(),
-          baseDate.getDate(),
-          0,
-          0,
-          0,
-        );
-
-        end = new Date(
-          baseDate.getFullYear(),
-          baseDate.getMonth(),
-          baseDate.getDate(),
-          23,
-          59,
-          59,
-        );
+        const bounds = this.timeService.getDayBounds(baseUtc);
+        startUtc = bounds.startUtc;
+        endUtc = bounds.endUtc;
       }
     }
 
     const bookings = await this.prisma.booking.findMany({
       where: {
         date: {
-          gte: start,
-          lte: end,
+          gte: startUtc,
+          lte: endUtc,
         },
       },
       orderBy: [{ date: 'asc' }, { startTime: 'asc' }],
@@ -498,30 +460,41 @@ export class BookingService {
     if (filters.status) {
       where.status = filters.status;
     }
+
     if (filters.from && filters.to) {
+      const fromUtc = this.timeService.toUtc(filters.from);
+      const toUtc = this.timeService.toUtc(filters.to);
+
       where.date = {
-        gte: localDateToUtc(filters.from),
-        lte: localDateToUtc(filters.to),
+        gte: fromUtc,
+        lte: toUtc,
       };
     }
 
     if (filters.period) {
-      const now = new Date();
-      let from: Date;
+      const nowUtc = new Date();
+
+      let fromUtc: Date;
 
       switch (filters.period) {
-        case 'day':
-          from = new Date(now.setHours(0, 0, 0, 0));
+        case 'day': {
+          const { startUtc } = this.timeService.getDayBounds(nowUtc);
+          fromUtc = startUtc;
           break;
-        case 'week':
-          from = new Date(now.setDate(now.getDate() - 7));
+        }
+
+        case 'week': {
+          fromUtc = new Date(nowUtc.getTime() - 7 * 24 * 60 * 60 * 1000);
           break;
-        case 'month':
-          from = new Date(now.setMonth(now.getMonth() - 1));
+        }
+
+        case 'month': {
+          fromUtc = new Date(nowUtc.getTime() - 30 * 24 * 60 * 60 * 1000);
           break;
+        }
       }
 
-      where.date = { gte: from };
+      where.date = { gte: fromUtc };
     }
 
     if (filters.search) {

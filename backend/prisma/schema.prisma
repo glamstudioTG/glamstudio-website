@@ -98,6 +98,7 @@ model Booking {
   @@index([date, startTime])
   @@index([date, endTime])
   @@index([workerId, date, startTime])
+  @@unique([workerId, date, startTime])
 }
 
 model BookingService {
@@ -162,6 +163,8 @@ model OverrideHours {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   worker    Worker?  @relation(fields: [workerId], references: [id])
+
+  @@unique([workerId, date])
 }
 
 enum Role {

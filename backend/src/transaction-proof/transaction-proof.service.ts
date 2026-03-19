@@ -12,6 +12,7 @@ import { BookingStatus, TransactionStatus } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import { TransactionProofQueryDto } from './dto/transaction-proof-query.dto';
 import { AdminTransactionProofQueryDto } from './dto/admin-transaction-proof-query.dto';
+import { TimeService } from 'src/time/time.service';
 
 type TransactionProofWithRelations = Prisma.TransactionProofGetPayload<{
   include: {
@@ -31,27 +32,35 @@ export class TransactionProofService {
     private prisma: PrismaService,
     private availability: AvailabilityService,
     private eventEmitter: EventEmitter2,
+    private timeService: TimeService,
   ) {}
 
   private buildPeriodFilter(period?: 'day' | 'week' | 'month') {
     if (!period) return undefined;
 
-    const now = new Date();
-    let from: Date;
+    const nowUtc = new Date();
+
+    let fromUtc: Date;
 
     switch (period) {
-      case 'day':
-        from = new Date(now.setHours(0, 0, 0, 0));
+      case 'day': {
+        const { startUtc } = this.timeService.getDayBounds(nowUtc);
+        fromUtc = startUtc;
         break;
-      case 'week':
-        from = new Date(now.setDate(now.getDate() - 7));
+      }
+
+      case 'week': {
+        fromUtc = new Date(nowUtc.getTime() - 7 * 24 * 60 * 60 * 1000);
         break;
-      case 'month':
-        from = new Date(now.setMonth(now.getMonth() - 1));
+      }
+
+      case 'month': {
+        fromUtc = new Date(nowUtc.getTime() - 30 * 24 * 60 * 60 * 1000);
         break;
+      }
     }
 
-    return { gte: from };
+    return { gte: fromUtc };
   }
 
   private mapToCard(proof: TransactionProofWithRelations) {
@@ -245,7 +254,11 @@ export class TransactionProofService {
     return this.prisma.$transaction(async (tx) => {
       await tx.transactionProof.update({
         where: { id: proof.id },
-        data: { status, reviewedAt: new Date(), reviewedBy: reviewerId },
+        data: {
+          status,
+          reviewedAt: this.timeService.toUtc(new Date()),
+          reviewedBy: reviewerId,
+        },
       });
 
       await tx.booking.update({

@@ -21,6 +21,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { NotificationModule } from './notification/notification.module';
 import { AdminStatsModule } from './admin-stats/admin-stats.module';
+import { TimeModule } from './time/time.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,6 +33,7 @@ import { AdminStatsModule } from './admin-stats/admin-stats.module';
     NotificationModule,
 
     PrismaModule,
+    TimeModule,
 
     BookingExpirationModule,
     BookingCleanupModule,

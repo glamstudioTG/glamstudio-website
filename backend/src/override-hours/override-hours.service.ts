@@ -8,20 +8,25 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateOverrideHoursDto } from './dto/create-override-hours.dto';
 import { localDateToUtc } from 'src/common/utils/date.utils';
 import { hhmmToMinutes } from 'src/common/utils/time.utils';
+import { TimeService } from 'src/time/time.service';
 
 @Injectable()
 export class OverrideHoursService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private timeService: TimeService,
+  ) {}
 
   async create(workerId: string, dto: CreateOverrideHoursDto) {
-    const dateOnly = localDateToUtc(dto.date);
+    const dateUtc = this.timeService.toUtc(dto.date);
+    const { startUtc, endUtc } = this.timeService.getDayBounds(dateUtc);
     const start = hhmmToMinutes(dto.startTime);
     const end = hhmmToMinutes(dto.endTime);
 
     if (start >= end) throw new BadRequestException('Invalid value');
 
     const existing = await this.prisma.overrideHours.findMany({
-      where: { workerId, date: dateOnly },
+      where: { workerId, date: { gte: startUtc, lte: endUtc } },
     });
     if (existing.length > 0)
       throw new ConflictException('Override for that day already exists');
@@ -29,7 +34,7 @@ export class OverrideHoursService {
     return this.prisma.overrideHours.create({
       data: {
         workerId,
-        date: dateOnly,
+        date: dateUtc,
         startTime: start,
         endTime: end,
       },
@@ -37,8 +42,11 @@ export class OverrideHoursService {
   }
 
   async getByDate(workerId: string, date: string) {
-    const d = localDateToUtc(date);
-    return this.prisma.overrideHours.findMany({ where: { workerId, date: d } });
+    const dateUtc = this.timeService.toUtc(date);
+    const { startUtc, endUtc } = this.timeService.getDayBounds(dateUtc);
+    return this.prisma.overrideHours.findMany({
+      where: { workerId, date: { gte: startUtc, lte: endUtc } },
+    });
   }
 
   async getAllByWorker(workerId: string) {

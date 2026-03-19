@@ -9,13 +9,18 @@ import { CreateScheduleBlockDto } from './dto/create-schedule-block.dto';
 import { hhmmToMinutes } from 'src/common/utils/time.utils';
 import { rangesOverlap } from 'src/common/utils/rangeOverlap';
 import { localDateToUtc } from 'src/common/utils/date.utils';
+import { TimeService } from 'src/time/time.service';
 
 @Injectable()
 export class ScheduleBlockService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private timeService: TimeService,
+  ) {}
 
   async create(dto: CreateScheduleBlockDto, workerId?: string) {
-    const date = localDateToUtc(dto.date);
+    const dateUtc = this.timeService.toUtc(dto.date);
+    const { startUtc, endUtc } = this.timeService.getDayBounds(dateUtc);
 
     let startTime: number | null = null;
     let endTime: number | null = null;
@@ -32,7 +37,10 @@ export class ScheduleBlockService {
     const existing = await this.prisma.scheduleBlock.findMany({
       where: {
         workerId: workerId ?? null,
-        date,
+        date: {
+          gte: startUtc,
+          lte: endUtc,
+        },
       },
     });
 
@@ -55,7 +63,7 @@ export class ScheduleBlockService {
     return this.prisma.scheduleBlock.create({
       data: {
         workerId: workerId ?? null,
-        date,
+        date: dateUtc,
         startTime,
         endTime,
         reason: dto.reason,
@@ -64,12 +72,16 @@ export class ScheduleBlockService {
   }
 
   async getByDate(date: string, workerId?: string) {
-    const d = localDateToUtc(date);
+    const dateUtc = this.timeService.toUtc(date);
+    const { startUtc, endUtc } = this.timeService.getDayBounds(dateUtc);
 
     return this.prisma.scheduleBlock.findMany({
       where: {
         workerId: workerId ?? null,
-        date: d,
+        date: {
+          gte: startUtc,
+          lte: startUtc,
+        },
       },
       orderBy: { startTime: 'asc' },
     });
@@ -107,12 +119,15 @@ export class ScheduleBlockService {
   }
 
   async getGlobalByDate(date: string) {
-    const d = localDateToUtc(date);
-
+    const dateUtc = this.timeService.toUtc(date);
+    const { startUtc, endUtc } = this.timeService.getDayBounds(dateUtc);
     return this.prisma.scheduleBlock.findMany({
       where: {
         workerId: null,
-        date: d,
+        date: {
+          gte: startUtc,
+          lte: endUtc,
+        },
       },
       orderBy: { startTime: 'asc' },
     });

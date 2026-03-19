@@ -6,9 +6,10 @@ import { AvailabilityHistoryController } from './availability-history.controller
 import { AvailabilityHistoryService } from './availability-history.service';
 import { ScheduleBlockModule } from 'src/schedule-block/schedule-block.module';
 import { OverrideHoursModule } from 'src/override-hours/override-hours.module';
+import { TimeModule } from 'src/time/time.module';
 
 @Module({
-  imports: [PrismaModule, ScheduleBlockModule, OverrideHoursModule],
+  imports: [PrismaModule, ScheduleBlockModule, OverrideHoursModule, TimeModule],
   controllers: [AvailabilityController, AvailabilityHistoryController],
   providers: [AvailabilityService, AvailabilityHistoryService],
   exports: [AvailabilityService, AvailabilityHistoryService],

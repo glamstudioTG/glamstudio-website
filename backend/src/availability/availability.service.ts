@@ -2,15 +2,18 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { minutesToHhmm } from 'src/common/utils/time.utils';
 import { substractRanges } from 'src/common/utils/substractRanges';
-import { localDateToUtc } from 'src/common/utils/date.utils';
-import { getDayOfWeekEnum } from 'src/common/utils/day-of-week';
 import { BookingStatus } from '@prisma/client';
+import { TimeService } from 'src/time/time.service';
+import { mapNumberToDayEnum } from 'src/common/utils/mapNumberToDayEnum';
 
 @Injectable()
 export class AvailabilityService {
   private readonly logger = new Logger(AvailabilityService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private timeService: TimeService,
+  ) {}
 
   async getAvailableSlots(
     workerId: string,
@@ -18,62 +21,87 @@ export class AvailabilityService {
     totalDuration: number,
     slotInterval?: number,
   ) {
-    const dateUtc = dateStr instanceof Date ? dateStr : localDateToUtc(dateStr);
-    const normalizedDate = new Date(dateUtc);
-    normalizedDate.setUTCHours(0, 0, 0, 0);
+    const dateUtc = this.timeService.toUtc(dateStr);
 
-    console.log('[AVAILABILITY] date debug', {
-      input: dateStr,
+    const { startUtc, endUtc } = this.timeService.getDayBounds(dateUtc);
+
+    const dayOfWeekNumber = this.timeService.getDayOfWeek(dateUtc);
+    const dayOfWeek = mapNumberToDayEnum(dayOfWeekNumber);
+
+    this.logger.debug('Availability input', {
+      workerId,
       dateUtc,
-      normalizedDate,
+      range: { startUtc, endUtc },
     });
 
-    const dayOfWeek = getDayOfWeekEnum(normalizedDate);
-
-    const GlobalBlocks = await this.prisma.scheduleBlock.findMany({
-      where: { workerId: null, date: normalizedDate },
+    const globalBlocks = await this.prisma.scheduleBlock.findMany({
+      where: {
+        workerId: null,
+        date: {
+          gte: startUtc,
+          lte: endUtc,
+        },
+      },
     });
 
     const workerBlocks = await this.prisma.scheduleBlock.findMany({
-      where: { workerId, date: normalizedDate },
+      where: {
+        workerId,
+        date: {
+          gte: startUtc,
+          lte: endUtc,
+        },
+      },
     });
 
-    const allBlocks = [...GlobalBlocks, ...workerBlocks];
+    const allBlocks = [...globalBlocks, ...workerBlocks];
 
     const hasFullDayBlock = allBlocks.some(
       (b) => b.startTime == null && b.endTime == null,
     );
 
-    if (hasFullDayBlock) {
-      return [];
-    }
+    if (hasFullDayBlock) return [];
 
     const overrides = await this.prisma.overrideHours.findFirst({
-      where: { workerId, date: normalizedDate },
+      where: {
+        workerId,
+        date: {
+          gte: startUtc,
+          lte: endUtc,
+        },
+      },
     });
 
     let baseRanges: Array<[number, number]> = [];
 
-    baseRanges = Array.from(
-      new Map(baseRanges.map(([s, e]) => [`${s}-${e}`, [s, e]])).values(),
-    ) as Array<[number, number]>;
-
     if (overrides) {
-      baseRanges.push([overrides.startTime, overrides.endTime]);
+      baseRanges = [[overrides.startTime, overrides.endTime]];
     } else {
       const businessHours = await this.prisma.businessHours.findMany({
-        where: { workerId, day: dayOfWeek },
+        where: {
+          workerId,
+          day: dayOfWeek,
+        },
         orderBy: { startTime: 'asc' },
       });
 
-      baseRanges = businessHours.map((b) => [b.startTime, b.endTime]);
-    }
+      if (businessHours.length === 0) {
+        this.logger.warn('Worker without business hours', {
+          workerId,
+          dayOfWeek,
+        });
+        return [];
+      }
 
-    if (baseRanges.length === 0) return [];
+      baseRanges = businessHours.map((b): [number, number] => [
+        b.startTime,
+        b.endTime,
+      ]);
+    }
 
     const blockRanges: Array<[number, number]> = [];
 
-    for (const b of [...GlobalBlocks, ...workerBlocks]) {
+    for (const b of allBlocks) {
       if (b.startTime != null && b.endTime != null) {
         blockRanges.push([b.startTime, b.endTime]);
       }
@@ -82,7 +110,10 @@ export class AvailabilityService {
     const bookings = await this.prisma.booking.findMany({
       where: {
         workerId,
-        date: normalizedDate,
+        date: {
+          gte: startUtc,
+          lte: endUtc,
+        },
         status: {
           in: [
             BookingStatus.PENDING_REVIEW,
@@ -91,7 +122,6 @@ export class AvailabilityService {
           ],
         },
       },
-
       select: { startTime: true, endTime: true },
     });
 
@@ -109,23 +139,20 @@ export class AvailabilityService {
 
     const now = new Date();
     const isToday =
-      normalizedDate.getUTCFullYear() === now.getUTCFullYear() &&
-      normalizedDate.getUTCMonth() === now.getUTCMonth() &&
-      normalizedDate.getUTCDate() === now.getUTCDate();
-
-    let nowMinutes = 0;
+      dateUtc.getFullYear() === now.getFullYear() &&
+      dateUtc.getMonth() === now.getMonth() &&
+      dateUtc.getDate() === now.getDate();
 
     if (isToday) {
-      nowMinutes = now.getHours() * 60 + now.getMinutes();
-    }
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-    if (isToday) {
       freeRanges = freeRanges
         .map(([s, e]) => [Math.max(s, nowMinutes), e] as [number, number])
         .filter(([s, e]) => e - s >= totalDuration);
     }
 
     const interval = slotInterval ?? totalDuration;
+
     const slots: Array<{
       startMin: number;
       endMin: number;
@@ -135,6 +162,7 @@ export class AvailabilityService {
 
     for (const [fs, fe] of freeRanges) {
       let cursor = fs;
+
       while (cursor + totalDuration <= fe) {
         slots.push({
           startMin: cursor,
@@ -142,6 +170,7 @@ export class AvailabilityService {
           start: minutesToHhmm(cursor),
           end: minutesToHhmm(cursor + totalDuration),
         });
+
         cursor += interval;
       }
     }
@@ -150,14 +179,12 @@ export class AvailabilityService {
       new Map(slots.map((s) => [`${s.startMin}-${s.endMin}`, s])).values(),
     );
 
-    console.log('[AVAILABILITY FINAL BASE]', {
-      workerId,
-      date: normalizedDate,
-      overrides,
+    this.logger.debug('Availability result', {
       baseRanges,
+      blockRanges,
+      freeRanges,
+      slots: uniqueSlots.length,
     });
-    this.logger.debug('Overrides', overrides);
-    this.logger.debug('Base ranges', baseRanges);
 
     return uniqueSlots;
   }
