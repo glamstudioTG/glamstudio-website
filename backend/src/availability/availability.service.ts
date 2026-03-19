@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { minutesToHhmm } from 'src/common/utils/time.utils';
 import { substractRanges } from 'src/common/utils/substractRanges';
@@ -8,6 +8,8 @@ import { BookingStatus } from '@prisma/client';
 
 @Injectable()
 export class AvailabilityService {
+  private readonly logger = new Logger(AvailabilityService.name);
+
   constructor(private prisma: PrismaService) {}
 
   async getAvailableSlots(
@@ -17,14 +19,23 @@ export class AvailabilityService {
     slotInterval?: number,
   ) {
     const dateUtc = dateStr instanceof Date ? dateStr : localDateToUtc(dateStr);
-    const dayOfWeek = getDayOfWeekEnum(dateUtc);
+    const normalizedDate = new Date(dateUtc);
+    normalizedDate.setUTCHours(0, 0, 0, 0);
+
+    console.log('[AVAILABILITY] date debug', {
+      input: dateStr,
+      dateUtc,
+      normalizedDate,
+    });
+
+    const dayOfWeek = getDayOfWeekEnum(normalizedDate);
 
     const GlobalBlocks = await this.prisma.scheduleBlock.findMany({
-      where: { workerId: null, date: dateUtc },
+      where: { workerId: null, date: normalizedDate },
     });
 
     const workerBlocks = await this.prisma.scheduleBlock.findMany({
-      where: { workerId, date: dateUtc },
+      where: { workerId, date: normalizedDate },
     });
 
     const allBlocks = [...GlobalBlocks, ...workerBlocks];
@@ -38,7 +49,7 @@ export class AvailabilityService {
     }
 
     const overrides = await this.prisma.overrideHours.findFirst({
-      where: { workerId, date: dateUtc },
+      where: { workerId, date: normalizedDate },
     });
 
     let baseRanges: Array<[number, number]> = [];
@@ -71,7 +82,7 @@ export class AvailabilityService {
     const bookings = await this.prisma.booking.findMany({
       where: {
         workerId,
-        date: dateUtc,
+        date: normalizedDate,
         status: {
           in: [
             BookingStatus.PENDING_REVIEW,
@@ -97,7 +108,10 @@ export class AvailabilityService {
     }
 
     const now = new Date();
-    const isToday = dateUtc.toDateString() === now.toDateString();
+    const isToday =
+      normalizedDate.getUTCFullYear() === now.getUTCFullYear() &&
+      normalizedDate.getUTCMonth() === now.getUTCMonth() &&
+      normalizedDate.getUTCDate() === now.getUTCDate();
 
     let nowMinutes = 0;
 
@@ -135,6 +149,9 @@ export class AvailabilityService {
     const uniqueSlots = Array.from(
       new Map(slots.map((s) => [`${s.startMin}-${s.endMin}`, s])).values(),
     );
+
+    this.logger.debug('Overrides', overrides);
+    this.logger.debug('Base ranges', baseRanges);
 
     return uniqueSlots;
   }
