@@ -59,7 +59,7 @@ export class AvailabilityService {
     ) as Array<[number, number]>;
 
     if (overrides) {
-      baseRanges = [[overrides.startTime, overrides.endTime]];
+      baseRanges.push([overrides.startTime, overrides.endTime]);
     } else {
       const businessHours = await this.prisma.businessHours.findMany({
         where: { workerId, day: dayOfWeek },
@@ -150,6 +150,12 @@ export class AvailabilityService {
       new Map(slots.map((s) => [`${s.startMin}-${s.endMin}`, s])).values(),
     );
 
+    console.log('[AVAILABILITY FINAL BASE]', {
+      workerId,
+      date: normalizedDate,
+      overrides,
+      baseRanges,
+    });
     this.logger.debug('Overrides', overrides);
     this.logger.debug('Base ranges', baseRanges);
 
