@@ -3,6 +3,7 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -21,6 +22,8 @@ import { GetBookingsDto } from './dto/get-bookings.dto';
 
 @Injectable()
 export class BookingService {
+  private readonly logger = new Logger(BookingService.name);
+
   constructor(
     private prisma: PrismaService,
     private availability: AvailabilityService,
@@ -107,13 +110,16 @@ export class BookingService {
 
     const hasUser = !!userId;
 
-    if (hasUser) {
-      dto.name = undefined;
-      dto.email = undefined;
-      dto.phone = undefined;
-    }
+    const input = {
+      ...dto,
+      ...(hasUser && {
+        name: undefined,
+        email: undefined,
+        phone: undefined,
+      }),
+    };
 
-    const hasGuest = !!dto.name && !!dto.email && !!dto.phone;
+    const hasGuest = !!input.name && !!input.email && !!input.phone;
 
     if (!hasUser && !hasGuest) {
       throw new BadRequestException(
@@ -121,14 +127,20 @@ export class BookingService {
       );
     }
 
-    const dateUtc = localDateToUtc(dto.date);
-    const start = hhmmToMinutes(dto.startTime);
+    const dateUtc = localDateToUtc(input.date);
+    const start = hhmmToMinutes(input.startTime);
+
+    this.logger.debug('Time normalization', {
+      inputDate: input.date,
+      dateUtc,
+      start,
+    });
 
     const totalDuration = services.reduce((acc, s) => acc + s.duration, 0);
 
     const end = start + totalDuration;
 
-    const endsAt = new Date(dateUtc);
+    const endsAt = new Date(dateUtc.getTime() + end * 60000);
     endsAt.setMinutes(endsAt.getMinutes() + end);
 
     if (start >= end)
@@ -137,7 +149,7 @@ export class BookingService {
     const MAX_BOOKINGS_PER_DAY = 4;
     const bookingsCount = await this.prisma.booking.count({
       where: {
-        workerId: dto.workerId,
+        workerId: input.workerId,
         date: dateUtc,
         status: {
           not: BookingStatus.CANCELLED,
@@ -152,26 +164,64 @@ export class BookingService {
     });
 
     if (bookingsCount >= MAX_BOOKINGS_PER_DAY) {
-      throw new ConflictException(
-        'No hay más cupos disponibles para este día.',
-      );
+      this.logger.warn('Daily limit reached', {
+        workerId: input.workerId,
+        date: dateUtc,
+        count: bookingsCount,
+      });
+
+      throw new ConflictException({
+        message: 'No hay más cupos disponibles para este día.',
+        code: 'DAY_FULL',
+      });
     }
 
     const slots = await this.availability.getAvailableSlots(
-      dto.workerId,
-      dto.date,
+      input.workerId,
+      dateUtc,
       totalDuration,
     );
 
+    this.logger.debug('Slot validation', {
+      requested: { start, end },
+      slots,
+    });
+
     const isValidSlot = slots?.some(
-      (s) => s.startMin === start && s.endMin === end,
+      (s) => start >= s.startMin && end <= s.endMin,
     );
 
     if (!isValidSlot) {
-      throw new ConflictException('Selecciona cupo valido.');
+      throw new ConflictException({
+        message: 'El horario seleccionado ya no está disponible.',
+        code: 'INVALID_SLOT',
+      });
     }
 
     return this.prisma.$transaction(async (tx) => {
+      const latestSlots = await this.availability.getAvailableSlots(
+        input.workerId,
+        dateUtc,
+        totalDuration,
+      );
+
+      const stillValid = latestSlots?.some(
+        (s) => start >= s.startMin && end <= s.endMin,
+      );
+
+      if (!stillValid) {
+        this.logger.warn('Slot lost during transaction', {
+          workerId: input.workerId,
+          start,
+          end,
+        });
+
+        throw new ConflictException({
+          message: 'El horario acaba de ser ocupado. Intenta con otro.',
+          code: 'RACE_CONDITION_SLOT',
+        });
+      }
+
       const booking = await tx.booking.create({
         data: {
           date: dateUtc,
@@ -180,16 +230,16 @@ export class BookingService {
           endsAt,
           totalDuration,
           status: BookingStatus.PENDING_PAYMENT,
-          comment: dto.comment,
+          comment: input.comment,
           worker: {
-            connect: { id: dto.workerId },
+            connect: { id: input.workerId },
           },
           ...(hasUser
             ? { user: { connect: { id: userId } } }
             : {
-                guestName: dto.name,
-                guestEmail: dto.email,
-                guestPhone: dto.phone,
+                guestName: input.name,
+                guestEmail: input.email,
+                guestPhone: input.phone,
               }),
         },
         include: {
@@ -217,8 +267,8 @@ export class BookingService {
       return {
         id: booking.id,
         status: booking.status,
-        date: dto.date,
-        startTime: dto.startTime,
+        date: input.date,
+        startTime: input.startTime,
         endTime: minutesToHhmm(booking.endTime),
         totalDuration: booking.totalDuration,
         totalPrice,

@@ -12,11 +12,11 @@ export class AvailabilityService {
 
   async getAvailableSlots(
     workerId: string,
-    dateStr: string,
+    dateStr: Date,
     totalDuration: number,
     slotInterval?: number,
   ) {
-    const dateUtc = localDateToUtc(dateStr);
+    const dateUtc = dateStr instanceof Date ? dateStr : localDateToUtc(dateStr);
     const dayOfWeek = getDayOfWeekEnum(dateUtc);
 
     const GlobalBlocks = await this.prisma.scheduleBlock.findMany({
