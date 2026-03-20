@@ -28,10 +28,10 @@ export class AvailabilityService {
     const dayOfWeekNumber = this.timeService.getDayOfWeek(dateUtc);
     const dayOfWeek = mapNumberToDayEnum(dayOfWeekNumber);
 
-    this.logger.debug('Availability input', {
-      workerId,
-      dateUtc,
-      range: { startUtc, endUtc },
+    this.logger.debug('DAY CHECK', {
+      original: dateStr,
+      utc: dateUtc,
+      dayOfWeekNumber,
     });
 
     const globalBlocks = await this.prisma.scheduleBlock.findMany({
