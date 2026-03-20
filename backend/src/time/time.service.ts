@@ -7,8 +7,19 @@ export class TimeService {
   private readonly BUSINESS_TZ = 'America/Bogota';
 
   toUtc(date: string | Date): Date {
-    if (date instanceof Date) return date;
-    return fromZonedTime(date, this.BUSINESS_TZ);
+    const d =
+      date instanceof Date
+        ? new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            12, // 👈 clave
+            0,
+            0,
+          )
+        : new Date(date);
+
+    return fromZonedTime(d, this.BUSINESS_TZ);
   }
 
   toLocal(dateUtc: Date): Date {

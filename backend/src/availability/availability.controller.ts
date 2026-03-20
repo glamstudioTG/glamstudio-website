@@ -12,7 +12,7 @@ export class AvailabilityController {
   ) {
     const [year, month, day] = date.split('-').map(Number);
 
-    const safeDate = new Date(year, month - 1, day);
+    const safeDate = new Date(year, month - 1, day, 12, 0, 0);
 
     return this.service.getAvailableSlots(workerId, safeDate, Number(duration));
   }

@@ -138,10 +138,7 @@ export class AvailabilityService {
     }
 
     const now = new Date();
-    const isToday =
-      dateUtc.getFullYear() === now.getFullYear() &&
-      dateUtc.getMonth() === now.getMonth() &&
-      dateUtc.getDate() === now.getDate();
+    const isToday = this.timeService.isToday(dateUtc);
 
     if (isToday) {
       const nowMinutes = now.getHours() * 60 + now.getMinutes();
