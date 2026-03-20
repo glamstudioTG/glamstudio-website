@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { AvailabilityApi } from "../../service/api/availability.api";
 import { AvailableSlot } from "../../types/booking.types";
+import { formatLocalDate } from "../../utils/formatLocalDate";
 
 export function useAvailabilityQuery(
   workerId?: string,
