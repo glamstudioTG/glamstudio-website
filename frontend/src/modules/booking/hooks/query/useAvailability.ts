@@ -11,13 +11,14 @@ export function useAvailabilityQuery(
     queryKey: [
       "availability",
       workerId,
-      date?.toISOString().split("T")[0],
+      date ? formatLocalDate(date) : null,
       serviceDuration,
     ],
+
     queryFn: () =>
       AvailabilityApi.getSlots(
         workerId!,
-        date!.toISOString().split("T")[0],
+        formatLocalDate(date!),
         serviceDuration!,
       ),
     enabled: !!workerId && !!date && !!serviceDuration,
