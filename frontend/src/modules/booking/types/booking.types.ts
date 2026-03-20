@@ -130,7 +130,7 @@ export interface BookingForm {
 
   setSelectedWorker: (worker: BookingWorker) => void;
   setDate: (date: Date) => void;
-  setTime: (time: string) => void;
+  setTime: (time: string | null) => void;
   setUserInfo: (user: UserInfo) => void;
 
   confirmBooking: () => Promise<string>;

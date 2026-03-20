@@ -11,7 +11,7 @@ export function useAvailabilityQuery(
     queryKey: [
       "availbility",
       workerId,
-      date?.toISOString().slice(0, 10),
+      date ? date.toISOString().split("T")[0] : null,
       serviceDuration,
     ],
     queryFn: () =>

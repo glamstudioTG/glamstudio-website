@@ -39,7 +39,15 @@ export default function StepDateTime({
 
   useEffect(() => {
     navigation.setContext(booking.state);
-  }, [booking.state]);
+
+    if (!slots || !selectedTime) return;
+
+    const stillValid = slots.some((s) => s.start === selectedTime);
+
+    if (!stillValid) {
+      booking.setTime(null);
+    }
+  }, [booking.state, slots, selectedTime]);
 
   const canContinue = !!selectedDate && !!selectedTime;
 
@@ -101,7 +109,10 @@ export default function StepDateTime({
                 return (
                   <motion.button
                     key={slot.startMin}
-                    onClick={() => booking.setTime(value)}
+                    onClick={() => {
+                      if (!slots.some((s) => s.start === value)) return;
+                      booking.setTime(value);
+                    }}
                     whileTap={{ scale: 0.96 }}
                     whileHover={{ scale: 1.04 }}
                     className={`

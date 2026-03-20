@@ -70,7 +70,7 @@ export function useBookingForm() {
     setState((prev) => ({ ...prev, date, time: null }));
   }, []);
 
-  const setTime = useCallback((time: string) => {
+  const setTime = useCallback((time: string | null) => {
     setState((prev) => ({ ...prev, time }));
   }, []);
 
