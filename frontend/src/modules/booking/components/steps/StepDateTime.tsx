@@ -51,6 +51,8 @@ export default function StepDateTime({
 
   const canContinue = !!selectedDate && !!selectedTime;
 
+  const isReady = !!slots && !isLoading;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -101,7 +103,7 @@ export default function StepDateTime({
             </p>
           )}
 
-          {!isLoading && !isError && slots && slots.length > 0 && (
+          {isReady && slots.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-3">
               {slots.map((slot) => {
                 const value = slot.start;

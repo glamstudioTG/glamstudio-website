@@ -10,8 +10,10 @@ import {
 } from "../types/booking.types";
 import { initialBookingState } from "../utils/initialBookingState";
 import { useCreateBooking } from "./query/useCreateBooking";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function useBookingForm() {
+  const queryClient = useQueryClient();
   const [state, setState] = useState<BookingDraft>(initialBookingState);
   const [booking, setBooking] = useState<Booking | null | BookingResponse>(
     null,
@@ -57,14 +59,19 @@ export function useBookingForm() {
     });
   }, []);
 
-  const setSelectedWorker = useCallback((worker: BookingWorker) => {
-    setState((prev) => ({
-      ...prev,
-      selectedWorker: worker,
-      date: null,
-      time: null,
-    }));
-  }, []);
+  const setSelectedWorker = useCallback(
+    (worker: BookingWorker) => {
+      queryClient.removeQueries({ queryKey: ["availability"] });
+
+      setState((prev) => ({
+        ...prev,
+        selectedWorker: worker,
+        date: null,
+        time: null,
+      }));
+    },
+    [queryClient],
+  );
 
   const setDate = useCallback((date: Date) => {
     setState((prev) => ({ ...prev, date, time: null }));

@@ -9,18 +9,21 @@ export function useAvailabilityQuery(
 ) {
   return useQuery<AvailableSlot[]>({
     queryKey: [
-      "availbility",
+      "availability",
       workerId,
-      date ? date.toISOString().split("T")[0] : null,
+      date?.toISOString().split("T")[0],
       serviceDuration,
     ],
     queryFn: () =>
       AvailabilityApi.getSlots(
         workerId!,
-        date!.toISOString().slice(0, 10),
+        date!.toISOString().split("T")[0],
         serviceDuration!,
       ),
-
     enabled: !!workerId && !!date && !!serviceDuration,
+
+    staleTime: 0,
+    gcTime: 0,
+    placeholderData: undefined,
   });
 }
