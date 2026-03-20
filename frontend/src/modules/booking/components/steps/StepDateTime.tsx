@@ -73,7 +73,17 @@ export default function StepDateTime({
           <Calendar
             mode="single"
             selected={selectedDate ?? undefined}
-            onSelect={(date) => date && booking.setDate(date)}
+            onSelect={(date) => {
+              if (!date) return;
+
+              const safeDate = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+              );
+
+              booking.setDate(safeDate);
+            }}
             disabled={{ before: new Date() }}
             className="w-full rounded-xl border border-[#850E35] bg-[#FFF5E4] p-4 text-black"
           />

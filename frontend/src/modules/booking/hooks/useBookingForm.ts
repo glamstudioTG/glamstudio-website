@@ -75,7 +75,13 @@ export function useBookingForm() {
   );
 
   const setDate = useCallback((date: Date) => {
-    setState((prev) => ({ ...prev, date, time: null }));
+    const safeDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+    );
+
+    setState((prev) => ({ ...prev, date: safeDate, time: null }));
   }, []);
 
   const setTime = useCallback((time: string | null) => {
