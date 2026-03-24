@@ -54,6 +54,7 @@ export default function PendingTransactionProofs({
           status={item.booking.status}
           proof={item.proof.imageUrl}
           transactionProof={item.proof}
+          email={item.client.email}
         />
       ))}
 
