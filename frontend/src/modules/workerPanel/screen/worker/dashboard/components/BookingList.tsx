@@ -43,6 +43,7 @@ export default function BookingList({ workerId, filters }: Props) {
           status={booking.status}
           proof={booking.transactionProof?.imageUrl ?? ""}
           transactionProof={booking.transactionProof ?? null}
+          email={booking.client.email}
         />
       ))}
     </div>
