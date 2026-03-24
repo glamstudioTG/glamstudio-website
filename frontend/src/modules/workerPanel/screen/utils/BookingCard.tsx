@@ -21,7 +21,10 @@ export default function BookingCard({
   const hasProof = !!transactionProof;
 
   const [onlyDate, rawMinutes] = date.split(" ");
-  const formattedTime = formatMinutesToHour(Number(rawMinutes));
+
+  const formattedTime = rawMinutes
+    ? formatMinutesToHour(Number(rawMinutes))
+    : "";
 
   return (
     <div className="flex flex-col gap-4 rounded-xl bg-[#FFEAEA] p-4 shadow-sm md:flex-row md:items-center">
@@ -62,12 +65,14 @@ export default function BookingCard({
         <div className="flex gap-2 md:flex-col">
           <button
             disabled={isPending}
-            onClick={() =>
+            onClick={() => {
+              if (!transactionProof) return;
+
               mutate({
                 proofId: transactionProof.id,
                 status: "APPROVED",
-              })
-            }
+              });
+            }}
             className="flex items-center justify-center gap-2 rounded-full bg-[#850E35] cursor-pointer px-4 py-1 text-sm text-white disabled:opacity-50"
           >
             {isPending ? <Spinner /> : "Confirmar"}
