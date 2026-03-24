@@ -83,7 +83,7 @@ export default function AcademySection() {
           {academyCourses.map((course, index) => {
             const isLastRow = index >= total - remainder;
             const isSingle = remainder === 1;
-            const isDouble = remainder === 2;
+            const isDouble = remainder === 3;
 
             return (
               <motion.div
@@ -96,7 +96,7 @@ export default function AcademySection() {
                 className={clsx(
                   "flex justify-center",
                   isLastRow && isSingle && "md:col-span-3",
-                  isLastRow && isDouble && "md:col-span-3",
+                  isLastRow && isDouble && "md:col-span-2",
                 )}
               >
                 <div className="w-full max-w-sm md:max-w-90">

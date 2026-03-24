@@ -12,6 +12,7 @@ export default function BookingCard({
   worker,
   proof,
   transactionProof,
+  email,
 }: PropsBookingCard) {
   const { mutate, isPending } = useReviewTransactionProof();
 
@@ -19,7 +20,6 @@ export default function BookingCard({
     transactionProof?.status === "PENDING" && status === "PENDING_REVIEW";
   const hasProof = !!transactionProof;
 
-  // 🔥 FORMATEO LIMPIO
   const [onlyDate, rawMinutes] = date.split(" ");
   const formattedTime = formatMinutesToHour(Number(rawMinutes));
 
@@ -33,16 +33,21 @@ export default function BookingCard({
       </div>
 
       <div className="md:w-1/4">
-        <p className="text-xs text-gray-500">SERVICE</p>
+        <p className="text-xs text-gray-500">Servicios</p>
         <p className="text-sm text-black">{service}</p>
       </div>
 
       <div className="md:w-1/4">
-        <p className="text-xs text-gray-500">DATE & WORKER</p>
+        <p className="text-xs text-gray-500">Fecha y Trabajador</p>
         <p className="text-sm text-black">
           {onlyDate} {formattedTime}
         </p>
         <p className="text-xs text-gray-500">w/ {worker}</p>
+      </div>
+
+      <div className="md:w-1/4">
+        <p className="text-xs text-gray-500">contacto</p>
+        <p className="text-sm text-black">{email}</p>
       </div>
 
       <div className="md:w-1/4 flex items-center gap-3">

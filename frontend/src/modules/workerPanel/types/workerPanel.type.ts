@@ -57,4 +57,5 @@ export type PropsBookingCard = {
   status: BookingStatus;
   proof: string;
   transactionProof: TransactionProof | null;
+  email: string;
 };

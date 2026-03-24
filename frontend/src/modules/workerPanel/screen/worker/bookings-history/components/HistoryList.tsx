@@ -55,6 +55,7 @@ export default function HistoryList({ workerId }: { workerId: string }) {
           status={item.booking.status}
           proof={item.proof.imageUrl}
           transactionProof={item.proof}
+          email={item.client.email}
         />
       ))}
 
