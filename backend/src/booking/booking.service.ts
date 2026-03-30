@@ -227,6 +227,44 @@ export class BookingService {
         });
       }
 
+      const overlappingBooking = await tx.booking.findFirst({
+        where: {
+          workerId: input.workerId,
+          date: dateUtc,
+          status: {
+            not: BookingStatus.CANCELLED,
+            in: [
+              BookingStatus.PENDING_PAYMENT,
+              BookingStatus.PENDING_REVIEW,
+              BookingStatus.CONFIRMED,
+              BookingStatus.COMPLETED,
+            ],
+          },
+          AND: [
+            {
+              startTime: { lt: end },
+            },
+            {
+              endTime: { gt: start },
+            },
+          ],
+        },
+      });
+
+      if (overlappingBooking) {
+        this.logger.warn('Overlap detected at DB level', {
+          workerId: input.workerId,
+          start,
+          end,
+          conflictingBookingId: overlappingBooking.id,
+        });
+
+        throw new ConflictException({
+          message: 'El horario ya fue ocupado por otra reserva.',
+          code: 'OVERLAPPING_BOOKING',
+        });
+      }
+
       const booking = await tx.booking.create({
         data: {
           date: dateUtc,
