@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -34,6 +35,8 @@ export class TransactionProofService {
     private eventEmitter: EventEmitter2,
     private timeService: TimeService,
   ) {}
+
+  private readonly logger = new Logger(TransactionProofService.name);
 
   private buildPeriodFilter(period?: 'day' | 'week' | 'month') {
     if (!period) return undefined;
@@ -147,12 +150,16 @@ export class TransactionProofService {
     });
 
     if (!booking) {
+      this.logger.warn(`uploadProof: booking ${bookingId} no encontrado`);
       throw new NotFoundException('Reserva no encontrada');
     }
 
     if (booking.status !== BookingStatus.PENDING_PAYMENT) {
+      this.logger.warn(
+        `uploadProof: booking ${bookingId} en estado inválido: ${booking.status}`,
+      );
       throw new BadRequestException(
-        'No se pueden subir comprobante para este estado',
+        `Estado de reserva inválido: ${booking.status}. Se requiere PENDING_PAYMENT.`,
       );
     }
 

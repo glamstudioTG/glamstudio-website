@@ -27,6 +27,7 @@ export default function StepPaymentProof({
   navigation,
 }: StepProps<BookingDraft>) {
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const previewUrl = useMemo(() => {
@@ -65,9 +66,39 @@ export default function StepPaymentProof({
       });
 
       setShowConfirmation(true);
-    } catch (err) {
-      console.error(err);
-      alert("Error enviando comprobante");
+    } catch (err: any) {
+      const status = err?.response?.status ?? err?.status;
+      const serverMessage = err?.response?.data?.message;
+
+      if (status === 400) {
+        if (serverMessage?.includes("comprobante en revisión")) {
+          setErrorMsg(
+            "Ya tienes un comprobante en revisión. No es necesario enviarlo de nuevo.",
+          );
+        } else if (serverMessage?.includes("Estado de reserva")) {
+          setErrorMsg(
+            "El estado de tu reserva no permite enviar comprobante en este momento. Contacta al negocio.",
+          );
+        } else {
+          setErrorMsg(serverMessage ?? "Datos inválidos. Intenta de nuevo.");
+        }
+      } else if (status === 404) {
+        setErrorMsg(
+          "No se encontró la reserva. Recarga la página e intenta de nuevo.",
+        );
+      } else if (status === 409) {
+        setErrorMsg(
+          "El horario seleccionado ya no está disponible. Por favor vuelve al paso anterior y elige otro horario.",
+        );
+      } else {
+        setErrorMsg("Error inesperado. Intenta de nuevo en unos segundos.");
+      }
+
+      console.error("[PaymentProof] Error al enviar comprobante:", {
+        status,
+        serverMessage,
+        err,
+      });
     }
   };
 
@@ -211,6 +242,7 @@ export default function StepPaymentProof({
                     const file = e.target.files?.[0];
                     if (file) {
                       booking.setPaymentProof(file);
+                      setErrorMsg(null);
                     }
                   }}
                 />
@@ -350,6 +382,12 @@ export default function StepPaymentProof({
     flex items-center justify-center gap-2 cursor-pointer
   "
         >
+          {errorMsg && (
+            <div className="rounded-xl bg-red-50 border border-red-200 p-4 flex gap-3 text-sm text-red-800">
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
+              <p>{errorMsg}</p>
+            </div>
+          )}
           {isSubmitting ? (
             <>
               <Spinner className="text-white size-5" />
