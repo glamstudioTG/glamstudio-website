@@ -93,7 +93,7 @@ function Calendar({
           "text-muted-foreground flex-1 text-center font-normal text-[0.75rem] select-none py-1",
           defaultClassNames.weekday,
         ),
-        week: cn("flex w-full mt-2", defaultClassNames.week),
+        week: cn("flex w-full mt-2 min-h-[40px]", defaultClassNames.week),
         week_number_header: cn(
           "select-none w-(--cell-size)",
           defaultClassNames.week_number_header,
@@ -218,7 +218,7 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        "w-full aspect-square h-auto min-h-0 min-w-0",
+        "w-full aspect-square h-auto min-h-9 min-w-0",
         "flex items-center justify-center",
         "text-xs sm:text-sm font-normal leading-none",
         "data-[selected-single=true]:bg-[#e993a1] data-[selected-single=true]:text-black",

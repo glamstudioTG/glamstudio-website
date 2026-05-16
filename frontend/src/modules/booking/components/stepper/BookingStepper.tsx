@@ -100,8 +100,7 @@ export default function BookingStepper({
           style={{ transformOrigin: "left" }}
           transition={{ duration: 0.4, ease: "easeOut" }}
         />
-      </div>
-      \{" "}
+      </div>{" "}
       <div className="mt-2 flex justify-between items-center sm:hidden">
         <span className="text-[11px] text-black/50">
           Paso {currentStep} de {steps.length}
