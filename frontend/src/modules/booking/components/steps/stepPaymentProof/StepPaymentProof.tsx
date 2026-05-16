@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   UploadCloud,
@@ -28,8 +28,10 @@ export default function StepPaymentProof({
 }: StepProps<BookingDraft>) {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [highlightNext, setHighlightNext] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
   const previewUrl = useMemo(() => {
     if (!booking.paymentProof) return null;
     return URL.createObjectURL(booking.paymentProof);
@@ -47,6 +49,21 @@ export default function StepPaymentProof({
   const uploadProofMutation = useUploadTransactionProof();
 
   const isSubmitting = isUploading || uploadProofMutation.isPending;
+
+  useEffect(() => {
+    if (!booking.paymentProof) return;
+
+    const timer = setTimeout(() => {
+      submitButtonRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setHighlightNext(true);
+      setTimeout(() => setHighlightNext(false), 1800);
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [booking.paymentProof]);
 
   const handleSubmitProof = async () => {
     if (!booking.booking || !booking.paymentProof || isSubmitting) return;
@@ -370,17 +387,18 @@ export default function StepPaymentProof({
         </button>
 
         <button
+          ref={submitButtonRef}
           disabled={!booking.paymentProof || isSubmitting}
           onClick={handleSubmitProof}
-          className="
-    w-full sm:w-auto
-    rounded-full bg-[#850E35]
-    px-6 py-3 text-sm font-medium text-white
-    transition-all
-    disabled:opacity-50
-    disabled:cursor-not-allowed
-    flex items-center justify-center gap-2 cursor-pointer
-  "
+          className={`
+            w-full sm:w-auto
+            rounded-full bg-[#850E35]
+            px-6 py-3 text-sm font-medium text-white
+            transition-all duration-500
+            disabled:opacity-50 disabled:cursor-not-allowed
+            flex items-center justify-center gap-2 cursor-pointer
+            ${highlightNext ? "ring-4 ring-[#850E35]/40 scale-[1.04]" : ""}
+          `}
         >
           {errorMsg && (
             <div className="rounded-xl bg-red-50 border border-red-200 p-4 flex gap-3 text-sm text-red-800">

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Calendar } from "@/src/components/ui/shadcn-io/calendar/calendar";
 import { Calendar1 } from "lucide-react";
 import StepHeader from "../../service/StepUtils/StepHeader";
@@ -26,6 +26,12 @@ export default function StepDateTime({
   const selectedTime = booking.state.time;
   const selectedWorker = booking.state.selectedWorker;
 
+  const slotsSectionRef = useRef<HTMLDivElement>(null);
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
+
+  const [highlightSlots, setHighlightSlots] = useState(false);
+  const [highlightNext, setHighlightNext] = useState(false);
+
   const totalDuration = booking.state.services.reduce(
     (acc, s) => acc + s.duration,
     0,
@@ -49,6 +55,36 @@ export default function StepDateTime({
     }
   }, [booking.state, slots, selectedTime]);
 
+  useEffect(() => {
+    if (!selectedDate) return;
+
+    const timer = setTimeout(() => {
+      slotsSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setHighlightSlots(true);
+      setTimeout(() => setHighlightNext(false), 2000);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [selectedDate]);
+
+  useEffect(() => {
+    if (!selectedTime) return;
+
+    const timer = setTimeout(() => {
+      nextButtonRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setHighlightNext(true);
+      setTimeout(() => setHighlightNext(false), 1800);
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [selectedTime]);
+
   const canContinue = !!selectedDate && !!selectedTime;
 
   const isReady = !!slots && !isLoading;
@@ -70,34 +106,52 @@ export default function StepDateTime({
         <div className="lg:col-span-7 space-y-3">
           <p className="text-sm font-medium text-black">Seleccionar fecha</p>
 
-          <Calendar
-            mode="single"
-            selected={selectedDate ?? undefined}
-            onSelect={(date) => {
-              if (!date) return;
-
-              const safeDate = new Date(
-                date.getFullYear(),
-                date.getMonth(),
-                date.getDate(),
-              );
-
-              booking.setDate(safeDate);
-            }}
-            disabled={{ before: new Date() }}
-            className="w-full rounded-xl border border-[#850E35] bg-[#FFF5E4] p-4 text-black"
-          />
+          <div className="w-full overflow-hidden rounded-xl border border-[#850E35] bg-[#FFF5E4] p-3 sm:p-4">
+            <Calendar
+              mode="single"
+              selected={selectedDate ?? undefined}
+              onSelect={(date) => {
+                if (!date) return;
+                const safeDate = new Date(
+                  date.getFullYear(),
+                  date.getMonth(),
+                  date.getDate(),
+                );
+                booking.setDate(safeDate);
+              }}
+              disabled={{ before: new Date() }}
+              className="text-black"
+            />
+          </div>
         </div>
 
         <div className="hidden lg:flex lg:col-span-1 justify-center">
           <div className="h-full w-px bg-[#850E35]/40" />
         </div>
 
-        <div className="lg:col-span-4 space-y-3">
+        <div
+          ref={slotsSectionRef}
+          className={`
+            lg:col-span-4 space-y-3
+            rounded-xl p-3 -m-3
+            border-2 transition-all duration-700
+            ${
+              highlightSlots
+                ? "border-[#850E35] shadow-[0_0_0_4px_rgba(133,14,53,0.15)]"
+                : "border-transparent"
+            }
+          `}
+        >
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium text-black">Horario disponible</p>
             <span className="text-xs text-black/50">(elige uno)</span>
           </div>
+
+          {!selectedDate && (
+            <p className="text-sm text-black/40 italic">
+              Primero selecciona una fecha
+            </p>
+          )}
 
           {isLoading && <SlotsSkeleton />}
 
@@ -157,16 +211,18 @@ export default function StepDateTime({
         </button>
 
         <button
+          ref={nextButtonRef}
           disabled={!canContinue}
           onClick={navigation.nextStep}
-          className="
+          className={`
             w-full sm:w-auto
             rounded-full bg-[#850E35]
             px-6 py-3 text-sm font-medium text-white
-            transition-all
+            transition-all duration-500
             disabled:opacity-40 cursor-pointer
             enabled:hover:scale-[1.03]
-          "
+            ${highlightNext ? "ring-4 ring-[#850E35]/40 scale-[1.04]" : ""}
+          `}
         >
           Siguiente
         </button>

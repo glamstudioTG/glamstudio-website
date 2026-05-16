@@ -13,7 +13,7 @@ export default function StepHeader({
   icon: Icon,
 }: StepHeaderProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
       <div className="flex flex-row gap-3">
         <Icon size={30} className="text-[#850E35]" />
         <h2 className="text-black text-4xl font-mono">{title}</h2>

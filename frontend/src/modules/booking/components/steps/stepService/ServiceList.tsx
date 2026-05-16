@@ -21,7 +21,7 @@ export default function ServiceList({ booking, services }: Props) {
   };
 
   return (
-    <div className="space-y-4 max-h-82.5 overflow-y-auto p-5">
+    <div className="space-y-4 max-h-130 lg:max-h-82.5 overflow-y-auto p-5">
       {services.map((service) => {
         const selected = booking.state.services.some(
           (s) => s.id === service.id,

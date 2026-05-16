@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BookingDraft, StepProps } from "../../../types/booking.types";
 import StepHeader from "../../../service/StepUtils/StepHeader";
 import ServiceBrowser from "./ServiceBrowser";
@@ -16,17 +16,59 @@ export default function StepServices({
   navigation,
 }: StepProps<BookingDraft>) {
   const workersMutation = useWorkersByServicesMutation();
+  const workerSectionRef = useRef<HTMLDivElement>(null);
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
+
+  const [highlightWorkers, setHighlightWorkers] = useState(false);
+  const [highlightNext, setHighlightNext] = useState(false);
+
+  const workerBlockShownRef = useRef(false);
 
   useEffect(() => {
-    if (booking.state.services.length === 0) return;
+    const hasServices = booking.state.services.length > 0;
+    const noWorkerChosen = !booking.state.selectedWorker;
+
+    if (!hasServices) {
+      workerBlockShownRef.current = false;
+      return;
+    }
 
     const serviceIds = booking.state.services.map((s) => s.id);
     workersMutation.mutate(serviceIds);
+    navigation.setContext(booking.state);
+
+    if (noWorkerChosen && !workerBlockShownRef.current) {
+      workerBlockShownRef.current = true;
+
+      const timer = setTimeout(() => {
+        workerSectionRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+        setHighlightWorkers(true);
+        setTimeout(() => setHighlightWorkers(false), 2000);
+      }, 350);
+
+      return () => clearTimeout(timer);
+    }
   }, [booking.state.services]);
 
   useEffect(() => {
+    if (!booking.state.selectedWorker) return;
+
     navigation.setContext(booking.state);
-  }, [booking.state.services, booking.state.selectedWorker]);
+
+    const timer = setTimeout(() => {
+      nextButtonRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setHighlightNext(true);
+      setTimeout(() => setHighlightNext(false), 1800);
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [booking.state.selectedWorker]);
 
   const compatibleWorkers = workersMutation.data ?? [];
 
@@ -60,28 +102,32 @@ export default function StepServices({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
         <div className="lg:col-span-8 order-1 space-y-6">
           <ServiceBrowser booking={booking} />
-          {booking.state.services.length > 0 &&
-            !booking.state.selectedWorker && (
-              <p className="mb-2 text-xs text-[#850E35]">
-                Debes elegir un especialista para continuar
-              </p>
-            )}
 
           {booking.state.services.length > 0 && (
             <motion.div
+              ref={workerSectionRef}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, ease: easeOut }}
-              className="
-          rounded-xl
-          bg-[#FDEAF2]
-          p-5
-          border border-[#850E35]/10
-        "
+              className={`
+                rounded-xl bg-[#FDEAF2] p-5
+                border-2 transition-all duration-700
+                ${
+                  highlightWorkers
+                    ? "border-[#850E35] shadow-[0_0_0_4px_rgba(133,14,53,0.15)]"
+                    : "border-transparent"
+                }
+              `}
             >
-              <h4 className="mb-3 text-sm font-medium text-black">
+              <h4 className="mb-1 text-sm font-medium text-black">
                 Selecciona tu especialista
               </h4>
+
+              {!booking.state.selectedWorker && (
+                <p className="mb-3 text-xs text-[#850E35]">
+                  Elige una especialista para continuar
+                </p>
+              )}
 
               <ServiceWorkerGrid
                 workers={compatibleWorkers}
@@ -128,20 +174,22 @@ export default function StepServices({
         "
       >
         <button
+          ref={nextButtonRef}
           onClick={handleNext}
           disabled={
             booking.state.services.length === 0 || !booking.state.selectedWorker
           }
-          className="
+          className={`
             w-full sm:w-auto
             rounded-full bg-[#850E35]
             px-6 py-3
             text-white text-sm font-medium
             disabled:opacity-40
-            transition-all
+            transition-all duration-500
             cursor-pointer
             enabled:hover:scale-[1.03]
-          "
+            ${highlightNext ? "ring-4 ring-[#850E35]/40 scale-[1.04]" : ""}
+          `}
         >
           Siguiente
         </button>

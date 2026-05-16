@@ -11,6 +11,7 @@ import StepServices from "./steps/stepService/StepServices";
 import StepSummary from "./steps/StepSummary";
 import { BookingDraft } from "../types/booking.types";
 import StepPaymentProof from "./steps/stepPaymentProof/StepPaymentProof";
+import { useEffect, useRef } from "react";
 
 const STEPS = [
   { id: 1, label: "Servicios" },
@@ -42,6 +43,7 @@ const stepVariants = {
 
 export default function BookingSection() {
   const booking = useBookingForm();
+  const sectionRef = useRef<HTMLElement>(null);
 
   const navigation = useStepNavigation<BookingDraft>({
     totalSteps: STEPS.length,
@@ -70,8 +72,18 @@ export default function BookingSection() {
     },
   });
 
+  useEffect(() => {
+    sectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [navigation.currentStep]);
+
   return (
-    <section className="bg-[#FFEAEA] mx-auto max-w-6xl py-16 space-y-12">
+    <section
+      ref={sectionRef}
+      className="bg-[#FFEAEA] mx-auto max-w-6xl py-16 space-y-12"
+    >
       <BookingStepper
         currentStep={navigation.currentStep}
         steps={STEPS}
